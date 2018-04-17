@@ -206,7 +206,7 @@ else
 MsgBox,
 (
 Settings:
-Tamanho da tela = %screenSizeY%
+Tamanho da tela = %screenSizeX% x %screenSizeY%
 Latencia 1 = %latency1%
 Latencia 2 = %latency2%
 
