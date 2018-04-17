@@ -1,0 +1,8 @@
+menuAtributo,617,110
+resetButton,971,727
+accept,816,821
+mainStat,1277,335
+vit,1277,425
+speed,1277,516
+resource,1277,612
+reciclaOK,847,377

@@ -1,0 +1,153 @@
+if (screenSizeX = 1920 && screenSizeY = 1080)
+{
+	menuAtributoX := 617
+	menuAtributoY := 110
+	resetButtonX := 971
+	resetButtonY := 727
+	acceptX := 816
+	acceptY := 821
+	mainStatX := 1277
+	mainStatY := 335
+	vitX := 1277
+	vitY := 425
+	speedX := 1277
+	speedY := 516
+	resourceX := 1277
+	resourceY := 612
+	reciclaOKX := 847
+	reciclaOKY := 377
+}
+else if (screenSizeX = 2560 && screenSizeY = 1440)
+{
+	menuAtributoX := 822
+	menuAtributoY := 146
+	resetButtonX := 1294
+	resetButtonY := 969
+	acceptX := 1088
+	acceptY := 1094
+	mainStatX := 1702
+	mainStatY := 446
+	vitX := 1702
+	vitY := 566
+	speedX := 1702
+	speedY := 688
+	resourceX := 1702
+	resourceY := 816
+	reciclaOKX := 1129
+	reciclaOKY := 502
+}
+else if (screenSizeX = 1600 && screenSizeY = 900)
+{
+	menuAtributoX := 514
+	menuAtributoY := 91
+	resetButtonX := 809
+	resetButtonY := 605
+	acceptX := 680
+	acceptY := 684
+	mainStatX := 1064
+	mainStatY := 279
+	vitX := 1064
+	vitY := 354
+	speedX := 1064
+	speedY := 430
+	resourceX := 1064
+	resourceY := 510
+	reciclaOKX := 705
+	reciclaOKY := 314
+}
+else if (screenSizeX = 1360 && screenSizeY = 768)
+{
+	menuAtributoX := 437
+	menuAtributoY := 78
+	resetButtonX := 687
+	resetButtonY := 516
+	acceptX := 578
+	acceptY := 583
+	mainStatX := 904
+	mainStatY := 238
+	vitX := 904
+	vitY := 302
+	speedX := 904
+	speedY := 366
+	resourceX := 904
+	resourceY := 435
+	reciclaOKX := 599
+	reciclaOKY := 268
+}
+else if (screenSizeX = 1024 && screenSizeY = 768)
+{
+	menuAtributoX := 329
+	menuAtributoY := 78
+	resetButtonX := 517
+	resetButtonY := 516
+	acceptX := 435
+	acceptY := 583
+	mainStatX := 681
+	mainStatY := 238
+	vitX := 681
+	vitY := 302
+	speedX := 681
+	speedY := 366
+	resourceX := 681
+	resourceY := 435
+	reciclaOKX := 451
+	reciclaOKY := 268
+}
+else if (screenSizeX = 1280 && screenSizeY = 800)
+{
+	menuAtributoX := 411
+	menuAtributoY := 81
+	resetButtonX := 647
+	resetButtonY := 538
+	acceptX := 544
+	acceptY := 608
+	mainStatX := 851
+	mainStatY := 248
+	vitX := 851
+	vitY := 314
+	speedX := 851
+	speedY := 382
+	resourceX := 851
+	resourceY := 453
+	reciclaOKX := 564
+	reciclaOKY := 279
+}
+else if (screenSizeX = 1280 && screenSizeY = 1024)
+{
+	menuAtributoX := 411
+	menuAtributoY := 104
+	resetButtonX := 647
+	resetButtonY := 689
+	acceptX := 544
+	acceptY := 778
+	mainStatX := 851
+	mainStatY := 317
+	vitX := 851
+	vitY := 402
+	speedX := 851
+	speedY := 489
+	resourceX := 851
+	resourceY := 580
+	reciclaOKX := 564
+	reciclaOKY := 357
+}
+else if (screenSizeX = 1920 && screenSizeY = 1440)
+{
+	menuAtributoX := 617
+	menuAtributoY := 146
+	resetButtonX := 971
+	resetButtonY := 969
+	acceptX := 816
+	acceptY := 1094
+	mainStatX := 1277
+	mainStatY := 446
+	vitX := 1277
+	vitY := 566
+	speedX := 1277
+	speedY := 688
+	resourceX := 1277
+	resourceY := 816
+	reciclaOKX := 847
+	reciclaOKY := 502
+}
+else 
