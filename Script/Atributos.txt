@@ -6,3 +6,7 @@ vit,1277,425
 speed,1277,516
 resource,1277,612
 reciclaOK,847,377
+limiteBagMin,1409,565
+preencherBotao,714,838
+transmutarBotao,235,828
+limiteDiferenca,51,48

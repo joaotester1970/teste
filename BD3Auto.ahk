@@ -62,6 +62,14 @@ if (screenSizeX = 1920 && screenSizeY = 1080)
 	resourceY := 612
 	reciclaOKX := 847
 	reciclaOKY := 377
+	limiteBagMinX := 1409
+	limiteBagMinY := 565
+	preencherBotaoX := 714
+	preencherBotaoY := 838
+	transmutarBotaoX := 235
+	transmutarBotaoY := 828
+	limiteDiferencaX := 51
+	limiteDiferencaY := 48
 }
 else if (screenSizeX = 2560 && screenSizeY = 1440)
 {
@@ -81,6 +89,14 @@ else if (screenSizeX = 2560 && screenSizeY = 1440)
 	resourceY := 816
 	reciclaOKX := 1129
 	reciclaOKY := 502
+	limiteBagMinX := 1878
+	limiteBagMinY := 753
+	preencherBotaoX := 952
+	preencherBotaoY := 1117
+	transmutarBotaoX := 313
+	transmutarBotaoY := 1104
+	limiteDiferencaX := 68
+	limiteDiferencaY := 64
 }
 else if (screenSizeX = 1600 && screenSizeY = 900)
 {
@@ -100,6 +116,14 @@ else if (screenSizeX = 1600 && screenSizeY = 900)
 	resourceY := 510
 	reciclaOKX := 705
 	reciclaOKY := 314
+	limiteBagMinX := 1174
+	limiteBagMinY := 470
+	preencherBotaoX := 595
+	preencherBotaoY := 698
+	transmutarBotaoX := 195
+	transmutarBotaoY := 690
+	limiteDiferencaX := 42
+	limiteDiferencaY := 40
 }
 else if (screenSizeX = 1360 && screenSizeY = 768)
 {
@@ -119,6 +143,14 @@ else if (screenSizeX = 1360 && screenSizeY = 768)
 	resourceY := 435
 	reciclaOKX := 599
 	reciclaOKY := 268
+	limiteBagMinX := 998
+	limiteBagMinY := 401
+	preencherBotaoX := 505
+	preencherBotaoY := 595
+	transmutarBotaoX := 166
+	transmutarBotaoY := 588
+	limiteDiferencaX := 36
+	limiteDiferencaY := 34
 }
 else if (screenSizeX = 1024 && screenSizeY = 768)
 {
@@ -138,6 +170,14 @@ else if (screenSizeX = 1024 && screenSizeY = 768)
 	resourceY := 435
 	reciclaOKX := 451
 	reciclaOKY := 268
+	limiteBagMinX := 751
+	limiteBagMinY := 401
+	preencherBotaoX := 380
+	preencherBotaoY := 595
+	transmutarBotaoX := 125
+	transmutarBotaoY := 588
+	limiteDiferencaX := 27
+	limiteDiferencaY := 34
 }
 else if (screenSizeX = 1280 && screenSizeY = 800)
 {
@@ -157,6 +197,14 @@ else if (screenSizeX = 1280 && screenSizeY = 800)
 	resourceY := 453
 	reciclaOKX := 564
 	reciclaOKY := 279
+	limiteBagMinX := 939
+	limiteBagMinY := 418
+	preencherBotaoX := 476
+	preencherBotaoY := 620
+	transmutarBotaoX := 156
+	transmutarBotaoY := 613
+	limiteDiferencaX := 34
+	limiteDiferencaY := 35
 }
 else if (screenSizeX = 1280 && screenSizeY = 1024)
 {
@@ -176,6 +224,14 @@ else if (screenSizeX = 1280 && screenSizeY = 1024)
 	resourceY := 580
 	reciclaOKX := 564
 	reciclaOKY := 357
+	limiteBagMinX := 939
+	limiteBagMinY := 535
+	preencherBotaoX := 476
+	preencherBotaoY := 794
+	transmutarBotaoX := 156
+	transmutarBotaoY := 785
+	limiteDiferencaX := 34
+	limiteDiferencaY := 45
 }
 else if (screenSizeX = 1920 && screenSizeY = 1440)
 {
@@ -195,6 +251,14 @@ else if (screenSizeX = 1920 && screenSizeY = 1440)
 	resourceY := 816
 	reciclaOKX := 847
 	reciclaOKY := 502
+	limiteBagMinX := 1409
+	limiteBagMinY := 753
+	preencherBotaoX := 714
+	preencherBotaoY := 1117
+	transmutarBotaoX := 235
+	transmutarBotaoY := 1104
+	limiteDiferencaX := 51
+	limiteDiferencaY := 64
 }
 else 
 {
@@ -506,32 +570,51 @@ forcarMovimento()
     return
 }
 
-transformaRaroLendario()  
+transformaRaroLendario()  ; esquerda para direita (eixo X)
 {
 
-    Global bagLimiteX
-    Global bagLimiteY
-    
+    Global limiteBagMinX 
+    Global limiteBagMinY 
+    Global preencherBotaoX 
+    Global preencherBotaoY 
+    Global transmutarBotaoX
+    Global transmutarBotaoY
+    Global limiteDiferencaX
+    Global limiteDiferencaY
+ 
     MouseGetPos, mouseX, mouseY
 
-;    MsgBox,
-;    (
-;	x: %mouseX%
-;	y: %mouseY%
-;   )
-    return
+    novaPosicaoX := mouseX
+    novaPosicaoY := mouseY
 
-;1602x609 perto limite - calcular diferença
+    loop
+    {
+        SetMouseDelay, 10
+        MouseClick, Right, novaPosicaoX, novaPosicaoY
+        SetMouseDelay, 10
+        MouseClick, Left, preencherBotaoX, preencherBotaoY
+        SetMouseDelay, 10
+        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
+        Sleep, 3000
+        SetMouseDelay, 10
+        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
+        Sleep, 2000
+        novaPosicaoX := NovaPosicaoX - limiteDiferencaX
+    
+    } until novaPosicaoX <= limiteBagMinX
+
+;1602x609 perto limite - calcular diferença 51
 ;1551x608 perto limite - calcular diferença
 ;1578x609 meio do item 
 ;1409x607 limite do bag (esquerdo)
-;1426x857 perto limite - calcular diferença
+;1426x857 perto limite - calcular diferença 48
 ;1426x809 perto limite - calcular diferença
 ;1426x833 meio do item 
 ;1426x565 limite do bag (superior)
 ;714x838  preencher esquerdo
 ;item direito
 ;235x828  transmutar esquerdo
+    return
 }
 
 transformaRaroLendarioVertical()
