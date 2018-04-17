@@ -1,64 +1,26 @@
-; =========================== START INFO ===========================
+ï»¿;Parametros de atalho
+RegRead, activateKeyDamage, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 01_AtalhoParagonDano
+RegRead, activateKeyHealth, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 02_AtalhoParagonVida
+RegRead, activateKeyKadala, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 03_AtalhoKadala
+RegRead, activateKeyReciclaLendarioUM, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 04_AtalhoReciclaLendarioUM
+RegRead, activateKeyTransformaRaroLendario, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 05_AtalhoTransformaRaroLendario
 
-; Você precisa editar 3 valores
-; 1.) Paragon points (depende do seu nível)
-; 2.) Activation Key (Teclas de atalho)
-; 3.) Latency (depende de sua conexão com internet)
+;Parametros de configuraÃ§Ã£o
+RegRead, latency1, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 01_LatenciaPainelParagon
+RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
+RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
 
-; INFO - Paragon "guideline"
-; stat1 = [paragon lvl] - [650] (first 2 digits rounded up)
-;    EXAMPLE - of player paragon lvl 2765
-;     EXAMPLE - 2765 - 650 = 2115
-;     EXAMPLE - with 2115 as result try stat1 = 22
-; vit1 more then likely just leave at zero
-; int2 = keep under 10 (it allow extra reistance from int in health mode)
-; vit2 = [paragon lvl] - [650] - [stat2 x 100]
-;    EXAMPLE - of player paragon lvl 2765 with stat2 set to 4
-;    EXAMPLE - 2765 - 650 - 400 = 1715
-;    EXAMPLE - with 1715 as result try vit2 = 18
+;Parametros de Paragon Dano
+RegRead, stat1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 01_ParagonDanoAtributo
+RegRead, vit1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 02_ParagonDanoVitalidade
+RegRead, speed1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 03_ParagonDanoVelocidade
+RegRead, resource1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 04_ParagonDanoRecurso
 
-; INFO - latency settings
-; if you are getting werid results and not all points are being
-; distributed properly you may have to adjust latency vaules.
-; if laggy try latency1 = 10 (default 5)
-; if laggy try latency2 = 30 (default 20)
-; changing these vaules will speed up and slow down the script so you
-; can play around with these numbers for whatever works best for you
-
-; INFO - setting activation key
-; ! = alt key
-; + = shift key
-; ^ = crtl key
-; # = windows key
-; EXAMPLE - ^!f would activate macro by pressing crtl + alt + f at the same time
-; EXAMPLE - q would actiavte macro by just pressing the q key
-
-
-;************************************************************************
-; ********** Editar somente os valores deste trecho do código ***********
-;************************************************************************
-
-stat1 := 7             ; atributo principal para modo dano - cada ponto equivale a 100 paragons
-vit1 := 0              ; vitalidade para modo dano - cada ponto equivale a 100 paragons
-Speed1 := 0            ; velocidade para modo dano - cada ponto equivale a 100 paragons
-Resource1 := 1         ; recurso para modo dano - cada ponto equivale a 100 paragons
-
-stat2 := 0             ; atributo principal para modo vida - cada ponto equivale a 100 paragons
-vit2 := 7              ; vitalidade para modo vida - cada ponto equivale a 100 paragons
-speed2 := 1            ; velocidade para modo vida - cada ponto equivale a 100 paragons
-resource2 := 0         ; recurso para modo vida - cada ponto equivale a 100 paragons
-
-activateKeyDamage = F10        ; Escolha a tecla de atalho para dano (observar informações de combinação de teclas acima)
-activateKeyHealth = F9         ; Escolha a tecla de atalho para vida (observar informações de combinação de teclas acima)
-
-activateKeyParagon = p		; Configure com a tecla de atalho que está definida para a abertura da tela de Paragon
-
-latency1 := 5            ; lag para abertura e fechamento da tela de paragon
-latency2 := 20            ; lag para atribuição dos pontos de paragon
-
-;************************************************************************
-;************************************************************************
-;************************************************************************
+;Parametros de Paragon Vida
+RegRead, stat2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 01_ParagonVidaAtributo
+RegRead, vit2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 02_ParagonVidaVitalidade
+RegRead, speed2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 03_ParagonVidaVelocidade
+RegRead, resource2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 04_ParagonVidaRecurso
 
 ; START AUTO SCREEN SIZE - save variables for cooridiates based on your sreen size
     SysGet, screenSize, 79
@@ -215,7 +177,7 @@ Modo Vida Hotkey = %activateKeyHealth%
 Latencia 1 = %latency1%
 Latencia 2 = %latency2%
 Paragon Hotkey = %activateKeyParagon%
-Não se esqueça:::::Certifique-se que a aba principal do paragon esteja selecionada antes do início da fenda::::::
+
 )
 
 SetDefaultMouseSpeed, 0 ; mouse moves faster
