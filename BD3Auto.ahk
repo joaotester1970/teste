@@ -211,10 +211,10 @@ Latencia 1 = %latency1%
 Latencia 2 = %latency2%
 
 Atalho Modo Dano = %activateKeyDamage%
-Atalho Modo Vida Hotkey = %activateKeyHealth%
+Atalho Modo Vida = %activateKeyHealth%
 Atalho Paragon = %activateKeyParagon%
 Atalho Troca Kadala = %activateKeyTrocaKadala%
-Atalho Recicla = %activateKeyReciclaLendarioUM%
+Atalho ReciclaUM = %activateKeyReciclaLendarioUM%
 Atalho Transforma Raro Lendário (direta para esquerda)= %activateKeyTransformaRaroLendario%
 Atalho Transforma Raro Lendário (baixo para cima)= %activateKeyTransformaRaroLendarioVertical%
 
@@ -233,8 +233,9 @@ SetDefaultMouseSpeed, 0 ; mouse moves faster
 Hotkey, %activateKeyDamage%, Damage ; starts damage script
 Hotkey, %activateKeyHealth%, Health ; starts health script1
 Hotkey, %activateKeyTrocaKadala%, kadala
-Hotkey, %activateKeyReciclaLendarioUM%, recicla
+Hotkey, %activateKeyReciclaLendarioUM%, reciclaUM
 Hotkey, %activateKeyTransformaRaroLendario%, transformaRaroLendario
+Hotkey, %activateKeyTransformaRaroLendarioVertical%, transformaRaroLendarioVertical
 Hotkey, F1, habilidadeAutomatica1
 Hotkey, F2, habilidadeAutomatica2
 Hotkey, F3, habilidadeAutomatica3
@@ -401,7 +402,7 @@ kadala() ;
     return
 }
 
-recicla()
+reciclaUM()
 {
     global reciclaOKX
     global reciclaOKY
@@ -520,18 +521,46 @@ transformaRaroLendario()
 ;   )
     return
 
+;1602x609 perto limite - calcular diferença
+;1551x608 perto limite - calcular diferença
+;1578x609 meio do item 
+;1409x607 limite do bag (esquerdo)
+;1426x857 perto limite - calcular diferença
+;1426x809 perto limite - calcular diferença
+;1426x833 meio do item 
+;1426x565 limite do bag (superior)
+;714x838  preencher esquerdo
+;item direito
+;235x828  transmutar esquerdo
+}
+
+transformaRaroLendarioVertical()
+{
+
+    Global bagLimiteX
+    Global bagLimiteY
+    
+    MouseGetPos, mouseX, mouseY
+
+;    MsgBox,
+;    (
+;	x: %mouseX%
+;	y: %mouseY%
+;   )
+
+return
+
 }
 
 posicao()  
 {
 
+    arquivoSaida = c:\temp\pontos.txt
+
     MouseGetPos, mouseX, mouseY
 
-    MsgBox,
-    (
-	x: %mouseX%
-	y: %mouseY%
-    )
+	FileAppend, %mouseX%x%mouseY%`n, %arquivoSaida%
+
     return
 
 }
