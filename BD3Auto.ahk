@@ -89,6 +89,7 @@ AutoCast Habilidade 4 = F4
 
 SetDefaultMouseSpeed, 0 ; mouse moves faster
 
+Hotkey, IfWinActive, Diablo III
 Hotkey, %activateKeyDamage%, trocaParagonDamage ; starts damage script
 Hotkey, %activateKeyHealth%, trocaParagonHealth ; starts health script1
 Hotkey, %activateKeyTrocaKadala%, kadala
@@ -101,6 +102,7 @@ Hotkey, F3, habilidadeAutomatica3
 Hotkey, F4, habilidadeAutomatica4
 ;Hotkey, #F12, forcarMovimento
 Hotkey, F12, posicao
+Hotkey, ^F12, validaCor
 
 trocaParagonDamage() ; script to change paragon for dealing damage
 {
@@ -379,14 +381,37 @@ return
 posicao()  
 {
 
-    arquivoSaida = c:\temp\pontos.txt
+    arquivoSaida = pontos.txt
 
     MouseGetPos, mouseX, mouseY
+    
+    PixelGetColor cor, %mouseX%, %mouseY%, Slow
 
-	FileAppend, %mouseX%x%mouseY%`n, %arquivoSaida%
+	FileAppend, %mouseX%;%mouseY%;%cor%`n, %arquivoSaida%
 
     return
 
+}
+
+validaCor()  
+{
+    arquivoSaida = pontos.txt
+
+    MouseGetPos, mouseX, mouseY
+
+    PixelSearch, saidaX, saidaY, mouseX-10, mouseY-10, mouseX+10, mouseY+10, 0x0C3845, 3, Fast
+
+    if ErrorLevel
+    {
+        FileAppend, %mouseX%;%mouseY%;%saidaX%;%saidaY%;não identificou`n, %arquivoSaida%
+    }
+    else
+    {
+        FileAppend, %mouseX%;%mouseY%;%saidaX%;%saidaY%;amarelo`n, %arquivoSaida%
+    }
+	
+
+    return
 }
 
 validaResolucao()
@@ -469,4 +494,42 @@ carregaConfiguracao()
     RegRead, vit2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 02_ParagonVidaVitalidade
     RegRead, speed2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 03_ParagonVidaVelocidade
     RegRead, resource2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 04_ParagonVidaRecurso
+}
+
+retornaInfoTela()
+{
+
+WinGet, active_id, ID, A
+WinMaximize, ahk_id %active_id%
+MsgBox, The active window's ID is "%active_id%".
+
+; Example #2: This will visit all windows on the entire system and display info about each of them:
+WinGet, id, list,,, Program Manager
+Loop, %id%
+{
+    this_id := id%A_Index%
+    WinActivate, ahk_id %this_id%
+    WinGetClass, this_class, ahk_id %this_id%
+    WinGetTitle, this_title, ahk_id %this_id%
+    MsgBox, 4, , Visiting All Windows`n%A_Index% of %id%`nahk_id %this_id%`nahk_class %this_class%`n%this_title%`n`nContinue?
+    IfMsgBox, NO, break
+}
+
+; Example #3: Extract the individual control names from a ControlList:
+WinGet, ActiveControlList, ControlList, A
+Loop, Parse, ActiveControlList, `n
+{
+    MsgBox, 4,, Control #%A_Index% is "%A_LoopField%". Continue?
+    IfMsgBox, No
+        break
+}
+
+; Example #4: Display in real time the active window's control list:
+#Persistent
+SetTimer, WatchActiveWindow, 200
+return
+WatchActiveWindow:
+WinGet, ControlList, ControlList, A
+ToolTip, %ControlList%
+return    
 }
