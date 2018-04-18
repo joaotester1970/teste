@@ -54,9 +54,14 @@ Global transmutarBotaoY
 Global limiteDiferencaX
 Global limiteDiferencaY
 
+CoordMode, Mouse, Window
+
 carregaConfiguracao()
 
-validaResolucao()
+SysGet, screenSizeX, 78
+SysGet, screenSizeY, 79
+
+ajustaResolucao()
 
 MsgBox,
 (
@@ -100,6 +105,8 @@ Hotkey, F12, posicao
 trocaParagonDamage() ; script to change paragon for dealing damage
 {
 
+    validaResolucao()
+    
     MouseGetPos, mouseX, mouseY
 
     SendInput %activateKeyParagon%
@@ -150,6 +157,8 @@ trocaParagonDamage() ; script to change paragon for dealing damage
 trocaParagonHealth() ; script to change paragon for staying alive
 {
 
+    validaResolucao()
+    
     MouseGetPos, mouseX, mouseY
 
     SendInput %activateKeyParagon%
@@ -200,6 +209,8 @@ trocaParagonHealth() ; script to change paragon for staying alive
 kadala() ; 
 {
 
+    validaResolucao()
+    
     MouseGetPos, mouseX, mouseY
     SetMouseDelay, 0
     Loop, %quantTrocaKadala%
@@ -213,6 +224,8 @@ kadala() ;
 
 reciclaUM()
 {
+
+    validaResolucao()
 
     MouseGetPos, mouseX, mouseY
     SetMouseDelay, 0
@@ -311,6 +324,7 @@ forcarMovimento()
 transformaRaroLendario()  ; esquerda para direita (eixo X)
 {
 
+    validaResolucao()
     MouseGetPos, mouseX, mouseY
 
     novaPosicaoX := mouseX
@@ -349,7 +363,7 @@ transformaRaroLendario()  ; esquerda para direita (eixo X)
 transformaRaroLendarioVertical()
 {
 
-    
+    validaResolucao()
     MouseGetPos, mouseX, mouseY
 
 ;    MsgBox,
@@ -377,233 +391,54 @@ posicao()
 
 validaResolucao()
 {
-    if (screenSizeX = 0 || screenSizeY = 0 || screenSizeX = "" || screenSizeY = "")
-    {
-        SysGet, screenSizeX, 78
-        SysGet, screenSizeY, 79
-    }
+    SysGet, novascreenSizeX, 78
+    SysGet, novascreenSizeY, 79
 
-    if (screenSizeX = 1920 && screenSizeY = 1080)
+    if (screenSizeX <> novascreenSizeX || screenSizeY <> novascreenSizeY)
     {
-        menuAtributoX := 617
-        menuAtributoY := 110
-        resetButtonX := 971
-        resetButtonY := 727
-        acceptX := 816
-        acceptY := 821
-        mainStatX := 1277
-        mainStatY := 335
-        vitX := 1277
-        vitY := 425
-        speedX := 1277
-        speedY := 516
-        resourceX := 1277
-        resourceY := 612
-        reciclaOKX := 847
-        reciclaOKY := 377
-        limiteBagMinX := 1409
-        limiteBagMinY := 565
-        preencherBotaoX := 714
-        preencherBotaoY := 838
-        transmutarBotaoX := 235
-        transmutarBotaoY := 828
-        limiteDiferencaX := 51
-        limiteDiferencaY := 48
+        screenSizeX := novascreenSizeX
+        screenSizeY := novascreenSizeY
     }
-    else if (screenSizeX = 2560 && screenSizeY = 1440)
-    {
-        menuAtributoX := 822
-        menuAtributoY := 146
-        resetButtonX := 1294
-        resetButtonY := 969
-        acceptX := 1088
-        acceptY := 1094
-        mainStatX := 1702
-        mainStatY := 446
-        vitX := 1702
-        vitY := 566
-        speedX := 1702
-        speedY := 688
-        resourceX := 1702
-        resourceY := 816
-        reciclaOKX := 1129
-        reciclaOKY := 502
-        limiteBagMinX := 1878
-        limiteBagMinY := 753
-        preencherBotaoX := 952
-        preencherBotaoY := 1117
-        transmutarBotaoX := 313
-        transmutarBotaoY := 1104
-        limiteDiferencaX := 68
-        limiteDiferencaY := 64
-    }
-    else if (screenSizeX = 1600 && screenSizeY = 900)
-    {
-        menuAtributoX := 514
-        menuAtributoY := 91
-        resetButtonX := 809
-        resetButtonY := 605
-        acceptX := 680
-        acceptY := 684
-        mainStatX := 1064
-        mainStatY := 279
-        vitX := 1064
-        vitY := 354
-        speedX := 1064
-        speedY := 430
-        resourceX := 1064
-        resourceY := 510
-        reciclaOKX := 705
-        reciclaOKY := 314
-        limiteBagMinX := 1174
-        limiteBagMinY := 470
-        preencherBotaoX := 595
-        preencherBotaoY := 698
-        transmutarBotaoX := 195
-        transmutarBotaoY := 690
-        limiteDiferencaX := 42
-        limiteDiferencaY := 40
-    }
-    else if (screenSizeX = 1360 && screenSizeY = 768)
-    {
-        menuAtributoX := 437
-        menuAtributoY := 78
-        resetButtonX := 687
-        resetButtonY := 516
-        acceptX := 578
-        acceptY := 583
-        mainStatX := 904
-        mainStatY := 238
-        vitX := 904
-        vitY := 302
-        speedX := 904
-        speedY := 366
-        resourceX := 904
-        resourceY := 435
-        reciclaOKX := 599
-        reciclaOKY := 268
-        limiteBagMinX := 998
-        limiteBagMinY := 401
-        preencherBotaoX := 505
-        preencherBotaoY := 595
-        transmutarBotaoX := 166
-        transmutarBotaoY := 588
-        limiteDiferencaX := 36
-        limiteDiferencaY := 34
-    }
-    else if (screenSizeX = 1024 && screenSizeY = 768)
-    {
-        menuAtributoX := 329
-        menuAtributoY := 78
-        resetButtonX := 517
-        resetButtonY := 516
-        acceptX := 435
-        acceptY := 583
-        mainStatX := 681
-        mainStatY := 238
-        vitX := 681
-        vitY := 302
-        speedX := 681
-        speedY := 366
-        resourceX := 681
-        resourceY := 435
-        reciclaOKX := 451
-        reciclaOKY := 268
-        limiteBagMinX := 751
-        limiteBagMinY := 401
-        preencherBotaoX := 380
-        preencherBotaoY := 595
-        transmutarBotaoX := 125
-        transmutarBotaoY := 588
-        limiteDiferencaX := 27
-        limiteDiferencaY := 34
-    }
-    else if (screenSizeX = 1280 && screenSizeY = 800)
-    {
-        menuAtributoX := 411
-        menuAtributoY := 81
-        resetButtonX := 647
-        resetButtonY := 538
-        acceptX := 544
-        acceptY := 608
-        mainStatX := 851
-        mainStatY := 248
-        vitX := 851
-        vitY := 314
-        speedX := 851
-        speedY := 382
-        resourceX := 851
-        resourceY := 453
-        reciclaOKX := 564
-        reciclaOKY := 279
-        limiteBagMinX := 939
-        limiteBagMinY := 418
-        preencherBotaoX := 476
-        preencherBotaoY := 620
-        transmutarBotaoX := 156
-        transmutarBotaoY := 613
-        limiteDiferencaX := 34
-        limiteDiferencaY := 35
-    }
-    else if (screenSizeX = 1280 && screenSizeY = 1024)
-    {
-        menuAtributoX := 411
-        menuAtributoY := 104
-        resetButtonX := 647
-        resetButtonY := 689
-        acceptX := 544
-        acceptY := 778
-        mainStatX := 851
-        mainStatY := 317
-        vitX := 851
-        vitY := 402
-        speedX := 851
-        speedY := 489
-        resourceX := 851
-        resourceY := 580
-        reciclaOKX := 564
-        reciclaOKY := 357
-        limiteBagMinX := 939
-        limiteBagMinY := 535
-        preencherBotaoX := 476
-        preencherBotaoY := 794
-        transmutarBotaoX := 156
-        transmutarBotaoY := 785
-        limiteDiferencaX := 34
-        limiteDiferencaY := 45
-    }
-    else if (screenSizeX = 1920 && screenSizeY = 1440)
-    {
-        menuAtributoX := 617
-        menuAtributoY := 146
-        resetButtonX := 971
-        resetButtonY := 969
-        acceptX := 816
-        acceptY := 1094
-        mainStatX := 1277
-        mainStatY := 446
-        vitX := 1277
-        vitY := 566
-        speedX := 1277
-        speedY := 688
-        resourceX := 1277
-        resourceY := 816
-        reciclaOKX := 847
-        reciclaOKY := 502
-        limiteBagMinX := 1409
-        limiteBagMinY := 753
-        preencherBotaoX := 714
-        preencherBotaoY := 1117
-        transmutarBotaoX := 235
-        transmutarBotaoY := 1104
-        limiteDiferencaX := 51
-        limiteDiferencaY := 64
-    }
-    else 
-    {
-        MsgBox, %screenSizeX% x %screenSizeY% - Resolução não suportada
-        exit
-    }
+    
+    ajustaResolucao()
+
+    return   
+}
+
+ajustaResolucao()
+{
+
+    screenXReferencia = 1920
+    screenYReferencia = 1080
+
+    screenXRazao := screenSizeX / screenXReferencia 
+    screenYRazao := screenSizeY / screenYReferencia
+    
+    menuAtributoX := format("{:u}", (617 * screenXRazao))
+    menuAtributoY := format("{:u}", (110 * screenYRazao))
+    resetButtonX := format("{:u}", (971 * screenXRazao))
+    resetButtonY := format("{:u}", (727 * screenYRazao))
+    acceptX := format("{:u}", (816 * screenXRazao))
+    acceptY := format("{:u}", (821 * screenYRazao))
+    mainStatX := format("{:u}", (1277 * screenXRazao))
+    mainStatY := format("{:u}", (335 * screenYRazao))
+    vitX := format("{:u}", (1277 * screenXRazao))
+    vitY := format("{:u}", (425 * screenYRazao))
+    speedX := format("{:u}", (1277 * screenXRazao))
+    speedY := format("{:u}", (516 * screenYRazao))
+    resourceX := format("{:u}", (1277 * screenXRazao))
+    resourceY := format("{:u}", (612 * screenYRazao))
+    reciclaOKX := format("{:u}", (847 * screenXRazao))
+    reciclaOKY := format("{:u}", (377 * screenYRazao))
+    limiteBagMinX := format("{:u}", (1409 * screenXRazao))
+    limiteBagMinY := format("{:u}", (565 * screenYRazao))
+    preencherBotaoX := format("{:u}", (714 * screenXRazao))
+    preencherBotaoY := format("{:u}", (838 * screenYRazao))
+    transmutarBotaoX := format("{:u}", (235 * screenXRazao))
+    transmutarBotaoY := format("{:u}", (828 * screenYRazao))
+    limiteDiferencaX := format("{:u}", (51 * screenXRazao))
+    limiteDiferencaY := format("{:u}", (48 * screenYRazao))
+
     return
 }
 
@@ -622,8 +457,6 @@ carregaConfiguracao()
     RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
     RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
     RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 04_QuantTrocaKadala
-    RegRead, screenSizeX, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 05_screenSizeX
-    RegRead, screenSizeY, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 06_screenSiveY
 
     ;Parametros de Paragon Dano
     RegRead, stat1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 01_ParagonDanoAtributo
