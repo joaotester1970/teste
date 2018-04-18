@@ -94,6 +94,7 @@ Hotkey, %activateKeyDamage%, trocaParagonDamage ; starts damage script
 Hotkey, %activateKeyHealth%, trocaParagonHealth ; starts health script1
 Hotkey, %activateKeyTrocaKadala%, kadala
 Hotkey, %activateKeyReciclaLendarioUM%, reciclaUM
+Hotkey, ^%activateKeyReciclaLendarioUM%, reciclaLinha
 Hotkey, %activateKeyTransformaRaroLendario%, transformaRaroLendario
 Hotkey, %activateKeyTransformaRaroLendarioVertical%, transformaRaroLendarioVertical
 Hotkey, F1, habilidadeAutomatica1
@@ -241,6 +242,34 @@ reciclaUM()
 
 }
 
+reciclaLinha()
+{
+
+    validaResolucao()
+
+    MouseGetPos, mouseX, mouseY
+
+    novaPosicaoX := mouseX
+    novaPosicaoY := mouseY
+
+    loop
+    {
+        SetMouseDelay, 0
+        MouseClick, Left, novaPosicaoX, novaPosicaoY
+        SetMouseDelay, 0
+        MouseClick, Left, reciclaOKX, reciclaOKY
+        novaPosicaoX := NovaPosicaoX - limiteDiferencaX
+    
+    } until novaPosicaoX <= limiteBagMinX
+
+    SetMouseDelay, 0
+    MouseMove, mouseX, mouseY
+
+    return
+
+}
+
+
 habilidadeAutomatica1()
 {
 	
@@ -348,17 +377,6 @@ transformaRaroLendario()  ; esquerda para direita (eixo X)
     
     } until novaPosicaoX <= limiteBagMinX
 
-;1602x609 perto limite - calcular diferença 51
-;1551x608 perto limite - calcular diferença
-;1578x609 meio do item 
-;1409x607 limite do bag (esquerdo)
-;1426x857 perto limite - calcular diferença 48
-;1426x809 perto limite - calcular diferença
-;1426x833 meio do item 
-;1426x565 limite do bag (superior)
-;714x838  preencher esquerdo
-;item direito
-;235x828  transmutar esquerdo
     return
 }
 
@@ -387,17 +405,6 @@ transformaRaroLendarioVertical()
     
     } until novaPosicaoY <= limiteBagMinY
 
-;1602x609 perto limite - calcular diferença 51
-;1551x608 perto limite - calcular diferença
-;1578x609 meio do item 
-;1409x607 limite do bag (esquerdo)
-;1426x857 perto limite - calcular diferença 48
-;1426x809 perto limite - calcular diferença
-;1426x833 meio do item 
-;1426x565 limite do bag (superior)
-;714x838  preencher esquerdo
-;item direito
-;235x828  transmutar esquerdo
     return
 
 }
