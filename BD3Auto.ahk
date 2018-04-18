@@ -343,7 +343,7 @@ transformaRaroLendario()  ; esquerda para direita (eixo X)
         Sleep, 3000
         SetMouseDelay, 10
         MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
-        Sleep, 2000
+        Sleep, 1000
         novaPosicaoX := NovaPosicaoX - limiteDiferencaX
     
     } until novaPosicaoX <= limiteBagMinX
@@ -368,13 +368,37 @@ transformaRaroLendarioVertical()
     validaResolucao()
     MouseGetPos, mouseX, mouseY
 
-;    MsgBox,
-;    (
-;	x: %mouseX%
-;	y: %mouseY%
-;   )
+    novaPosicaoX := mouseX
+    novaPosicaoY := mouseY
 
-return
+    loop
+    {
+        SetMouseDelay, 10
+        MouseClick, Right, novaPosicaoX, novaPosicaoY
+        SetMouseDelay, 10
+        MouseClick, Left, preencherBotaoX, preencherBotaoY
+        SetMouseDelay, 10
+        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
+        Sleep, 3000
+        SetMouseDelay, 10
+        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
+        Sleep, 1000
+        novaPosicaoY := NovaPosicaoY - limiteDiferencaY
+    
+    } until novaPosicaoY <= limiteBagMinY
+
+;1602x609 perto limite - calcular diferença 51
+;1551x608 perto limite - calcular diferença
+;1578x609 meio do item 
+;1409x607 limite do bag (esquerdo)
+;1426x857 perto limite - calcular diferença 48
+;1426x809 perto limite - calcular diferença
+;1426x833 meio do item 
+;1426x565 limite do bag (superior)
+;714x838  preencher esquerdo
+;item direito
+;235x828  transmutar esquerdo
+    return
 
 }
 
@@ -385,7 +409,7 @@ posicao()
 
     MouseGetPos, mouseX, mouseY
     
-    PixelGetColor cor, %mouseX%, %mouseY%, Slow
+    PixelGetColor cor, %mouseX%, %mouseY%, RGB
 
 	FileAppend, %mouseX%;%mouseY%;%cor%`n, %arquivoSaida%
 
@@ -499,37 +523,37 @@ carregaConfiguracao()
 retornaInfoTela()
 {
 
-WinGet, active_id, ID, A
-WinMaximize, ahk_id %active_id%
-MsgBox, The active window's ID is "%active_id%".
+    WinGet, active_id, ID, A
+    WinMaximize, ahk_id %active_id%
+    MsgBox, The active window's ID is "%active_id%".
 
-; Example #2: This will visit all windows on the entire system and display info about each of them:
-WinGet, id, list,,, Program Manager
-Loop, %id%
-{
-    this_id := id%A_Index%
-    WinActivate, ahk_id %this_id%
-    WinGetClass, this_class, ahk_id %this_id%
-    WinGetTitle, this_title, ahk_id %this_id%
-    MsgBox, 4, , Visiting All Windows`n%A_Index% of %id%`nahk_id %this_id%`nahk_class %this_class%`n%this_title%`n`nContinue?
-    IfMsgBox, NO, break
-}
+    ; Example #2: This will visit all windows on the entire system and display info about each of them:
+    WinGet, id, list,,, Program Manager
+    Loop, %id%
+    {
+        this_id := id%A_Index%
+        WinActivate, ahk_id %this_id%
+        WinGetClass, this_class, ahk_id %this_id%
+        WinGetTitle, this_title, ahk_id %this_id%
+        MsgBox, 4, , Visiting All Windows`n%A_Index% of %id%`nahk_id %this_id%`nahk_class %this_class%`n%this_title%`n`nContinue?
+        IfMsgBox, NO, break
+    }
 
-; Example #3: Extract the individual control names from a ControlList:
-WinGet, ActiveControlList, ControlList, A
-Loop, Parse, ActiveControlList, `n
-{
-    MsgBox, 4,, Control #%A_Index% is "%A_LoopField%". Continue?
-    IfMsgBox, No
-        break
-}
+    ; Example #3: Extract the individual control names from a ControlList:
+    WinGet, ActiveControlList, ControlList, A
+    Loop, Parse, ActiveControlList, `n
+    {
+        MsgBox, 4,, Control #%A_Index% is "%A_LoopField%". Continue?
+        IfMsgBox, No
+            break
+    }
 
-; Example #4: Display in real time the active window's control list:
-#Persistent
-SetTimer, WatchActiveWindow, 200
-return
-WatchActiveWindow:
-WinGet, ControlList, ControlList, A
-ToolTip, %ControlList%
-return    
+    ; Example #4: Display in real time the active window's control list:
+    #Persistent
+    SetTimer, WatchActiveWindow, 200
+    return
+    WatchActiveWindow:
+    WinGet, ControlList, ControlList, A
+    ToolTip, %ControlList%
+    return    
 }
