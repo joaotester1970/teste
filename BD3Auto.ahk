@@ -12,6 +12,8 @@ global activateKeyTransformaRaroLendarioVertical
 global quantTrocaKadala
 global latency1
 global latency2
+global screenSizeRegX
+global screenSizeRegY
 
 global stat1
 global vit1
@@ -58,10 +60,7 @@ CoordMode, Mouse, Window
 
 carregaConfiguracao()
 
-SysGet, screenSizeX, 78
-SysGet, screenSizeY, 79
-
-ajustaResolucao()
+validaResolucao()
 
 MsgBox,
 (
@@ -104,6 +103,7 @@ Hotkey, F4, habilidadeAutomatica4
 ;Hotkey, #F12, forcarMovimento
 Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
+Hotkey, ^t, teleporte
 
 trocaParagonDamage() ; script to change paragon for dealing damage
 {
@@ -447,16 +447,26 @@ validaCor()
 
 validaResolucao()
 {
-    SysGet, novascreenSizeX, 78
-    SysGet, novascreenSizeY, 79
+
+    if (screenSizeRegX <> 0 && screenSizeRegY <> 0)
+    {
+        novascreenSizeX := screenSizeRegX
+        novascreenSizeY := screenSizeRegY
+    }
+    else
+    {
+        SysGet, novascreenSizeX, 78
+        SysGet, novascreenSizeY, 79
+
+    }
 
     if (screenSizeX <> novascreenSizeX || screenSizeY <> novascreenSizeY)
     {
         screenSizeX := novascreenSizeX
         screenSizeY := novascreenSizeY
+        ajustaResolucao()
+
     }
-    
-    ajustaResolucao()
 
     return   
 }
@@ -513,6 +523,9 @@ carregaConfiguracao()
     RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
     RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
     RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 04_QuantTrocaKadala
+    RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 05_screenSizeX
+    RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 06_screenSizeY
+
 
     ;Parametros de Paragon Dano
     RegRead, stat1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 01_ParagonDanoAtributo
@@ -563,4 +576,9 @@ retornaInfoTela()
     WinGet, ControlList, ControlList, A
     ToolTip, %ControlList%
     return    
+}
+
+teleporte()
+{
+    Send, t{Enter}
 }
