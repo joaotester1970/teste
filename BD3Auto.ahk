@@ -29,6 +29,14 @@ Global habilitadeAutomatica2Estado, habilitadeAutomatica2Estado := 1
 Global habilitadeAutomatica3Estado, habilitadeAutomatica3Estado := 1
 Global habilitadeAutomatica4Estado, habilitadeAutomatica4Estado := 1
 
+Global Habilidade1TempoPerfil, Habilidade1TempoPerfil := Array(0,0,0,0)
+Global Habilidade2TempoPerfil, Habilidade2TempoPerfil := Array(0,0,0,0)
+Global Habilidade3TempoPerfil, Habilidade3TempoPerfil := Array(0,0,0,0)
+Global Habilidade4TempoPerfil, Habilidade4TempoPerfil := Array(0,0,0,0)
+
+Global perfilAutomaticoEstado, perfilAutomaticoEstado := 1
+Global perfilAutomaticoCarregado, perfilAutomaticoCarregado := 1
+
 Global forcarMovimentoEstado, forcarMovimentoEstado := 1
 
 global menuAtributoX
@@ -57,6 +65,7 @@ Global limiteDiferencaX
 Global limiteDiferencaY
 
 CoordMode, Mouse, Window
+Thread, interrupt, 0
 
 carregaConfiguracao()
 
@@ -100,10 +109,31 @@ Hotkey, F1, habilidadeAutomatica1
 Hotkey, F2, habilidadeAutomatica2
 Hotkey, F3, habilidadeAutomatica3
 Hotkey, F4, habilidadeAutomatica4
+Hotkey, ^F1, perfilAutomatico1
+Hotkey, ^F2, perfilAutomatico2
+Hotkey, ^F3, perfilAutomatico3
+Hotkey, ^F4, perfilAutomatico4
 ;Hotkey, #F12, forcarMovimento
 Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
 Hotkey, ^t, teleporte
+
+perfilAutomatico1()
+{
+    perfilAutomatico(1)
+}
+perfilAutomatico2()
+{
+    perfilAutomatico(2)
+}
+perfilAutomatico3()
+{
+    perfilAutomatico(3)
+}
+perfilAutomatico4()
+{
+    perfilAutomatico(4)
+}
 
 trocaParagonDamage() ; script to change paragon for dealing damage
 {
@@ -269,7 +299,6 @@ reciclaLinha()
 
 }
 
-
 habilidadeAutomatica1()
 {
 	
@@ -424,6 +453,89 @@ posicao()
 
 }
 
+perfilAutomatico(perfilAcionado)
+{
+    MouseGetPos, mouseX, mouseY
+    SetMouseDelay, 0
+    MouseClick, Left, mouseX, mouseY
+    
+    if (perfilAcionado <> perfilAutomaticoCarregado)
+    {
+        perfilAutomaticoCarregado := perfilAcionado
+        SetTimer, habilidade1, Off
+        SetTimer, habilidade2, Off
+        SetTimer, habilidade3, Off
+        SetTimer, habilidade4, Off
+        perfilAutomaticoEstado := 1 
+    }
+
+    
+    if perfilAutomaticoEstado = 1
+    {
+        tempo1 := Habilidade1TempoPerfil[perfilAutomaticoCarregado]
+        tempo2 := Habilidade2TempoPerfil[perfilAutomaticoCarregado]
+        tempo3 := Habilidade3TempoPerfil[perfilAutomaticoCarregado]
+        tempo4 := Habilidade4TempoPerfil[perfilAutomaticoCarregado]
+
+        If (tempo1 > 100) 
+        {
+            habilidade1()
+            SetTimer, habilidade1, %tempo1%
+        }
+        If (tempo2 > 100) 
+        {
+            habilidade2()
+            SetTimer, habilidade2, %tempo2%
+        }
+        If (tempo3 > 100) 
+        {
+            habilidade3()
+            SetTimer, habilidade3, %tempo3%
+        }
+        If (tempo4 > 100) 
+        {
+            habilidade4()
+            SetTimer, habilidade4, %tempo4%
+        }
+    }
+    else
+    {
+        SetTimer, habilidade1, Off
+        SetTimer, habilidade2, Off
+        SetTimer, habilidade3, Off
+        SetTimer, habilidade4, Off
+    }
+    
+    perfilAutomaticoEstado := perfilAutomaticoEstado * -1
+    
+    return
+
+}
+
+habilidade1()
+{
+    SendInput, 1
+    return
+}
+
+habilidade2()
+{
+    SendInput, 2
+    return
+}
+
+habilidade3()
+{
+    SendInput, 3
+    return
+}
+
+habilidade4()
+{
+    SendInput, 4
+    return
+}
+
 validaCor()  
 {
     arquivoSaida = pontos.txt
@@ -523,9 +635,8 @@ carregaConfiguracao()
     RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
     RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
     RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 04_QuantTrocaKadala
-    RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 05_screenSizeX
-    RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 06_screenSizeY
-
+    RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 05_ResolucaoX
+    RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 06_ResolucaoY
 
     ;Parametros de Paragon Dano
     RegRead, stat1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 01_ParagonDanoAtributo
@@ -538,6 +649,49 @@ carregaConfiguracao()
     RegRead, vit2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 02_ParagonVidaVitalidade
     RegRead, speed2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 03_ParagonVidaVelocidade
     RegRead, resource2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 04_ParagonVidaRecurso
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[1] := tempo1
+    Habilidade2TempoPerfil[1] := tempo2
+    Habilidade3TempoPerfil[1] := tempo3
+    Habilidade4TempoPerfil[1] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[2] := tempo1
+    Habilidade2TempoPerfil[2] := tempo2
+    Habilidade3TempoPerfil[2] := tempo3
+    Habilidade4TempoPerfil[2] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[3] := tempo1
+    Habilidade2TempoPerfil[3] := tempo2
+    Habilidade3TempoPerfil[3] := tempo3
+    Habilidade4TempoPerfil[3] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[4] := tempo1
+    Habilidade2TempoPerfil[4] := tempo2
+    Habilidade3TempoPerfil[4] := tempo3
+    Habilidade4TempoPerfil[4] := tempo4
+
+    return
+
 }
 
 retornaInfoTela()

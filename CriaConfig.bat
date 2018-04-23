@@ -1,6 +1,21 @@
-reg add HKCU\Software\DiabloAuto
-reg add HKCU\Software\DiabloAuto\01_Atalhos
-reg add HKCU\Software\DiabloAuto\02_Config
-reg add HKCU\Software\DiabloAuto\03_ParagonDano
-reg add HKCU\Software\DiabloAuto\04_ParagonVida
-config.reg
+reg delete HKCU\Software\DiabloAuto /f
+reg delete HKCU\Software\DiabloAuto\01_Atalhos /f
+reg delete HKCU\Software\DiabloAuto\02_Config /f
+reg delete HKCU\Software\DiabloAuto\03_ParagonDano /f
+reg delete HKCU\Software\DiabloAuto\04_ParagonVida /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil1 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil2 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil3 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil4 /f
+
+reg add HKCU\Software\DiabloAuto /f
+reg add HKCU\Software\DiabloAuto\01_Atalhos /f
+reg add HKCU\Software\DiabloAuto\02_Config /f
+reg add HKCU\Software\DiabloAuto\03_ParagonDano /f
+reg add HKCU\Software\DiabloAuto\04_ParagonVida /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil1 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil2 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil3 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil4 /f
