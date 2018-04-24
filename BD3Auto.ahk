@@ -92,6 +92,12 @@ AutoCast Habilidade 1 = F1
 AutoCast Habilidade 2 = F2
 AutoCast Habilidade 3 = F3
 AutoCast Habilidade 4 = F4
+
+Perfil Automatizado 1 = Control+F1
+Perfil Automatizado 2 = Control+F2
+Perfil Automatizado 3 = Control+F3
+Perfil Automatizado 4 = Control+F4
+
 )
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
 
@@ -477,22 +483,22 @@ perfilAutomatico(perfilAcionado)
         tempo3 := Habilidade3TempoPerfil[perfilAutomaticoCarregado]
         tempo4 := Habilidade4TempoPerfil[perfilAutomaticoCarregado]
 
-        If (tempo1 > 100) 
+        If (tempo1 >= 100) 
         {
             habilidade1()
             SetTimer, habilidade1, %tempo1%
         }
-        If (tempo2 > 100) 
+        If (tempo2 >= 100) 
         {
             habilidade2()
             SetTimer, habilidade2, %tempo2%
         }
-        If (tempo3 > 100) 
+        If (tempo3 >= 100) 
         {
             habilidade3()
             SetTimer, habilidade3, %tempo3%
         }
-        If (tempo4 > 100) 
+        If (tempo4 >= 100) 
         {
             habilidade4()
             SetTimer, habilidade4, %tempo4%
