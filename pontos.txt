@@ -1,0 +1,15 @@
+(esc - abrir opções do jogo)
+
+228;317;0x000000 (menu opções)
+509;579;0x000000 (configuração de teclas)
+1537;705;0x000000 (scroll para baixo 11 vezes)
+
+1142;481;0x000000 (habilidade 3 - tecla 1)
+1392;484;0x000000 (habilidade 3 - tecla 2)
+1143;673;0x000000 (forçar movimento - tecla 1)
+1391;675;0x000000 (forçar movimento - tecla 2)
+1239;867;0x000000 (aceitar)
+
+tecla esc para fechar o menu.
+1536;360;0x000000
+1536;423;0x000000
