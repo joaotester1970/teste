@@ -13,3 +13,9 @@
 tecla esc para fechar o menu.
 1536;360;0x000000
 1536;423;0x000000
+866;535;;;não identificou
+1141;526;0x000000
+1389;525;0x000000
+1107;362;0x000000
+1537;588;;;não identificou
+1025;639;;;não identificou

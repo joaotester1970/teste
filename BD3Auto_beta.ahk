@@ -6,7 +6,7 @@ global activateKeyDamage
 global activateKeyHealth
 global activateKeyTrocaKadala
 global activateKeyReciclaLendarioUM
-global activateKeyTransformaRaroLendario
+global activateKeyTransformaRaroLendarioHorizontal
 global activateKeyTransformaRaroLendarioVertical
 
 global quantTrocaKadala
@@ -29,10 +29,10 @@ Global habilitadeAutomatica2Estado, habilitadeAutomatica2Estado := 1
 Global habilitadeAutomatica3Estado, habilitadeAutomatica3Estado := 1
 Global habilitadeAutomatica4Estado, habilitadeAutomatica4Estado := 1
 
-Global Habilidade1TempoPerfil, Habilidade1TempoPerfil := Array(0,0,0,0)
-Global Habilidade2TempoPerfil, Habilidade2TempoPerfil := Array(0,0,0,0)
-Global Habilidade3TempoPerfil, Habilidade3TempoPerfil := Array(0,0,0,0)
-Global Habilidade4TempoPerfil, Habilidade4TempoPerfil := Array(0,0,0,0)
+Global Habilidade1TempoPerfil, Habilidade1TempoPerfil := Array(0,0,0,0,0,0,0,0)
+Global Habilidade2TempoPerfil, Habilidade2TempoPerfil := Array(0,0,0,0,0,0,0,0)
+Global Habilidade3TempoPerfil, Habilidade3TempoPerfil := Array(0,0,0,0,0,0,0,0)
+Global Habilidade4TempoPerfil, Habilidade4TempoPerfil := Array(0,0,0,0,0,0,0,0)
 
 Global perfilAutomaticoEstado, perfilAutomaticoEstado := 1
 Global perfilAutomaticoCarregado, perfilAutomaticoCarregado := 1
@@ -73,10 +73,10 @@ Global menuJogoBarraRolagemArrastoX1
 Global menuJogoBarraRolagemArrastoY1
 Global menuJogoBarraRolagemArrastoX2
 Global menuJogoBarraRolagemArrastoY2
-Global menuJogoHabilidade3Tecla1X
-Global menuJogoHabilidade3Tecla1Y
-Global menuJogoHabilidade3Tecla2X
-Global menuJogoHabilidade3Tecla2Y
+Global menuJogoHabilidade4Tecla1X
+Global menuJogoHabilidade4Tecla1Y
+Global menuJogoHabilidade4Tecla2X
+Global menuJogoHabilidade4Tecla2Y
 Global menuJogoForcarMovimentoTecla1X
 Global menuJogoForcarMovimentoTecla1Y
 Global menuJogoForcarMovimentoTecla2X
@@ -84,14 +84,25 @@ Global menuJogoForcarMovimentoTecla2Y
 Global menuJogoAceitarX
 Global menuJogoAceitarY
 
+Global novaPosicaoX
+Global novaPosicaoY
+
+Global transformaRaroLendarioPosicao ; 0 = horizontal; 1 = vertical
+Global transformaRaroLendarioSituacao, transformaRaroLendarioSituacao := 1 ; 1 = liga, -1 = desliga
+
 CoordMode, Mouse, Window
-Thread, interrupt, 0
+
+Thread, NoTimers
+
+run reg import %A_ScriptDir%\config.reg
+
+Sleep, 2000
 
 carregaConfiguracao()
 
 validaResolucao()
 
-MsgBox,
+MsgBox, 0,,
 (
 Settings:
 Tamanho da tela = %screenSizeX% x %screenSizeY%
@@ -103,7 +114,7 @@ Atalho Modo Vida = %activateKeyHealth%
 Atalho Paragon = %activateKeyParagon%
 Atalho Troca Kadala = %activateKeyTrocaKadala%
 Atalho ReciclaUM = %activateKeyReciclaLendarioUM%
-Atalho Transforma Raro Lendário (direta para esquerda)= %activateKeyTransformaRaroLendario%
+Atalho Transforma Raro Lendário (direta para esquerda)= %activateKeyTransformaRaroLendarioHorizontal%
 Atalho Transforma Raro Lendário (baixo para cima)= %activateKeyTransformaRaroLendarioVertical%
 
 Troca Kadala quantidade = %quantTrocaKadala%
@@ -117,11 +128,18 @@ Perfil Automatizado 1 = Control+F1
 Perfil Automatizado 2 = Control+F2
 Perfil Automatizado 3 = Control+F3
 Perfil Automatizado 4 = Control+F4
+Perfil Automatizado 5 = Control+Shift+F1
+Perfil Automatizado 6 = Control+Shift+F2
+Perfil Automatizado 7 = Control+Shift+F3
+Perfil Automatizado 8 = Control+Shift+F4
 
-)
+),3
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
 
 SetDefaultMouseSpeed, 0 ; mouse moves faster
+
+
+Hotkey, ^+r, recarregar
 
 Hotkey, IfWinActive, Diablo III
 Hotkey, %activateKeyDamage%, trocaParagonDamage ; starts damage script
@@ -129,7 +147,7 @@ Hotkey, %activateKeyHealth%, trocaParagonHealth ; starts health script1
 Hotkey, %activateKeyTrocaKadala%, kadala
 Hotkey, %activateKeyReciclaLendarioUM%, reciclaUM
 Hotkey, ^%activateKeyReciclaLendarioUM%, reciclaLinha
-Hotkey, %activateKeyTransformaRaroLendario%, transformaRaroLendario
+Hotkey, %activateKeyTransformaRaroLendarioHorizontal%, transformaRaroLendarioHorizontal
 Hotkey, %activateKeyTransformaRaroLendarioVertical%, transformaRaroLendarioVertical
 Hotkey, F1, habilidadeAutomatica1
 Hotkey, F2, habilidadeAutomatica2
@@ -139,12 +157,21 @@ Hotkey, ^F1, perfilAutomatico1
 Hotkey, ^F2, perfilAutomatico2
 Hotkey, ^F3, perfilAutomatico3
 Hotkey, ^F4, perfilAutomatico4
+Hotkey, +^F1, perfilAutomatico5
+Hotkey, +^F2, perfilAutomatico6
+Hotkey, +^F3, perfilAutomatico7
+Hotkey, +^F4, perfilAutomatico8
 ;Hotkey, #F12, forcarMovimento
 Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
 Hotkey, +F12, trocaWheelUpDownNecro
-
 Hotkey, ^t, teleporte
+
+recarregar()
+{
+    Reload
+    Return
+}
 
 perfilAutomatico1()
 {
@@ -162,9 +189,28 @@ perfilAutomatico4()
 {
     perfilAutomatico(4)
 }
+perfilAutomatico5()
+{
+    perfilAutomatico(5)
+}
+perfilAutomatico6()
+{
+    perfilAutomatico(6)
+}
+perfilAutomatico7()
+{
+    perfilAutomatico(7)
+}
+perfilAutomatico8()
+{
+    perfilAutomatico(8)
+}
+
 
 trocaParagonDamage() ; script to change paragon for dealing damage
 {
+
+    Critical
 
     validaResolucao()
     
@@ -193,15 +239,15 @@ trocaParagonDamage() ; script to change paragon for dealing damage
     }
 
     SetMouseDelay, %latency2%
-    Loop, %stat1%
-    {
-        MouseClick, Left, mainStatX, mainStatY
-    }
-
-    SetMouseDelay, %latency2%
     Loop, %vit1%
     {
         MouseClick, Left, vitX, vitY
+    }
+
+    SetMouseDelay, %latency2%
+    Loop, %stat1%
+    {
+        MouseClick, Left, mainStatX, mainStatY
     }
 
     SendInput, {Ctrl Up}
@@ -217,7 +263,8 @@ trocaParagonDamage() ; script to change paragon for dealing damage
 
 trocaParagonHealth() ; script to change paragon for staying alive
 {
-
+    Critical
+    
     validaResolucao()
     
     MouseGetPos, mouseX, mouseY
@@ -269,6 +316,7 @@ trocaParagonHealth() ; script to change paragon for staying alive
 
 kadala() ; 
 {
+    Critical
 
     validaResolucao()
     
@@ -285,6 +333,7 @@ kadala() ;
 
 reciclaUM()
 {
+    Critical
 
     validaResolucao()
 
@@ -302,7 +351,8 @@ reciclaUM()
 
 reciclaLinha()
 {
-
+    Critical
+    
     validaResolucao()
 
     MouseGetPos, mouseX, mouseY
@@ -409,61 +459,84 @@ forcarMovimento()
     return
 }
 
-transformaRaroLendario()  ; esquerda para direita (eixo X)
+transformaRaroLendarioHorizontal()  ; esquerda para direita (eixo X)
 {
 
-    validaResolucao()
-    MouseGetPos, mouseX, mouseY
-
-    novaPosicaoX := mouseX
-    novaPosicaoY := mouseY
-
-    loop
-    {
-        SetMouseDelay, 10
-        MouseClick, Right, novaPosicaoX, novaPosicaoY
-        SetMouseDelay, 10
-        MouseClick, Left, preencherBotaoX, preencherBotaoY
-        SetMouseDelay, 10
-        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
-        Sleep, 3000
-        SetMouseDelay, 10
-        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
-        Sleep, 1000
-        novaPosicaoX := NovaPosicaoX - limiteDiferencaX
-    
-    } until novaPosicaoX <= limiteBagMinX
-
+    transformaRaroLendarioPosicao := 0
+    transformaRaroLendario()
     return
+
 }
 
 transformaRaroLendarioVertical()
 {
 
-    validaResolucao()
-    MouseGetPos, mouseX, mouseY
+    transformaRaroLendarioPosicao := 1
+    transformaRaroLendario()
+    return
 
-    novaPosicaoX := mouseX
-    novaPosicaoY := mouseY
+}
 
-    loop
+transformaRaroLendario()
+{
+
+    if transformaRaroLendarioSituacao = 1
     {
-        SetMouseDelay, 10
-        MouseClick, Right, novaPosicaoX, novaPosicaoY
-        SetMouseDelay, 10
-        MouseClick, Left, preencherBotaoX, preencherBotaoY
-        SetMouseDelay, 10
-        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
-        Sleep, 3000
-        SetMouseDelay, 10
-        MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
-        Sleep, 1000
-        novaPosicaoY := NovaPosicaoY - limiteDiferencaY
-    
-    } until novaPosicaoY <= limiteBagMinY
+        validaResolucao()
+
+        MouseGetPos, mouseX, mouseY
+
+        novaPosicaoX := mouseX
+        novaPosicaoY := mouseY
+
+        SetTimer, transformaRaroLendarioTimer, 1000
+    }
+    else
+    {
+        SetTimer, transformaRaroLendarioTimer, Off
+    }
+
+    transformaRaroLendarioSituacao := transformaRaroLendarioSituacao * -1   
 
     return
 
+}
+
+transformaRaroLendarioTimer()
+{
+
+    Critical 
+    
+    SetMouseDelay, 10
+    MouseClick, Right, novaPosicaoX, novaPosicaoY
+    SetMouseDelay, 10
+    MouseClick, Left, preencherBotaoX, preencherBotaoY
+    SetMouseDelay, 10
+    MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
+    Sleep, 3000
+    SetMouseDelay, 10
+    MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
+    
+    if transformaRaroLendarioPosicao = 0 ; 0 = horizontal , 1 = vertical
+    {
+        novaPosicaoX := NovaPosicaoX - limiteDiferencaX
+    }
+    else
+    {
+        novaPosicaoY := NovaPosicaoY - limiteDiferencaY
+    }
+    
+    if (novaPosicaoX <= limiteBagMinX) or (novaPosicaoY <= limiteBagMinY)
+    {
+        SetTimer, transformaRaroLendarioTimer, Off
+        transformaRaroLendarioSituacao := 1
+    }
+    else
+    {
+        MouseMove, novaPosicaoX, novaPosicaoY
+    }
+
+    return
 }
 
 posicao()  
@@ -505,22 +578,22 @@ perfilAutomatico(perfilAcionado)
         tempo3 := Habilidade3TempoPerfil[perfilAutomaticoCarregado]
         tempo4 := Habilidade4TempoPerfil[perfilAutomaticoCarregado]
 
-        If (tempo1 >= 100) 
+        If (tempo1 >= 70) 
         {
             habilidade1()
             SetTimer, habilidade1, %tempo1%
         }
-        If (tempo2 >= 100) 
+        If (tempo2 >= 70) 
         {
             habilidade2()
             SetTimer, habilidade2, %tempo2%
         }
-        If (tempo3 >= 100) 
+        If (tempo3 >= 70) 
         {
             habilidade3()
             SetTimer, habilidade3, %tempo3%
         }
-        If (tempo4 >= 100) 
+        If (tempo4 >= 70) 
         {
             habilidade4()
             SetTimer, habilidade4, %tempo4%
@@ -571,7 +644,8 @@ teleporte()
 
 trocaWheelUpDownNecro()
 {
-
+    Critical
+    
     MouseGetPos, mouseX, mouseY
 
     SendInput, {Esc} ;menu do jogo
@@ -587,22 +661,22 @@ trocaWheelUpDownNecro()
     if trocaWheelUpDownNecroEstado = 1
     {
         SetMouseDelay, 10
-        MouseClick, Left, menuJogoHabilidade3Tecla1X, menuJogoHabilidade3Tecla1Y ; habilidade 3 - tecla 1
+        MouseClick, Left, menuJogoHabilidade4Tecla1X, menuJogoHabilidade4Tecla1Y ; habilidade 3 - tecla 1
         SendInput, {WheelUp} ;menu do jogo
 
         SetMouseDelay, 10
-        MouseClick, Left, menuJogoHabilidade3Tecla2X, menuJogoHabilidade3Tecla2Y ; habilidade 3 - tecla 2
+        MouseClick, Left, menuJogoHabilidade4Tecla2X, menuJogoHabilidade4Tecla2Y ; habilidade 3 - tecla 2
         SendInput, {WheelDown} ;menu do jogo
     }
     else
     {
         SetMouseDelay, 10
-        MouseClick, Left, menuJogoHabilidade3Tecla1X, menuJogoHabilidade3Tecla1Y ; habilidade 3 - tecla 1
-        SendInput, {XButton1} ;menu do jogo
+        MouseClick, Left, menuJogoHabilidade4Tecla1X, menuJogoHabilidade4Tecla1Y ; habilidade 3 - tecla 1
+        SendInput, {d} ;menu do jogo
 
         SetMouseDelay, 10
-        MouseClick, Left, menuJogoHabilidade3Tecla2X, menuJogoHabilidade3Tecla2Y ; habilidade 3 - tecla 2
-        SendInput, 3 ;menu do jogo
+        MouseClick, Left, menuJogoHabilidade4Tecla2X, menuJogoHabilidade4Tecla2Y ; habilidade 3 - tecla 2
+        SendInput, 4 ;menu do jogo
 
         SetMouseDelay, 10
         MouseClick, Left, menuJogoForcarMovimentoTecla1X, menuJogoForcarMovimentoTecla1Y ; forçar movimento - tecla 1
@@ -714,10 +788,10 @@ ajustaResolucao()
     menuJogoBarraRolagemArrastoY1 := format("{:u}", (360 * screenYRazao))
     menuJogoBarraRolagemArrastoX2 := format("{:u}", (1536 * screenXRazao))
     menuJogoBarraRolagemArrastoY2 := format("{:u}", (423 * screenYRazao))
-    menuJogoHabilidade3Tecla1X := format("{:u}", (1142 * screenXRazao))
-    menuJogoHabilidade3Tecla1Y := format("{:u}", (484 * screenYRazao))
-    menuJogoHabilidade3Tecla2X := format("{:u}", (1392 * screenXRazao))
-    menuJogoHabilidade3Tecla2Y := format("{:u}", (484 * screenYRazao))
+    menuJogoHabilidade4Tecla1X := format("{:u}", (1142 * screenXRazao))
+    menuJogoHabilidade4Tecla1Y := format("{:u}", (525 * screenYRazao))
+    menuJogoHabilidade4Tecla2X := format("{:u}", (1389 * screenXRazao))
+    menuJogoHabilidade4Tecla2Y := format("{:u}", (525 * screenYRazao))
     menuJogoForcarMovimentoTecla1X := format("{:u}", (1142 * screenXRazao))
     menuJogoForcarMovimentoTecla1Y := format("{:u}", (673 * screenYRazao))
     menuJogoForcarMovimentoTecla2X := format("{:u}", (1392 * screenXRazao))
@@ -735,7 +809,7 @@ carregaConfiguracao()
     RegRead, activateKeyHealth, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 02_AtalhoParagonVida
     RegRead, activateKeyTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 03_AtalhoKadala
     RegRead, activateKeyReciclaLendarioUM, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 04_AtalhoReciclaLendarioUM
-    RegRead, activateKeyTransformaRaroLendario, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 05_AtalhoTransformaRaroLendario
+    RegRead, activateKeyTransformaRaroLendarioHorizontal, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 05_AtalhoTransformaRaroLendario
     RegRead, activateKeyTransformaRaroLendarioVertical, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 06_AtalhoTransformaRaroLendarioVertical
 
     ;Parametros de configuração
@@ -797,6 +871,48 @@ carregaConfiguracao()
     Habilidade2TempoPerfil[4] := tempo2
     Habilidade3TempoPerfil[4] := tempo3
     Habilidade4TempoPerfil[4] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[5] := tempo1
+    Habilidade2TempoPerfil[5] := tempo2
+    Habilidade3TempoPerfil[5] := tempo3
+    Habilidade4TempoPerfil[5] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[6] := tempo1
+    Habilidade2TempoPerfil[6] := tempo2
+    Habilidade3TempoPerfil[6] := tempo3
+    Habilidade4TempoPerfil[6] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[7] := tempo1
+    Habilidade2TempoPerfil[7] := tempo2
+    Habilidade3TempoPerfil[7] := tempo3
+    Habilidade4TempoPerfil[7] := tempo4
+
+    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 01_Habilidade1Tempo
+    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 02_Habilidade2Tempo
+    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 03_Habilidade3Tempo
+    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 04_Habilidade4Tempo
+
+    Habilidade1TempoPerfil[8] := tempo1
+    Habilidade2TempoPerfil[8] := tempo2
+    Habilidade3TempoPerfil[8] := tempo3
+    Habilidade4TempoPerfil[8] := tempo4
+
+
 
     return
 

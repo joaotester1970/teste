@@ -29,10 +29,10 @@ Global habilitadeAutomatica2Estado, habilitadeAutomatica2Estado := 1
 Global habilitadeAutomatica3Estado, habilitadeAutomatica3Estado := 1
 Global habilitadeAutomatica4Estado, habilitadeAutomatica4Estado := 1
 
-Global Habilidade1TempoPerfil, Habilidade1TempoPerfil := Array(0,0,0,0,0,0,0,0)
-Global Habilidade2TempoPerfil, Habilidade2TempoPerfil := Array(0,0,0,0,0,0,0,0)
-Global Habilidade3TempoPerfil, Habilidade3TempoPerfil := Array(0,0,0,0,0,0,0,0)
-Global Habilidade4TempoPerfil, Habilidade4TempoPerfil := Array(0,0,0,0,0,0,0,0)
+Global Habilidade1TempoPerfil, Habilidade1TempoPerfil := Array(0,0,0,0)
+Global Habilidade2TempoPerfil, Habilidade2TempoPerfil := Array(0,0,0,0)
+Global Habilidade3TempoPerfil, Habilidade3TempoPerfil := Array(0,0,0,0)
+Global Habilidade4TempoPerfil, Habilidade4TempoPerfil := Array(0,0,0,0)
 
 Global perfilAutomaticoEstado, perfilAutomaticoEstado := 1
 Global perfilAutomaticoCarregado, perfilAutomaticoCarregado := 1
@@ -128,10 +128,6 @@ Perfil Automatizado 1 = Control+F1
 Perfil Automatizado 2 = Control+F2
 Perfil Automatizado 3 = Control+F3
 Perfil Automatizado 4 = Control+F4
-Perfil Automatizado 5 = Control+Shift+F1
-Perfil Automatizado 6 = Control+Shift+F2
-Perfil Automatizado 7 = Control+Shift+F3
-Perfil Automatizado 8 = Control+Shift+F4
 
 ),3
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
@@ -157,10 +153,6 @@ Hotkey, ^F1, perfilAutomatico1
 Hotkey, ^F2, perfilAutomatico2
 Hotkey, ^F3, perfilAutomatico3
 Hotkey, ^F4, perfilAutomatico4
-Hotkey, +^F1, perfilAutomatico5
-Hotkey, +^F2, perfilAutomatico6
-Hotkey, +^F3, perfilAutomatico7
-Hotkey, +^F4, perfilAutomatico8
 ;Hotkey, #F12, forcarMovimento
 Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
@@ -189,23 +181,6 @@ perfilAutomatico4()
 {
     perfilAutomatico(4)
 }
-perfilAutomatico5()
-{
-    perfilAutomatico(5)
-}
-perfilAutomatico6()
-{
-    perfilAutomatico(6)
-}
-perfilAutomatico7()
-{
-    perfilAutomatico(7)
-}
-perfilAutomatico8()
-{
-    perfilAutomatico(8)
-}
-
 
 trocaParagonDamage() ; script to change paragon for dealing damage
 {
@@ -871,48 +846,6 @@ carregaConfiguracao()
     Habilidade2TempoPerfil[4] := tempo2
     Habilidade3TempoPerfil[4] := tempo3
     Habilidade4TempoPerfil[4] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[5] := tempo1
-    Habilidade2TempoPerfil[5] := tempo2
-    Habilidade3TempoPerfil[5] := tempo3
-    Habilidade4TempoPerfil[5] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[6] := tempo1
-    Habilidade2TempoPerfil[6] := tempo2
-    Habilidade3TempoPerfil[6] := tempo3
-    Habilidade4TempoPerfil[6] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[7] := tempo1
-    Habilidade2TempoPerfil[7] := tempo2
-    Habilidade3TempoPerfil[7] := tempo3
-    Habilidade4TempoPerfil[7] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[8] := tempo1
-    Habilidade2TempoPerfil[8] := tempo2
-    Habilidade3TempoPerfil[8] := tempo3
-    Habilidade4TempoPerfil[8] := tempo4
-
-
 
     return
 

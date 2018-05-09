@@ -8,6 +8,10 @@ reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil1 /f
 reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil2 /f
 reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil3 /f
 reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil4 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil5 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil6 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil7 /f
+reg delete HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil8 /f
 
 reg add HKCU\Software\DiabloAuto /f
 reg add HKCU\Software\DiabloAuto\01_Atalhos /f
@@ -19,3 +23,7 @@ reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil1 /f
 reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil2 /f
 reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil3 /f
 reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil4 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil5 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil6 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil7 /f
+reg add HKCU\Software\DiabloAuto\05_PerfilTemporizado\Perfil8 /f
