@@ -1,14 +1,6 @@
 ﻿global screenSizeX
 global screenSizeY
 
-global activateKeyParagon
-global activateKeyDamage
-global activateKeyHealth
-global activateKeyTrocaKadala
-global activateKeyReciclaLendarioUM
-global activateKeyTransformaRaroLendarioHorizontal
-global activateKeyTransformaRaroLendarioVertical
-
 global quantTrocaKadala
 global latency1
 global latency2
@@ -29,6 +21,7 @@ Global habilitadeAutomatica2Estado, habilitadeAutomatica2Estado := 1
 Global habilitadeAutomatica3Estado, habilitadeAutomatica3Estado := 1
 Global habilitadeAutomatica4Estado, habilitadeAutomatica4Estado := 1
 
+Global NomePerfil, NomePerfil := Array("","","","","","","","")
 Global Habilidade1TempoPerfil, Habilidade1TempoPerfil := Array(0,0,0,0,0,0,0,0)
 Global Habilidade2TempoPerfil, Habilidade2TempoPerfil := Array(0,0,0,0,0,0,0,0)
 Global Habilidade3TempoPerfil, Habilidade3TempoPerfil := Array(0,0,0,0,0,0,0,0)
@@ -111,9 +104,9 @@ IfWinActive, Diablo III
 }
 else 
 {
-    run reg import %A_ScriptDir%\Config.reg
+    ;run reg import %A_ScriptDir%\Config.reg
 
-    Sleep, 2000
+    ;Sleep, 2000
 
     MsgBox, 0,,
     (
@@ -121,14 +114,16 @@ else
     Tamanho da tela = %screenSizeX% x %screenSizeY%
     Latencia 1 = %latency1%
     Latencia 2 = %latency2%
+    
+    Atalho Reload = Control+Shift+R
 
-    Atalho Modo Dano = %activateKeyDamage%
-    Atalho Modo Vida = %activateKeyHealth%
+    Atalho Modo Dano = F8
+    Atalho Modo Vida = F7
     Atalho Paragon = %activateKeyParagon%
     Atalho Troca Kadala = %activateKeyTrocaKadala%
-    Atalho ReciclaUM = %activateKeyReciclaLendarioUM%
-    Atalho Transforma Raro Lendário (direta para esquerda)= %activateKeyTransformaRaroLendarioHorizontal%
-    Atalho Transforma Raro Lendário (baixo para cima)= %activateKeyTransformaRaroLendarioVertical%
+    Atalho ReciclaUM = F6
+    Atalho Transforma Raro Lendário (direta para esquerda)= F11
+    Atalho Transforma Raro Lendário (baixo para cima)= Control+F11
 
     Troca Kadala quantidade = %quantTrocaKadala%
 
@@ -155,13 +150,13 @@ SetDefaultMouseSpeed, 0 ; mouse moves faster
 Hotkey, ^+r, recarregar
 
 Hotkey, IfWinActive, Diablo III
-Hotkey, %activateKeyDamage%, trocaParagonDamage ; starts damage script
-Hotkey, %activateKeyHealth%, trocaParagonHealth ; starts health script1
-Hotkey, %activateKeyTrocaKadala%, kadala
-Hotkey, %activateKeyReciclaLendarioUM%, reciclaUM
-Hotkey, ^%activateKeyReciclaLendarioUM%, reciclaLinha
-Hotkey, %activateKeyTransformaRaroLendarioHorizontal%, transformaRaroLendarioHorizontal
-Hotkey, %activateKeyTransformaRaroLendarioVertical%, transformaRaroLendarioVertical
+Hotkey, F8, trocaParagonDamage ; starts damage script
+Hotkey, F7, trocaParagonHealth ; starts health script1
+Hotkey, F5, kadala
+Hotkey, F6, reciclaUM
+Hotkey, ^F6, reciclaLinha
+Hotkey, F11, transformaRaroLendarioHorizontal
+Hotkey, ^F11, transformaRaroLendarioVertical
 Hotkey, F1, habilidadeAutomatica1
 Hotkey, F2, habilidadeAutomatica2
 Hotkey, F3, habilidadeAutomatica3
@@ -861,113 +856,247 @@ ajustaResolucao()
 
 carregaConfiguracao()
 {
-    ;Parametros de atalho
-    RegRead, activateKeyDamage, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 01_AtalhoParagonDano
-    RegRead, activateKeyHealth, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 02_AtalhoParagonVida
-    RegRead, activateKeyTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 03_AtalhoKadala
-    RegRead, activateKeyReciclaLendarioUM, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 04_AtalhoReciclaLendarioUM
-    RegRead, activateKeyTransformaRaroLendarioHorizontal, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 05_AtalhoTransformaRaroLendario
-    RegRead, activateKeyTransformaRaroLendarioVertical, HKEY_CURRENT_USER\Software\DiabloAuto\01_Atalhos, 06_AtalhoTransformaRaroLendarioVertical
+    ;Parametros de configuração
+
+    RegRead, latency1, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 01_LatenciaPainelParagon
+    if latency1 is integer
+    {
+        migraConfigVelha()
+    }
 
     ;Parametros de configuração
-    RegRead, latency1, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 01_LatenciaPainelParagon
-    RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
-    RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
-    RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 04_QuantTrocaKadala
-    RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 05_ResolucaoX
-    RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 06_ResolucaoY
+    RegRead, latency1, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon
+    if latency1 is not integer
+    {
+        latency1 = 100
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon, %latency1%
+    }
+    
+    RegRead, latency2, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick
+    if latency2 is not integer
+    {
+        latency2 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick, %latency2%
+    }
+    
+    RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon
+    if activateKeyParagon is space
+    {
+        activateKeyParagon := "p"
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %activateKeyParagon%
+    }
 
+    RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala
+    if quantTrocaKadala is not integer
+    {
+        quantTrocaKadala = 30
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala, %quantTrocaKadala%
+    }
+
+    RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoX
+    if screenSizeRegX is not integer
+    {
+        screenSizeRegX = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoX, %screenSizeRegX%
+    }
+
+    RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY
+        if screenSizeRegY is not integer
+    {
+        screenSizeRegY = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY, %screenSizeRegY%
+    }
+
+;-----------------------------
+    ;Parametros de Paragon Dano
+    RegRead, stat1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo
+    if stat1 is not integer
+    {
+        stat1 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo, %stat1%
+    }
+    
+    RegRead, vit1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade
+    if vit1 is not integer
+    {
+        vit1 = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade, %vit1%
+    }
+    
+    RegRead, speed1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade
+    if speed1 is not integer
+    {
+        speed1 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade, %speed1%
+    }
+    
+    RegRead, resource1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoRecurso
+    if resource1 is not integer
+    {
+        resource1 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoRecurso, %resource1%
+    }
+
+;-----------------------------
+    ;Parametros de Paragon Vida
+    
+    RegRead, stat2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo
+    if stat2 is not integer
+    {
+        stat2 = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo, %stat2%
+    }
+    
+    RegRead, vit2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade
+    if vit2 is not integer
+    {
+        vit2 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade, %vit2%
+    }
+    
+    RegRead, speed2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade
+    if speed2 is not integer
+    {
+        speed2 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade, %speed2%
+    }
+    
+    RegRead, resource2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaRecurso
+    if resource2 is not integer
+    {
+        resource2 = 1
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaRecurso, %resource2%
+    }
+
+;-----------------
+    ;Perfil temporizado
+
+    loop, 8
+    {
+        chaveRegistry := "HKEY_CURRENT_USER\Software\BD3Auto\PerfilTemporizado\Perfil" . A_Index
+        RegRead, nome, %chaveRegistry%, Nome
+        if nome is space
+        {
+            nome = "XXXXX"
+            RegWrite, REG_SZ, %chaveRegistry%, Nome, %nome%
+        }
+
+        RegRead, tempo1, %chaveRegistry%, Habilidade1Tempo
+        if tempo1 is not integer
+        {
+            tempo1 = 0
+            RegWrite, REG_SZ, %chaveRegistry%, Habilidade1Tempo, %tempo1%
+        }
+        
+        RegRead, tempo2, %chaveRegistry%, Habilidade2Tempo
+        if tempo2 is not integer
+        {
+            tempo2 = 0
+            RegWrite, REG_SZ, %chaveRegistry%, Habilidade2Tempo, %tempo2%
+        }
+        
+        RegRead, tempo3, %chaveRegistry%, Habilidade3Tempo
+        if tempo3 is not integer
+        {
+            tempo3 = 0
+            RegWrite, REG_SZ, %chaveRegistry%, Habilidade3Tempo, %tempo3%
+        }
+        
+        RegRead, tempo4, %chaveRegistry%, Habilidade4Tempo
+        if tempo4 is not integer
+        {
+            tempo4 = 0
+            RegWrite, REG_SZ, %chaveRegistry%, Habilidade4Tempo, %tempo4%
+        }
+        
+        NomePerfil[A_Index] := nome
+        Habilidade1TempoPerfil[A_Index] := tempo1
+        Habilidade2TempoPerfil[A_Index] := tempo2
+        Habilidade3TempoPerfil[A_Index] := tempo3
+        Habilidade4TempoPerfil[A_Index] := tempo4
+
+        
+        
+    }
+
+    return
+
+}
+
+migraConfigVelha()
+{
+
+    RegRead, latency1, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 01_LatenciaPainelParagon
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon, %latency1%
+    
+    RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick, %latency2%
+
+    RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %activateKeyParagon%
+
+    RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 04_QuantTrocaKadala
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala, %quantTrocaKadala%
+
+    RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 05_ResolucaoX
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoX, %screenSizeRegX%
+
+    RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 06_ResolucaoY
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY, %screenSizeRegY%
+
+;-----------------------------
     ;Parametros de Paragon Dano
     RegRead, stat1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 01_ParagonDanoAtributo
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo, %stat1%
+    
     RegRead, vit1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 02_ParagonDanoVitalidade
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade, %vit1%
+
     RegRead, speed1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 03_ParagonDanoVelocidade
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade, %speed1%
+    
     RegRead, resource1, HKEY_CURRENT_USER\Software\DiabloAuto\03_ParagonDano, 04_ParagonDanoRecurso
-
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoRecurso, %resource1%
+    
+;-----------------------------
     ;Parametros de Paragon Vida
+    
     RegRead, stat2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 01_ParagonVidaAtributo
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo, %stat2%
+    
     RegRead, vit2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 02_ParagonVidaVitalidade
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade, %vit2%
+
     RegRead, speed2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 03_ParagonVidaVelocidade
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade, %speed2%
+    
     RegRead, resource2, HKEY_CURRENT_USER\Software\DiabloAuto\04_ParagonVida, 04_ParagonVidaRecurso
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaRecurso, %resource2%
 
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil1, 04_Habilidade4Tempo
+;-----------------
+    ;Perfil temporizado
 
-    Habilidade1TempoPerfil[1] := tempo1
-    Habilidade2TempoPerfil[1] := tempo2
-    Habilidade3TempoPerfil[1] := tempo3
-    Habilidade4TempoPerfil[1] := tempo4
+    loop, 8
+    {
+        chaveRegistry1 := "HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil" . A_Index
+        chaveRegistry2 := "HKEY_CURRENT_USER\Software\BD3Auto\PerfilTemporizado\Perfil" . A_Index
+        RegRead, nome, %chaveRegistry1%, 00_Nome
+        RegWrite, REG_SZ, %chaveRegistry2%, Nome, %nome%
 
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil2, 04_Habilidade4Tempo
+        RegRead, tempo1, %chaveRegistry1%, 01_Habilidade1Tempo
+        RegWrite, REG_SZ, %chaveRegistry2%, Habilidade1Tempo, %tempo1%
+        
+        RegRead, tempo2, %chaveRegistry1%, 02_Habilidade2Tempo
+        RegWrite, REG_SZ, %chaveRegistry2%, Habilidade2Tempo, %tempo2%
+        
+        RegRead, tempo3, %chaveRegistry1%, 03_Habilidade3Tempo
+        RegWrite, REG_SZ, %chaveRegistry2%, Habilidade3Tempo, %tempo3%
+        
+        RegRead, tempo4, %chaveRegistry1%, 04_Habilidade4Tempo
+        RegWrite, REG_SZ, %chaveRegistry2%, Habilidade4Tempo, %tempo4%
+    }
 
-    Habilidade1TempoPerfil[2] := tempo1
-    Habilidade2TempoPerfil[2] := tempo2
-    Habilidade3TempoPerfil[2] := tempo3
-    Habilidade4TempoPerfil[2] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil3, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[3] := tempo1
-    Habilidade2TempoPerfil[3] := tempo2
-    Habilidade3TempoPerfil[3] := tempo3
-    Habilidade4TempoPerfil[3] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil4, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[4] := tempo1
-    Habilidade2TempoPerfil[4] := tempo2
-    Habilidade3TempoPerfil[4] := tempo3
-    Habilidade4TempoPerfil[4] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil5, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[5] := tempo1
-    Habilidade2TempoPerfil[5] := tempo2
-    Habilidade3TempoPerfil[5] := tempo3
-    Habilidade4TempoPerfil[5] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil6, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[6] := tempo1
-    Habilidade2TempoPerfil[6] := tempo2
-    Habilidade3TempoPerfil[6] := tempo3
-    Habilidade4TempoPerfil[6] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil7, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[7] := tempo1
-    Habilidade2TempoPerfil[7] := tempo2
-    Habilidade3TempoPerfil[7] := tempo3
-    Habilidade4TempoPerfil[7] := tempo4
-
-    RegRead, tempo1, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 01_Habilidade1Tempo
-    RegRead, tempo2, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 02_Habilidade2Tempo
-    RegRead, tempo3, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 03_Habilidade3Tempo
-    RegRead, tempo4, HKEY_CURRENT_USER\Software\DiabloAuto\05_PerfilTemporizado\Perfil8, 04_Habilidade4Tempo
-
-    Habilidade1TempoPerfil[8] := tempo1
-    Habilidade2TempoPerfil[8] := tempo2
-    Habilidade3TempoPerfil[8] := tempo3
-    Habilidade4TempoPerfil[8] := tempo4
+    run reg delete HKCU\Software\DiabloAuto /f
 
     return
 
