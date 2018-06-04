@@ -84,6 +84,9 @@ Global menuJogoForcarMovimentoTecla2Y
 Global menuJogoAceitarX
 Global menuJogoAceitarY
 
+Global posicaoCentralX
+Global posicaoCentralY
+
 Global novaPosicaoX
 Global novaPosicaoY
 
@@ -94,48 +97,58 @@ CoordMode, Mouse, Window
 
 Thread, NoTimers
 
-run reg import %A_ScriptDir%\config.reg
-
-Sleep, 2000
-
 carregaConfiguracao()
 
 validaResolucao()
 
-MsgBox, 0,,
-(
-Settings:
-Tamanho da tela = %screenSizeX% x %screenSizeY%
-Latencia 1 = %latency1%
-Latencia 2 = %latency2%
+IfWinActive, Diablo III
+{
+    ;WinActivate, Diablo III
 
-Atalho Modo Dano = %activateKeyDamage%
-Atalho Modo Vida = %activateKeyHealth%
-Atalho Paragon = %activateKeyParagon%
-Atalho Troca Kadala = %activateKeyTrocaKadala%
-Atalho ReciclaUM = %activateKeyReciclaLendarioUM%
-Atalho Transforma Raro Lendário (direta para esquerda)= %activateKeyTransformaRaroLendarioHorizontal%
-Atalho Transforma Raro Lendário (baixo para cima)= %activateKeyTransformaRaroLendarioVertical%
+    SendInput, {Enter} ;menu do jogo
+    SendInput, r ;menu do jogo
+    SendInput, {Enter} ;menu do jogo
+}
+else 
+{
+    run reg import %A_ScriptDir%\Config.reg
 
-Troca Kadala quantidade = %quantTrocaKadala%
+    Sleep, 2000
 
-AutoCast Habilidade 1 = F1
-AutoCast Habilidade 2 = F2
-AutoCast Habilidade 3 = F3
-AutoCast Habilidade 4 = F4
+    MsgBox, 0,,
+    (
+    Settings:
+    Tamanho da tela = %screenSizeX% x %screenSizeY%
+    Latencia 1 = %latency1%
+    Latencia 2 = %latency2%
 
-Perfil Automatizado 1 = Control+F1
-Perfil Automatizado 2 = Control+F2
-Perfil Automatizado 3 = Control+F3
-Perfil Automatizado 4 = Control+F4
-Perfil Automatizado 5 = Control+Shift+F1
-Perfil Automatizado 6 = Control+Shift+F2
-Perfil Automatizado 7 = Control+Shift+F3
-Perfil Automatizado 8 = Control+Shift+F4
+    Atalho Modo Dano = %activateKeyDamage%
+    Atalho Modo Vida = %activateKeyHealth%
+    Atalho Paragon = %activateKeyParagon%
+    Atalho Troca Kadala = %activateKeyTrocaKadala%
+    Atalho ReciclaUM = %activateKeyReciclaLendarioUM%
+    Atalho Transforma Raro Lendário (direta para esquerda)= %activateKeyTransformaRaroLendarioHorizontal%
+    Atalho Transforma Raro Lendário (baixo para cima)= %activateKeyTransformaRaroLendarioVertical%
 
-),3
+    Troca Kadala quantidade = %quantTrocaKadala%
+
+    AutoCast Habilidade 1 = F1
+    AutoCast Habilidade 2 = F2
+    AutoCast Habilidade 3 = F3
+    AutoCast Habilidade 4 = F4
+
+    Perfil Automatizado 1 = Control+F1
+    Perfil Automatizado 2 = Control+F2
+    Perfil Automatizado 3 = Control+F3
+    Perfil Automatizado 4 = Control+F4
+    Perfil Automatizado 5 = Control+Shift+F1
+    Perfil Automatizado 6 = Control+Shift+F2
+    Perfil Automatizado 7 = Control+Shift+F3
+    Perfil Automatizado 8 = Control+Shift+F4
+
+    ),3
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
-
+}
 SetDefaultMouseSpeed, 0 ; mouse moves faster
 
 
@@ -165,6 +178,7 @@ Hotkey, +^F4, perfilAutomatico8
 Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
 Hotkey, +F12, trocaWheelUpDownNecro
+Hotkey, ^+F12, verificaDistancia
 Hotkey, ^t, teleporte
 
 recarregar()
@@ -642,6 +656,48 @@ teleporte()
     Send, t{Enter}
 }
 
+verificaDistancia()
+{
+    MouseGetPos, mouseX, mouseY
+
+    lateral1 := posicaoCentralX - mouseX
+    lateral2 := posicaoCentralY - mouseY
+
+    if lateral1 < 0 and lateral2 >= 0 ; quadrante A
+    {
+        relacaoPixelMetro := 11.08108
+    }
+    else if lateral1 < 0 and lateral2 < 0 ; quadrante B
+    {
+        relacaoPixelMetro := 15.72972
+    }
+    else if lateral1 >= 0 and lateral2 < 0 ; quadrante C
+    {
+        relacaoPixelMetro := 15.72972
+    }
+    else  ; quadrante D
+    {
+        relacaoPixelMetro := 11.08108
+    }
+
+    if lateral1 < 0 
+        lateral1 := lateral1 * -1
+
+    if lateral2 < 0 
+        lateral2 := lateral2 * -1
+
+    distancia := Sqrt((lateral1**2)+(lateral2**2))
+    
+    distancia := Round((distancia / relacaoPixelMetro), 2)
+
+    SendInput, {Enter} ;menu do jogo
+    SendInput, %distancia% ;menu do jogo
+    SendInput, {Enter} ;menu do jogo
+
+
+    ;MouseMove, posicaoCentralX, posicaoCentralY
+}
+
 trocaWheelUpDownNecro()
 {
     Critical
@@ -650,7 +706,7 @@ trocaWheelUpDownNecro()
 
     SendInput, {Esc} ;menu do jogo
 
-    SetMouseDelay, 10
+    SetMouseDelay, 50
     MouseClick, Left, menuJogoOpcoesX, menuJogoOpcoesY ; menu opções
 
     SetMouseDelay, 10
@@ -716,7 +772,6 @@ validaCor()
     {
         FileAppend, %mouseX%;%mouseY%;%saidaX%;%saidaY%;amarelo`n, %arquivoSaida%
     }
-	
 
     return
 }
@@ -741,7 +796,6 @@ validaResolucao()
         screenSizeX := novascreenSizeX
         screenSizeY := novascreenSizeY
         ajustaResolucao()
-
     }
 
     return   
@@ -798,6 +852,9 @@ ajustaResolucao()
     menuJogoForcarMovimentoTecla2Y := format("{:u}", (673 * screenYRazao))
     menuJogoAceitarX := format("{:u}", (1239 * screenXRazao))
     menuJogoAceitarY := format("{:u}", (867 * screenYRazao))
+
+    posicaoCentralX := format("{:u}", (960 * screenXRazao))
+    posicaoCentralY := format("{:u}", (507 * screenYRazao))
 
     return
 }
@@ -911,8 +968,6 @@ carregaConfiguracao()
     Habilidade2TempoPerfil[8] := tempo2
     Habilidade3TempoPerfil[8] := tempo3
     Habilidade4TempoPerfil[8] := tempo4
-
-
 
     return
 

@@ -1,10 +1,15 @@
-﻿#NoEnv
+﻿;$r::send, r
+;na frente da tecla não deixa ela executar recursivamente.
+
+#NoEnv
 #SingleInstance Force
 SetWorkingDir %A_ScriptDir%
 
 global screenSizeX
 global screenSizeY
 
+global atalhoParagonDano
+global atalhoParagonVida
 global latency1
 global latency2
 global activateKeyParagon
@@ -126,6 +131,11 @@ Global menuJogoAceitarY
 Global posicaoCentralX
 Global posicaoCentralY
 
+Global MyText
+Global angulo
+Global distanciaMetros
+Global distanciaPixel
+
 Global novaPosicaoX
 Global novaPosicaoY
 
@@ -139,6 +149,7 @@ Thread, NoTimers
 carregaConfiguracao()
 
 criaJanelaConfiguracao()
+;criaTransparencia()
 
 validaResolucao()
 
@@ -165,10 +176,11 @@ SetDefaultMouseSpeed, 0 ; mouse moves faster
 
 Hotkey, ^+r, recarregar
 Hotkey, ^+c, abreJanelaConfiguracao
+Hotkey, F12, posicao
 
 Hotkey, IfWinActive, Diablo III
-Hotkey, F8, trocaParagonDamage ; starts damage script
-Hotkey, F7, trocaParagonHealth ; starts health script1
+Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
+Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
 Hotkey, F5, kadala
 Hotkey, F6, reciclaUM
 Hotkey, ^F6, reciclaLinha
@@ -187,11 +199,10 @@ Hotkey, +^F2, perfilAutomatico6
 Hotkey, +^F3, perfilAutomatico7
 Hotkey, +^F4, perfilAutomatico8
 ;Hotkey, #F12, forcarMovimento
-Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
 Hotkey, +F12, trocaWheelUpDownNecro
-Hotkey, ^+F12, verificaDistancia
 Hotkey, ^t, teleporte
+Hotkey, ^+d, verificaDistancia
 
 recarregar()
 {
@@ -232,7 +243,7 @@ perfilAutomatico8()
     perfilAutomatico(8)
 }
 
-trocaParagonDamage() ; script to change paragon for dealing damage
+trocaParagonDano() ; script to change paragon for dealing damage
 {
 
     Critical
@@ -286,7 +297,7 @@ trocaParagonDamage() ; script to change paragon for dealing damage
 
 }
 
-trocaParagonHealth() ; script to change paragon for staying alive
+trocaParagonVida() ; script to change paragon for staying alive
 {
     Critical
     
@@ -571,9 +582,9 @@ posicao()
 
     MouseGetPos, mouseX, mouseY
     
-    PixelGetColor cor, %mouseX%, %mouseY%, RGB
+    ;PixelGetColor cor, %mouseX%, %mouseY%, RGB
 
-	FileAppend, %mouseX%;%mouseY%;%cor%`n, %arquivoSaida%
+	FileAppend, %mouseX%%A_Tab%%mouseY%`n, %arquivoSaida%
 
     return
 
@@ -669,44 +680,177 @@ teleporte()
 
 verificaDistancia()
 {
-    MouseGetPos, mouseX, mouseY
 
+; quadrantes a (-,+) b (-,-) c (+,-) d(+,+)
+    algulo := 0
+    
+    ;verificar influência dos angulos retos, 90,180,270 e 360
+    
+    MouseGetPos, mouseX, mouseY
+    
     lateral1 := posicaoCentralX - mouseX
     lateral2 := posicaoCentralY - mouseY
+    
+    if lateral1 = 0
+        lateral1 := 1
+    
+    if lateral2 = 0
+        lateral2 := 1
 
-    if lateral1 < 0 and lateral2 >= 0 ; quadrante A
+    if (lateral1 < 0 and lateral2 > 0) ; quadrante A
     {
-        relacaoPixelMetro := 11.08108
+        lateral1 := lateral1 * -1
+        angulo := (atan(lateral1/lateral2))*(180/3.1415)
     }
-    else if lateral1 < 0 and lateral2 < 0 ; quadrante B
+    else if (lateral1 < 0 and lateral2 < 0) ; quadrante B
     {
-        relacaoPixelMetro := 15.72972
+        lateral1 := lateral1 * -1
+        lateral2 := lateral2 * -1
+        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        angulo := (90 - angulo) + 90
+
     }
-    else if lateral1 >= 0 and lateral2 < 0 ; quadrante C
+    else if (lateral1 > 0 and lateral2 < 0) ; quadrante C
     {
-        relacaoPixelMetro := 15.72972
+        lateral2 := lateral2 * -1
+        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        angulo := 180 + angulo
+        
     }
     else  ; quadrante D
     {
-        relacaoPixelMetro := 11.08108
+        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        angulo := (90 - angulo) + 270
+    }
+    
+    ;se(c10<0 and d10>=0;i10;se(c10<0 and d10<0;(90-i10)+90;se(c10>=0 and d10<0;(180+i10);(90-i10)+270)))
+    
+    angulo := Round(angulo, 0)
+    distanciaPixel := Round((Sqrt((lateral1**2)+(lateral2**2))),2)
+
+    if (((angulo >= 355) and (angulo <= 360)) or ((angulo >= 0 and angulo <= 5)))
+    {
+        razao := 1.000862227
+        a1 := 0.074744489
+        entrei := "0"
+    } else if angulo between 6 and 28
+    {
+        razao := 1.000820748
+        a1 := 0.071666463
+        entrei := "6"
+    } else if angulo between 29 and 56
+    {
+        razao := 1.000575566
+        a1 := 0.064607276
+        entrei := "29"
+    } else if angulo between 57 and 74
+    {
+        razao := 1.000341841
+        a1 := 0.055382556
+        entrei := "57"
+    } else if angulo between 75 and 85
+    {
+        razao := 1.000101173
+        a1 := 0.05099126
+        entrei := "75"
+    } else if angulo between 86 and 94
+    {
+        razao := 0.999958238
+        a1 := 0.050627995
+        entrei := "86"
+    } else if angulo between 95 and 106 
+    {
+        razao := 0.999913011
+        a1 := 0.050239308
+        entrei := "95"
+    } else if angulo between 107 and 124 
+    {
+        razao := 0.99970338
+        a1 := 0.054630864
+        entrei := "107"
+    } else if angulo between 125 and 151 
+    {
+        razao := 0.999493875
+        a1 := 0.06357635
+        entrei := "125"
+    } else if angulo between 152 and 175 
+    {
+        razao := 0.999347218
+        a1 := 0.071811604
+        entrei := "152"
+    } else if angulo between 176 and 184 
+    {
+        razao := 0.999353989
+        a1 := 0.072159024
+        entrei := "176"
+    } else if angulo between 185 and 209 
+    {
+        razao := 0.999423657
+        a1 := 0.069145613
+        entrei := "185"
+    } else if angulo between 210 and 237 
+    {
+        razao := 0.999541615
+        a1 := 0.060606472
+        entrei := "210"
+    } else if angulo between 238 and 254 
+    {
+        razao := 0.999736411
+        a1 := 0.051747492
+        entrei := "238"
+    } else if angulo between 255 and 265 
+    {
+        razao := 0.999918171
+        a1 := 0.047627823
+        entrei := "255"
+    } else if angulo between 266 and 274 
+    {
+        razao := 1.000058185
+        a1 := 0.046307554
+        entrei := "266"
+    } else if angulo between 275 and 286 
+    {
+        razao := 1.000163669
+        a1 := 0.047010321
+        entrei := "275"
+    } else if angulo between 287 and 304 
+    {
+        razao := 1.000323095
+        a1 := 0.05231339
+        entrei := "287"
+    } else if angulo between 305 and 331 
+    {
+        razao := 1.000684458
+        a1 := 0.059377953
+        entrei := "305"
+    } else if angulo between 332 and 354 
+    {
+        razao := 1.000841902
+        a1 := 0.069798028
+        entrei := "332"
+    } else
+    {
+        razao := 0
+        a1 := 0
+        entrei := "vazio"
     }
 
-    if lateral1 < 0 
-        lateral1 := lateral1 * -1
-
-    if lateral2 < 0 
-        lateral2 := lateral2 * -1
-
-    distancia := Sqrt((lateral1**2)+(lateral2**2))
-    
-    distancia := Round((distancia / relacaoPixelMetro), 2)
+    distanciaMetros := Round(((a1*(razao**(distanciaPixel-1)))*distanciaPixel),0)
 
     SendInput, {Enter} ;menu do jogo
-    SendInput, %distancia% ;menu do jogo
+    SendInput, %distanciaMetros%m ;menu do jogo
     SendInput, {Enter} ;menu do jogo
 
+    ;GuiControl,, MyText, %entrei% - %angulo%o - %distanciaMetros%m - %distanciaPixel%
 
-    ;MouseMove, posicaoCentralX, posicaoCentralY
+
+;    MsgBox, 0,,
+;(
+;%angulo%o, %distanciaMetros%m, %entrei%
+;),2
+
+    return
+
 }
 
 trocaWheelUpDownNecro()
@@ -733,7 +877,7 @@ trocaWheelUpDownNecro()
 
         SetMouseDelay, 10
         MouseClick, Left, menuJogoHabilidade4Tecla2X, menuJogoHabilidade4Tecla2Y ; habilidade 3 - tecla 2
-        SendInput, {WheelDown} ;menu do jogo
+        SendInput, 4 ;menu do jogo
     }
     else
     {
@@ -925,6 +1069,14 @@ carregaConfiguracao()
 
 ;-----------------------------
     ;Parametros de Paragon Dano
+
+    RegRead, atalhoParagonDano, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano
+    if atalhoParagonDano is space
+    {
+        atalhoParagonDano = F8
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
+    }
+
     RegRead, stat1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo
     if stat1 is not integer
     {
@@ -956,6 +1108,13 @@ carregaConfiguracao()
 ;-----------------------------
     ;Parametros de Paragon Vida
     
+    RegRead, atalhoParagonVida, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida
+    if atalhoParagonVida is space
+    {
+        atalhoParagonVida = F7
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
+    }
+
     RegRead, stat2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo
     if stat2 is not integer
     {
@@ -1049,6 +1208,7 @@ gravaConfiguracao()
 
 ;-----------------------------
     ;Parametros de Paragon Dano
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo, %stat1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade, %vit1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade, %speed1%
@@ -1056,7 +1216,8 @@ gravaConfiguracao()
     
 ;-----------------------------
     ;Parametros de Paragon Vida
-    
+
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo, %stat2%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade, %vit2%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade, %speed2%
@@ -1167,17 +1328,18 @@ migraConfigVelha()
 criaJanelaConfiguracao()
 {
 
+    ;Gui, Configurações: New,, Configurações
     Gui Add, Tab3, x10 y10 w350 h250, Ajuda|Configurações||Paragon|Perfil Auto 1|Perfil Auto 2|Perfil Auto 3|Perfil Auto 4|Perfil Auto 5|Perfil Auto 6|Perfil Auto 7|Perfil Auto 8
 
     Gui, Tab, 1
-    Gui, Add, Text, x50 y90, Control+Shift+R (Reload)  /  Control+Shift+C (Configuração)
-    Gui, Add, Text, x50 y110, F7 (Modo Vida)  /  F8 (Modo Dano) 
-    Gui, Add, Text, x50 y130, F5 (Troca Itens Kadala)  /  F6 (Recicla Item)
-    Gui, Add, Text, x50 y150, F11 (Transforma Raro Lendário (direta para esquerda)) 
-    Gui, Add, Text, x50 y170, Control+F11 (Transforma Raro Lendário (baixo para cima))
-    Gui, Add, Text, x50 y190, F1, F2, F3, F4 (Auto cast habilidades)
-    Gui, Add, Text, x50 y210, Control+F1 a Control+F4 (Perfil Auto 1 a 4) 
-    Gui, Add, Text, x50 y230, Control+Shift+F1 a Control+Shift+F4 (Perfil Auto 5 a 6) 
+    Gui, Add, Text, x30 y90, Control+Shift+C (Configuração)  /  Control+Shift+R (Reload)
+    Gui, Add, Text, x30 y110, F5 (Troca Itens Kadala)  /  F6 (Recicla Item)
+    Gui, Add, Text, x30 y130, F11 (Transforma Raro Lendário (direta para esquerda)) 
+    Gui, Add, Text, x30 y150, Control+F11 (Transforma Raro Lendário (baixo para cima))
+    Gui, Add, Text, x30 y170, F1, F2, F3, F4 (Auto cast habilidades)
+    Gui, Add, Text, x30 y190, Control+F1 a Control+F4 (Perfil Auto 1 a 4) 
+    Gui, Add, Text, x30 y210, Control+Shift+F1 a Control+Shift+F4 (Perfil Auto 5 a 8) 
+    Gui, Add, Text, x30 y230, Control+Shift+D - Distância em Metros (em desenvolvimento)
 
     Gui, Tab, 2
     Gui, Add, Text, x50 y90, Latência Paragon:
@@ -1194,24 +1356,33 @@ criaJanelaConfiguracao()
     Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
 
     Gui, Tab, 3
-    Gui, Add, Text, x80 y90, Vida (F7)
-    Gui, Add, Text, x50 y120, Atributo:
+    Gui, Add, Text, x50 y90, Vida
+    Gui, Add, Text, x20 y120, Atalho(*):
+    Gui, Add, Text,, Atributo:
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Edit, x110 y120 w40 h21 vstat2, %stat2%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, x80 y120 w40 h21 vatalhoParagonVida, %atalhoParagonVida%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w40 h21 vstat2, %stat2%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vvit2, %vit2%
     Gui, Add, Edit, w40 h21 vspeed2, %speed2% ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vresource2, %resource2%
-    Gui, Add, Text, x210 y90, Dano (F8)
-    Gui, Add, Text, x180 y120, Atributo:
+    Gui, Add, Text, x160 y90, Dano
+    Gui, Add, Text, x130 y120, Atalho(*):
+    Gui, Add, Text,, Atributo:
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Edit, x250 y120 w40 h21 vstat1, %stat1%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, x190 y120 w40 h21 vatalhoParagonDano, %atalhoParagonDano%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w40 h21 vstat1, %stat1%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vvit1, %vit1%
     Gui, Add, Edit, w40 h21 vspeed1, %speed1% ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vresource1, %resource1%
+    Gui, Add, Text, x245 y120, (*) para configurar:
+    Gui, Add, Text, x245 y140, ^ = Control
+    Gui, Add, Text, x245 y155, + = Shift
+    Gui, Add, Text, x245 y170, ^+v = control+shift+v
+    Gui, Add, Text, x245 y185, Necessário reload
 
     loop, 8
     {
@@ -1237,7 +1408,7 @@ criaJanelaConfiguracao()
 
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
-    Gui, Add, Button, x315 y270 default, Fechar  ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Add, Button, x315 y270 default, Fechar ; The label ButtonOK (if it exists) will be run when the button is pressed.
 
     return
 }
@@ -1247,25 +1418,26 @@ abreJanelaConfiguracao()
     Gui, Show,, Configurações
     return
 
-ButtonFechar:
+}
+
 GuiClose:
 GuiEscape:
+ButtonFechar:
+{
+    Gui, Submit  ; Save each control's contents to its associated variable.
+    
+    loop, 8
     {
-        Gui, Submit  ; Save each control's contents to its associated variable.
-        
-        loop, 8
-        {
-            NomePerfil[A_Index] := NomePerfil%A_Index%
-            Habilidade1TempoPerfil[A_Index] := Habilidade1TempoPerfil%A_Index%
-            Habilidade2TempoPerfil[A_Index] := Habilidade2TempoPerfil%A_Index%
-            Habilidade3TempoPerfil[A_Index] := Habilidade3TempoPerfil%A_Index%
-            Habilidade4TempoPerfil[A_Index] := Habilidade4TempoPerfil%A_Index%
-        }
-
-        gravaConfiguracao()
-        
-        return
+        NomePerfil[A_Index] := NomePerfil%A_Index%
+        Habilidade1TempoPerfil[A_Index] := Habilidade1TempoPerfil%A_Index%
+        Habilidade2TempoPerfil[A_Index] := Habilidade2TempoPerfil%A_Index%
+        Habilidade3TempoPerfil[A_Index] := Habilidade3TempoPerfil%A_Index%
+        Habilidade4TempoPerfil[A_Index] := Habilidade4TempoPerfil%A_Index%
     }
+
+    gravaConfiguracao()
+    
+    return
 }
 
 retornaInfoTela()
@@ -1304,4 +1476,20 @@ retornaInfoTela()
     WinGet, ControlList, ControlList, A
     ToolTip, %ControlList%
     return    
+}
+
+criaTransparencia()
+{
+    ;Gui, DisplayTransparente:New
+    CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
+    Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
+    Gui, Color, %CustomColor%
+    Gui, Font, s32  ; Set a large font size (32-point).
+    Gui, Add, Text, vMyText cLime, XXXXXXXXXXXXXXXXXXXXXX ; XX & YY serve to auto-size the window.
+    ; Make all pixels of this color transparent and make the text itself translucent (150):
+    WinSet, TransColor, %CustomColor% 150
+    Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
+    SetTimer, verificaDistancia, 200
+
+    return
 }
