@@ -178,7 +178,7 @@ Hotkey, ^+r, recarregar
 Hotkey, ^+c, abreJanelaConfiguracao
 Hotkey, F12, posicao
 
-Hotkey, IfWinActive, Diablo III
+;Hotkey, IfWinActive, Diablo III
 Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
 Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
 Hotkey, F5, kadala
@@ -680,53 +680,67 @@ teleporte()
 
 verificaDistancia()
 {
+    MouseGetPos, mouseX, mouseY
+    distanciaMetros := calculaDistanciaAnt(mouseX, mouseY)
+    
+    MsgBox, 0,,
+(
+%distanciaMetros%m
+),2
 
-; quadrantes a (-,+) b (-,-) c (+,-) d(+,+)
+
+}
+
+calculaDistancia()
+{
+    
+}
+
+calculaDistanciaAnt(mouseX, mouseY)
+{
+    ; quadrantes a (-,+) b (-,-) c (+,-) d(+,+)
     algulo := 0
     
     ;verificar influência dos angulos retos, 90,180,270 e 360
     
-    MouseGetPos, mouseX, mouseY
+    catetoXPixel := posicaoCentralX - mouseX
+    catetoYPixel := posicaoCentralY - mouseY
     
-    lateral1 := posicaoCentralX - mouseX
-    lateral2 := posicaoCentralY - mouseY
+    if catetoXPixel = 0
+        catetoXPixel := 1
     
-    if lateral1 = 0
-        lateral1 := 1
-    
-    if lateral2 = 0
-        lateral2 := 1
+    if catetoYPixel = 0
+        catetoYPixel := 1
 
-    if (lateral1 < 0 and lateral2 > 0) ; quadrante A
+    if (catetoXPixel < 0 and catetoYPixel > 0) ; quadrante A
     {
-        lateral1 := lateral1 * -1
-        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        catetoXPixel := catetoXPixel * -1
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
     }
-    else if (lateral1 < 0 and lateral2 < 0) ; quadrante B
+    else if (catetoXPixel < 0 and catetoYPixel < 0) ; quadrante B
     {
-        lateral1 := lateral1 * -1
-        lateral2 := lateral2 * -1
-        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        catetoXPixel := catetoXPixel * -1
+        catetoYPixel := catetoYPixel * -1
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
         angulo := (90 - angulo) + 90
 
     }
-    else if (lateral1 > 0 and lateral2 < 0) ; quadrante C
+    else if (catetoXPixel > 0 and catetoYPixel < 0) ; quadrante C
     {
-        lateral2 := lateral2 * -1
-        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        catetoYPixel := catetoYPixel * -1
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
         angulo := 180 + angulo
         
     }
     else  ; quadrante D
     {
-        angulo := (atan(lateral1/lateral2))*(180/3.1415)
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
         angulo := (90 - angulo) + 270
     }
     
     ;se(c10<0 and d10>=0;i10;se(c10<0 and d10<0;(90-i10)+90;se(c10>=0 and d10<0;(180+i10);(90-i10)+270)))
     
     angulo := Round(angulo, 0)
-    distanciaPixel := Round((Sqrt((lateral1**2)+(lateral2**2))),2)
 
     if (((angulo >= 355) and (angulo <= 360)) or ((angulo >= 0 and angulo <= 5)))
     {
@@ -835,11 +849,24 @@ verificaDistancia()
         entrei := "vazio"
     }
 
-    distanciaMetros := Round(((a1*(razao**(distanciaPixel-1)))*distanciaPixel),0)
+    hipotenusaPixel := Round((Sqrt((catetoXPixel**2)+(catetoYPixel**2))),2)
+    hipotenusaMetros := (a1*(razao**(hipotenusaPixel-1)))*hipotenusaPixel
+    
+    if mouseX >= posicaoCentralX
+    {
+        catetoXMetros := (0.072159024*(0.999353989**(catetoXPixel-1)))*catetoXPixel
+    }
+    else
+    {
+        catetoXMetros := (0.074744489*(1.000862227**(catetoXPixel-1)))*catetoXPixel
+    }
+    
+    catetoYMetros := (hipotenusaMetros**2)-(catetoXMetros**2)
 
-    SendInput, {Enter} ;menu do jogo
-    SendInput, %distanciaMetros%m ;menu do jogo
-    SendInput, {Enter} ;menu do jogo
+    distanciaMetros := Round(catetoYMetros,0)
+    ;SendInput, {Enter} ;menu do jogo
+    ;SendInput, %distanciaMetros%m ;menu do jogo
+    ;SendInput, {Enter} ;menu do jogo
 
     ;GuiControl,, MyText, %entrei% - %angulo%o - %distanciaMetros%m - %distanciaPixel%
 
@@ -849,9 +876,10 @@ verificaDistancia()
 ;%angulo%o, %distanciaMetros%m, %entrei%
 ;),2
 
-    return
+    return catetoYMetros
 
 }
+
 
 trocaWheelUpDownNecro()
 {
