@@ -7,7 +7,7 @@ SetWorkingDir %A_ScriptDir%
 
 ;************************ Configurar aqui *******************************************
 
-Global testeSituacao, testeSituacao := 0 ; 0 no diablo; 1 = windows; 2 com osd
+Global testeSituacao, testeSituacao := 2 ; 0 no diablo; 1 = windows; 2 com osd
 Global sequenciadorAutomaticoComTempo, sequenciadorAutomaticoComTempo := 1 ; 0 sem temporizador 1 com temporizador
 
 ;*******************************************************************
@@ -219,14 +219,14 @@ Para configurar pressione Control+Shift+C
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
 }
 
-if ((testeSituacao = 0) or (testeSituacao = 1))
-{
+;if ((testeSituacao = 0) or (testeSituacao = 1))
+;{
     criaJanelaConfiguracao()
-}
-else
-{
+;}
+;else
+;{
     criaTransparencia()
-}
+;}
 
 SetDefaultMouseSpeed, 0 ; mouse moves faster
 
@@ -941,6 +941,8 @@ teleporte()
 
 verificaDistancia()
 {
+    Gui, Transparencia:Default
+
     MouseGetPos, mouseX, mouseY
     ;texto := calculaDistanciaAnt(mouseX, mouseY)
     texto := calculaDistancia(mouseX, mouseY)
@@ -1724,7 +1726,7 @@ migraConfigVelha()
 criaJanelaConfiguracao()
 {
 
-    ;Gui, Configurações: New,, Configurações
+    Gui, Configuracoes: New,, Configurações
     Gui Add, Tab3, x10 y10 w350 h280, Ajuda||Configurações|Paragon|Atalho Auto|Perfil Auto 1|Perfil Auto 2|Perfil Auto 3|Perfil Auto 4|Perfil Auto 5|Perfil Auto 6|Perfil Auto 7|Perfil Auto 8
 
     Gui, Tab, 1
@@ -1873,6 +1875,8 @@ criaJanelaConfiguracao()
     GuiEscape:
     ButtonSalvar:
     {
+        Gui, Configuracoes:Default
+
         Gui, Submit  ; Save each control's contents to its associated variable.
         gravaConfiguracao()
         return
@@ -1887,9 +1891,10 @@ abreJanelaConfiguracao()
     sequenciadorAutomatico3AtalhoAntes := sequenciadorAutomatico3Atalho
     sequenciadorAutomatico4AtalhoAntes := sequenciadorAutomatico4Atalho
     
+    Gui, Configuracoes:Default
+    
     Gui, Show,, Configurações
     return
-
 }
 
 retornaInfoTela()
@@ -1932,6 +1937,7 @@ retornaInfoTela()
 
 criaTransparencia()
 {
+    Gui, Transparencia: New
     CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
     Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
     Gui, Color, %CustomColor%
