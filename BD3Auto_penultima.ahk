@@ -1,10 +1,17 @@
-﻿#NoEnv
+﻿;$r::send, r
+;na frente da tecla não deixa ela executar recursivamente.
+
+#NoEnv
 #SingleInstance Force
 SetWorkingDir %A_ScriptDir%
+
+Global testeSituacao, testeSituacao := 0 ; 0 no diablo; 1 = windows; 2 com osd
 
 global screenSizeX
 global screenSizeY
 
+global atalhoParagonDano
+global atalhoParagonVida
 global latency1
 global latency2
 global activateKeyParagon
@@ -125,6 +132,13 @@ Global menuJogoAceitarY
 
 Global posicaoCentralX
 Global posicaoCentralY
+Global screenXRazao
+Global screenYRazao
+
+Global MyText
+Global angulo
+Global distanciaMetros
+Global distanciaPixel
 
 Global novaPosicaoX
 Global novaPosicaoY
@@ -137,8 +151,6 @@ CoordMode, Mouse, Window
 Thread, NoTimers
 
 carregaConfiguracao()
-
-criaJanelaConfiguracao()
 
 validaResolucao()
 
@@ -154,21 +166,31 @@ else
 {
 
     MsgBox, 0,,
-    (
-    Tamanho da tela = %screenSizeX% x %screenSizeY%
-    Para configurar pressione Control+Shift+C
-    ),3
+(
+Tamanho da tela = %screenSizeX% x %screenSizeY%
+Para configurar pressione Control+Shift+C
+),3
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
+}
+
+if ((testeSituacao = 0) or (testeSituacao = 1))
+{
+    criaJanelaConfiguracao()
+}
+else
+{
+    criaTransparencia()
 }
 
 SetDefaultMouseSpeed, 0 ; mouse moves faster
 
 Hotkey, ^+r, recarregar
 Hotkey, ^+c, abreJanelaConfiguracao
+Hotkey, F12, posicao
 
 Hotkey, IfWinActive, Diablo III
-Hotkey, F8, trocaParagonDamage ; starts damage script
-Hotkey, F7, trocaParagonHealth ; starts health script1
+Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
+Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
 Hotkey, F5, kadala
 Hotkey, F6, reciclaUM
 Hotkey, ^F6, reciclaLinha
@@ -187,11 +209,10 @@ Hotkey, +^F2, perfilAutomatico6
 Hotkey, +^F3, perfilAutomatico7
 Hotkey, +^F4, perfilAutomatico8
 ;Hotkey, #F12, forcarMovimento
-Hotkey, F12, posicao
 Hotkey, ^F12, validaCor
 Hotkey, +F12, trocaWheelUpDownNecro
-Hotkey, ^+F12, verificaDistancia
 Hotkey, ^t, teleporte
+Hotkey, ^+d, verificaDistancia
 
 recarregar()
 {
@@ -232,7 +253,7 @@ perfilAutomatico8()
     perfilAutomatico(8)
 }
 
-trocaParagonDamage() ; script to change paragon for dealing damage
+trocaParagonDano() ; script to change paragon for dealing damage
 {
 
     Critical
@@ -286,7 +307,7 @@ trocaParagonDamage() ; script to change paragon for dealing damage
 
 }
 
-trocaParagonHealth() ; script to change paragon for staying alive
+trocaParagonVida() ; script to change paragon for staying alive
 {
     Critical
     
@@ -571,9 +592,9 @@ posicao()
 
     MouseGetPos, mouseX, mouseY
     
-    PixelGetColor cor, %mouseX%, %mouseY%, RGB
+    ;PixelGetColor cor, %mouseX%, %mouseY%, RGB
 
-	FileAppend, %mouseX%;%mouseY%;%cor%`n, %arquivoSaida%
+	FileAppend, %mouseX%%A_Tab%%mouseY%`n, %arquivoSaida%
 
     return
 
@@ -670,43 +691,105 @@ teleporte()
 verificaDistancia()
 {
     MouseGetPos, mouseX, mouseY
+    ;texto := calculaDistanciaAnt(mouseX, mouseY)
+    texto := calculaDistancia(mouseX, mouseY)
 
-    lateral1 := posicaoCentralX - mouseX
-    lateral2 := posicaoCentralY - mouseY
+    if testeSituacao = 0 
+    {
+        SendInput, {Enter}
+        SendInput, %texto%        
+        SendInput, {Enter}
+    }
+    else if testeSituacao = 1
+    {
+        MsgBox, 0,,(%texto%)
+    }
+    else
+    {
+        GuiControl,, MyText, %texto%
+    }
 
-    if lateral1 < 0 and lateral2 >= 0 ; quadrante A
+    return
+
+}
+
+calculaDistancia(mouseX, mouseY)
+{
+
+    ; quadrantes a (-,+) b (-,-) c (+,-) d(+,+)
+    algulo := 0
+    
+    ;verificar influência dos angulos retos, 90,180,270 e 360
+    
+    catetoXPixel := posicaoCentralX - mouseX
+    catetoYPixel := posicaoCentralY - mouseY
+    
+    if catetoXPixel = 0
+        catetoXPixel := 1
+    
+    if catetoYPixel = 0
+        catetoYPixel := 1
+
+    if (catetoXPixel < 0 and catetoYPixel > 0) ; quadrante A
     {
-        relacaoPixelMetro := 11.08108
+        catetoXPixel := catetoXPixel * -1
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
     }
-    else if lateral1 < 0 and lateral2 < 0 ; quadrante B
+    else if (catetoXPixel < 0 and catetoYPixel < 0) ; quadrante B
     {
-        relacaoPixelMetro := 15.72972
+        catetoXPixel := catetoXPixel * -1
+        catetoYPixel := catetoYPixel * -1
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
+        angulo := (90 - angulo) + 90
+
     }
-    else if lateral1 >= 0 and lateral2 < 0 ; quadrante C
+    else if (catetoXPixel > 0 and catetoYPixel < 0) ; quadrante C
     {
-        relacaoPixelMetro := 15.72972
+        catetoYPixel := catetoYPixel * -1
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
+        angulo := 180 + angulo
+        
     }
     else  ; quadrante D
     {
-        relacaoPixelMetro := 11.08108
+        angulo := (atan(catetoXPixel/catetoYPixel))*(180/3.1415)
+        angulo := (90 - angulo) + 270
+    }
+    
+    angulo := Round(angulo, 2)
+
+    
+    if (mouseY >= posicaoCentralY) ; Y inferior
+    {
+        catetoYMetros := ((0.08807938*(0.99938944**(catetoYPixel-1)))*catetoYPixel) * screenYRazao
+    }
+    else ; Y superior
+    {
+        catetoYMetros := ((0.080479528*(1.00086283**(catetoYPixel-1)))*catetoYPixel) * screenYRazao
     }
 
-    if lateral1 < 0 
-        lateral1 := lateral1 * -1
-
-    if lateral2 < 0 
-        lateral2 := lateral2 * -1
-
-    distancia := Sqrt((lateral1**2)+(lateral2**2))
+    catetoXMetros := (0.063533792*(0.999838803**(catetoXPixel-1)))*catetoXPixel ; Relação em metro de X na posição central
     
-    distancia := Round((distancia / relacaoPixelMetro), 2)
+    catetoXMetros := catetoXMetros * (1.362668238*(0.999388636**(mouseY-1))) * screenXRazao ; correção em função da posição Y
 
-    SendInput, {Enter} ;menu do jogo
-    SendInput, %distancia% ;menu do jogo
-    SendInput, {Enter} ;menu do jogo
+    hipotenusaMetros := Round((Sqrt((catetoXMetros**2)+(catetoYMetros**2))),0)
 
+    ;textoRetorno := angulo . "o - " . Round(hipotenusaMetros,1) . "(h) " . Round(catetoXMetros,1) . "(x)" . Round(catetoYMetros,1) . "(y) " . "posicao:" . mouseX . "x" . mouseY . "(" . posicaoCentralX . "x" . posicaoCentralY . ")"
+    ;textoRetorno := angulo . "o - " . Round(hipotenusaMetros,1) . "(h) " . Round(catetoYMetros,1) . "(y) " . Round(catetoXMetros,1) . "(x)" . "posicao:" . mouseX . "x" . mouseY
+    ;textoRetorno := Round(hipotenusaPixel,1) . "(h) " . Round(catetoYPixel,1) . "(y) " . Round(catetoXPixel,1) . "(x)" . "posicao:" . mouseX . "x" . mouseY . "(" . posicaoCentralX . "x" . posicaoCentralY . ")"
+    ;textoRetorno := Round(catetoYMetros,1) . "(y) " . Round(catetoYPixel,1) . "(yP)" . " posicao:" . mouseX . "x" . mouseY
 
-    ;MouseMove, posicaoCentralX, posicaoCentralY
+    if testeSituacao = 0
+    {
+        textoRetorno := Round(hipotenusaMetros,0) . "m"
+    }
+    else
+    {
+        textoRetorno := angulo . "o - " . Round(hipotenusaMetros,1) . "(h) " . Round(catetoXMetros,1) . "(x)" . Round(catetoYMetros,1) . "(y) " . "posicao:" . mouseX . "x" . mouseY . "(" . posicaoCentralX . "x" . posicaoCentralY . ")"
+    }
+
+    return textoRetorno
+
 }
 
 trocaWheelUpDownNecro()
@@ -733,7 +816,7 @@ trocaWheelUpDownNecro()
 
         SetMouseDelay, 10
         MouseClick, Left, menuJogoHabilidade4Tecla2X, menuJogoHabilidade4Tecla2Y ; habilidade 3 - tecla 2
-        SendInput, {WheelDown} ;menu do jogo
+        SendInput, 4 ;menu do jogo
     }
     else
     {
@@ -815,57 +898,120 @@ validaResolucao()
 ajustaResolucao()
 {
 
-    screenXReferencia = 1920
-    screenYReferencia = 1080
-
+    screenXReferencia := 1920
+    screenYReferencia := 1080
     screenXRazao := screenSizeX / screenXReferencia 
     screenYRazao := screenSizeY / screenYReferencia
-    
-    menuAtributoX := format("{:u}", (617 * screenXRazao))
-    menuAtributoY := format("{:u}", (110 * screenYRazao))
-    resetButtonX := format("{:u}", (971 * screenXRazao))
-    resetButtonY := format("{:u}", (727 * screenYRazao))
-    acceptX := format("{:u}", (816 * screenXRazao))
-    acceptY := format("{:u}", (821 * screenYRazao))
-    mainStatX := format("{:u}", (1277 * screenXRazao))
-    mainStatY := format("{:u}", (335 * screenYRazao))
-    vitX := format("{:u}", (1277 * screenXRazao))
-    vitY := format("{:u}", (425 * screenYRazao))
-    speedX := format("{:u}", (1277 * screenXRazao))
-    speedY := format("{:u}", (516 * screenYRazao))
-    resourceX := format("{:u}", (1277 * screenXRazao))
-    resourceY := format("{:u}", (612 * screenYRazao))
-    reciclaOKX := format("{:u}", (847 * screenXRazao))
-    reciclaOKY := format("{:u}", (377 * screenYRazao))
-    limiteBagMinX := format("{:u}", (1409 * screenXRazao))
-    limiteBagMinY := format("{:u}", (565 * screenYRazao))
-    preencherBotaoX := format("{:u}", (714 * screenXRazao))
-    preencherBotaoY := format("{:u}", (838 * screenYRazao))
-    transmutarBotaoX := format("{:u}", (235 * screenXRazao))
-    transmutarBotaoY := format("{:u}", (828 * screenYRazao))
-    limiteDiferencaX := format("{:u}", (51 * screenXRazao))
-    limiteDiferencaY := format("{:u}", (48 * screenYRazao))
-    menuJogoOpcoesX := format("{:u}", (228 * screenXRazao))
-    menuJogoOpcoesY := format("{:u}", (317 * screenYRazao))
-    menuJogoConfTeclasX := format("{:u}", (509 * screenXRazao))
-    menuJogoConfTeclasY := format("{:u}", (579 * screenYRazao))
-    menuJogoBarraRolagemArrastoX1 := format("{:u}", (1536 * screenXRazao))
-    menuJogoBarraRolagemArrastoY1 := format("{:u}", (360 * screenYRazao))
-    menuJogoBarraRolagemArrastoX2 := format("{:u}", (1536 * screenXRazao))
-    menuJogoBarraRolagemArrastoY2 := format("{:u}", (423 * screenYRazao))
-    menuJogoHabilidade4Tecla1X := format("{:u}", (1142 * screenXRazao))
-    menuJogoHabilidade4Tecla1Y := format("{:u}", (525 * screenYRazao))
-    menuJogoHabilidade4Tecla2X := format("{:u}", (1389 * screenXRazao))
-    menuJogoHabilidade4Tecla2Y := format("{:u}", (525 * screenYRazao))
-    menuJogoForcarMovimentoTecla1X := format("{:u}", (1142 * screenXRazao))
-    menuJogoForcarMovimentoTecla1Y := format("{:u}", (673 * screenYRazao))
-    menuJogoForcarMovimentoTecla2X := format("{:u}", (1392 * screenXRazao))
-    menuJogoForcarMovimentoTecla2Y := format("{:u}", (673 * screenYRazao))
-    menuJogoAceitarX := format("{:u}", (1239 * screenXRazao))
-    menuJogoAceitarY := format("{:u}", (867 * screenYRazao))
 
-    posicaoCentralX := format("{:u}", (960 * screenXRazao))
-    posicaoCentralY := format("{:u}", (507 * screenYRazao))
+    if (screenSizeX <= 1920)
+    {
+        
+        menuAtributoX := format("{:u}", (617 * screenXRazao))
+        menuAtributoY := format("{:u}", (110 * screenYRazao))
+        resetButtonX := format("{:u}", (971 * screenXRazao))
+        resetButtonY := format("{:u}", (727 * screenYRazao))
+        acceptX := format("{:u}", (816 * screenXRazao))
+        acceptY := format("{:u}", (821 * screenYRazao))
+        mainStatX := format("{:u}", (1277 * screenXRazao))
+        mainStatY := format("{:u}", (335 * screenYRazao))
+        vitX := format("{:u}", (1277 * screenXRazao))
+        vitY := format("{:u}", (425 * screenYRazao))
+        speedX := format("{:u}", (1277 * screenXRazao))
+        speedY := format("{:u}", (516 * screenYRazao))
+        resourceX := format("{:u}", (1277 * screenXRazao))
+        resourceY := format("{:u}", (612 * screenYRazao))
+
+        reciclaOKX := format("{:u}", (847 * screenXRazao))
+        reciclaOKY := format("{:u}", (377 * screenYRazao))
+
+        limiteBagMinX := format("{:u}", (1409 * screenXRazao))
+        limiteBagMinY := format("{:u}", (565 * screenYRazao))
+
+        preencherBotaoX := format("{:u}", (714 * screenXRazao))
+        preencherBotaoY := format("{:u}", (838 * screenYRazao))
+        transmutarBotaoX := format("{:u}", (235 * screenXRazao))
+        transmutarBotaoY := format("{:u}", (828 * screenYRazao))
+        limiteDiferencaX := format("{:u}", (51 * screenXRazao))
+        limiteDiferencaY := format("{:u}", (48 * screenYRazao))
+        
+        menuJogoOpcoesX := format("{:u}", (228 * screenXRazao))
+        menuJogoOpcoesY := format("{:u}", (317 * screenYRazao))
+        menuJogoConfTeclasX := format("{:u}", (509 * screenXRazao))
+        menuJogoConfTeclasY := format("{:u}", (579 * screenYRazao))
+        menuJogoBarraRolagemArrastoX1 := format("{:u}", (1536 * screenXRazao))
+        menuJogoBarraRolagemArrastoY1 := format("{:u}", (360 * screenYRazao))
+        menuJogoBarraRolagemArrastoX2 := format("{:u}", (1536 * screenXRazao))
+        menuJogoBarraRolagemArrastoY2 := format("{:u}", (423 * screenYRazao))
+        menuJogoHabilidade4Tecla1X := format("{:u}", (1142 * screenXRazao))
+        menuJogoHabilidade4Tecla1Y := format("{:u}", (525 * screenYRazao))
+        menuJogoHabilidade4Tecla2X := format("{:u}", (1389 * screenXRazao))
+        menuJogoHabilidade4Tecla2Y := format("{:u}", (525 * screenYRazao))
+        menuJogoForcarMovimentoTecla1X := format("{:u}", (1142 * screenXRazao))
+        menuJogoForcarMovimentoTecla1Y := format("{:u}", (673 * screenYRazao))
+        menuJogoForcarMovimentoTecla2X := format("{:u}", (1392 * screenXRazao))
+        menuJogoForcarMovimentoTecla2Y := format("{:u}", (673 * screenYRazao))
+        menuJogoAceitarX := format("{:u}", (1239 * screenXRazao))
+        menuJogoAceitarY := format("{:u}", (867 * screenYRazao))
+
+        posicaoCentralX := format("{:u}", (960 * screenXRazao))
+        posicaoCentralY := format("{:u}", (507 * screenYRazao))
+    }
+    else
+    {
+        posicaoCentralXReferencia := 1920 / 2
+        
+        posicaoCentralX := screenSizeX / 2
+        posicaoCentralY := format("{:u}", (507 * screenYRazao))
+
+        screenYRazao := screenSizeY / screenYReferencia
+        
+        menuAtributoX := posicaoCentralX - (posicaoCentralXReferencia - 617)
+        menuAtributoY := format("{:u}", (110 * screenYRazao))
+        resetButtonX := posicaoCentralX - (posicaoCentralXReferencia - 971)
+        resetButtonY := format("{:u}", (727 * screenYRazao))
+        acceptX := posicaoCentralX - (posicaoCentralXReferencia - 816)
+        acceptY := format("{:u}", (821 * screenYRazao))
+        mainStatX := posicaoCentralX - (posicaoCentralXReferencia - 1277)
+        mainStatY := format("{:u}", (335 * screenYRazao))
+        vitX := posicaoCentralX - (posicaoCentralXReferencia - 1277)
+        vitY := format("{:u}", (425 * screenYRazao))
+        speedX := posicaoCentralX - (posicaoCentralXReferencia - 1277)
+        speedY := format("{:u}", (516 * screenYRazao))
+        resourceX := posicaoCentralX - (posicaoCentralXReferencia - 1277)
+        resourceY := format("{:u}", (612 * screenYRazao))
+
+        reciclaOKX := posicaoCentralX - (posicaoCentralXReferencia - 847)
+        reciclaOKY := format("{:u}", (377 * screenYRazao))
+
+        limiteBagMinX := screenSizeX - (screenXReferencia - 1409)
+        limiteBagMinY := format("{:u}", (565 * screenYRazao))
+
+        preencherBotaoX := 714
+        preencherBotaoY := format("{:u}", (838 * screenYRazao))
+        transmutarBotaoX := 235
+        transmutarBotaoY := format("{:u}", (828 * screenYRazao))
+        limiteDiferencaX := 51
+        limiteDiferencaY := format("{:u}", (48 * screenYRazao))
+        
+        menuJogoOpcoesX := posicaoCentralX - (posicaoCentralXReferencia - 228)
+        menuJogoOpcoesY := format("{:u}", (317 * screenYRazao))
+        menuJogoConfTeclasX := posicaoCentralX - (posicaoCentralXReferencia - 509)
+        menuJogoConfTeclasY := format("{:u}", (579 * screenYRazao))
+        menuJogoBarraRolagemArrastoX1 := posicaoCentralX - (posicaoCentralXReferencia - 1536)
+        menuJogoBarraRolagemArrastoY1 := format("{:u}", (360 * screenYRazao))
+        menuJogoBarraRolagemArrastoX2 := posicaoCentralX - (posicaoCentralXReferencia - 1536)
+        menuJogoBarraRolagemArrastoY2 := format("{:u}", (423 * screenYRazao))
+        menuJogoHabilidade4Tecla1X := posicaoCentralX - (posicaoCentralXReferencia - 1142)
+        menuJogoHabilidade4Tecla1Y := format("{:u}", (525 * screenYRazao))
+        menuJogoHabilidade4Tecla2X := posicaoCentralX - (posicaoCentralXReferencia - 1389)
+        menuJogoHabilidade4Tecla2Y := format("{:u}", (525 * screenYRazao))
+        menuJogoForcarMovimentoTecla1X := posicaoCentralX - (posicaoCentralXReferencia - 1142)
+        menuJogoForcarMovimentoTecla1Y := format("{:u}", (673 * screenYRazao))
+        menuJogoForcarMovimentoTecla2X := posicaoCentralX - (posicaoCentralXReferencia - 1392)
+        menuJogoForcarMovimentoTecla2Y := format("{:u}", (673 * screenYRazao))
+        menuJogoAceitarX := posicaoCentralX - (posicaoCentralXReferencia - 1239)
+        menuJogoAceitarY := format("{:u}", (867 * screenYRazao))
+    }
 
     return
 }
@@ -925,6 +1071,14 @@ carregaConfiguracao()
 
 ;-----------------------------
     ;Parametros de Paragon Dano
+
+    RegRead, atalhoParagonDano, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano
+    if atalhoParagonDano is space
+    {
+        atalhoParagonDano = F8
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
+    }
+
     RegRead, stat1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo
     if stat1 is not integer
     {
@@ -956,6 +1110,13 @@ carregaConfiguracao()
 ;-----------------------------
     ;Parametros de Paragon Vida
     
+    RegRead, atalhoParagonVida, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida
+    if atalhoParagonVida is space
+    {
+        atalhoParagonVida = F7
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
+    }
+
     RegRead, stat2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo
     if stat2 is not integer
     {
@@ -1049,6 +1210,7 @@ gravaConfiguracao()
 
 ;-----------------------------
     ;Parametros de Paragon Dano
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo, %stat1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade, %vit1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade, %speed1%
@@ -1056,7 +1218,8 @@ gravaConfiguracao()
     
 ;-----------------------------
     ;Parametros de Paragon Vida
-    
+
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo, %stat2%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade, %vit2%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade, %speed2%
@@ -1167,17 +1330,18 @@ migraConfigVelha()
 criaJanelaConfiguracao()
 {
 
+    ;Gui, Configurações: New,, Configurações
     Gui Add, Tab3, x10 y10 w350 h250, Ajuda|Configurações||Paragon|Perfil Auto 1|Perfil Auto 2|Perfil Auto 3|Perfil Auto 4|Perfil Auto 5|Perfil Auto 6|Perfil Auto 7|Perfil Auto 8
 
     Gui, Tab, 1
-    Gui, Add, Text, x50 y90, Control+Shift+R (Reload)  /  Control+Shift+C (Configuração)
-    Gui, Add, Text, x50 y110, F7 (Modo Vida)  /  F8 (Modo Dano) 
-    Gui, Add, Text, x50 y130, F5 (Troca Itens Kadala)  /  F6 (Recicla Item)
-    Gui, Add, Text, x50 y150, F11 (Transforma Raro Lendário (direta para esquerda)) 
-    Gui, Add, Text, x50 y170, Control+F11 (Transforma Raro Lendário (baixo para cima))
-    Gui, Add, Text, x50 y190, F1, F2, F3, F4 (Auto cast habilidades)
-    Gui, Add, Text, x50 y210, Control+F1 a Control+F4 (Perfil Auto 1 a 4) 
-    Gui, Add, Text, x50 y230, Control+Shift+F1 a Control+Shift+F4 (Perfil Auto 5 a 6) 
+    Gui, Add, Text, x30 y90, Control+Shift+C (Configuração)  /  Control+Shift+R (Reload)
+    Gui, Add, Text, x30 y110, F5 (Troca Itens Kadala)  /  F6 (Recicla Item)
+    Gui, Add, Text, x30 y130, F11 (Transforma Raro Lendário (direta para esquerda)) 
+    Gui, Add, Text, x30 y150, Control+F11 (Transforma Raro Lendário (baixo para cima))
+    Gui, Add, Text, x30 y170, F1, F2, F3, F4 (Auto cast habilidades)
+    Gui, Add, Text, x30 y190, Control+F1 a Control+F4 (Perfil Auto 1 a 4) 
+    Gui, Add, Text, x30 y210, Control+Shift+F1 a Control+Shift+F4 (Perfil Auto 5 a 8) 
+    Gui, Add, Text, x30 y230, Control+Shift+D - Distância em Metros (em desenvolvimento)
 
     Gui, Tab, 2
     Gui, Add, Text, x50 y90, Latência Paragon:
@@ -1194,24 +1358,33 @@ criaJanelaConfiguracao()
     Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
 
     Gui, Tab, 3
-    Gui, Add, Text, x80 y90, Vida (F7)
-    Gui, Add, Text, x50 y120, Atributo:
+    Gui, Add, Text, x50 y90, Vida
+    Gui, Add, Text, x20 y120, Atalho(*):
+    Gui, Add, Text,, Atributo:
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Edit, x110 y120 w40 h21 vstat2, %stat2%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, x80 y120 w40 h21 vatalhoParagonVida, %atalhoParagonVida%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w40 h21 vstat2, %stat2%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vvit2, %vit2%
     Gui, Add, Edit, w40 h21 vspeed2, %speed2% ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vresource2, %resource2%
-    Gui, Add, Text, x210 y90, Dano (F8)
-    Gui, Add, Text, x180 y120, Atributo:
+    Gui, Add, Text, x160 y90, Dano
+    Gui, Add, Text, x130 y120, Atalho(*):
+    Gui, Add, Text,, Atributo:
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Edit, x250 y120 w40 h21 vstat1, %stat1%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, x190 y120 w40 h21 vatalhoParagonDano, %atalhoParagonDano%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w40 h21 vstat1, %stat1%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vvit1, %vit1%
     Gui, Add, Edit, w40 h21 vspeed1, %speed1% ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vresource1, %resource1%
+    Gui, Add, Text, x245 y120, (*) para configurar:
+    Gui, Add, Text, x245 y140, ^ = Control
+    Gui, Add, Text, x245 y155, + = Shift
+    Gui, Add, Text, x245 y170, ^+v = control+shift+v
+    Gui, Add, Text, x245 y185, Necessário reload
 
     loop, 8
     {
@@ -1237,22 +1410,16 @@ criaJanelaConfiguracao()
 
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
-    Gui, Add, Button, x315 y270 default, Fechar  ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Add, Button, x315 y270 default, Fechar ; The label ButtonOK (if it exists) will be run when the button is pressed.
 
     return
-}
 
-abreJanelaConfiguracao()
-{
-    Gui, Show,, Configurações
-    return
-
-ButtonFechar:
-GuiClose:
-GuiEscape:
+    GuiClose:
+    GuiEscape:
+    ButtonFechar:
     {
-        Gui, Submit  ; Save each control's contents to its associated variable.
-        
+    Gui, Submit  ; Save each control's contents to its associated variable.
+
         loop, 8
         {
             NomePerfil[A_Index] := NomePerfil%A_Index%
@@ -1262,10 +1429,18 @@ GuiEscape:
             Habilidade4TempoPerfil[A_Index] := Habilidade4TempoPerfil%A_Index%
         }
 
-        gravaConfiguracao()
-        
-        return
+    gravaConfiguracao()
+
+    return
     }
+    
+}
+
+abreJanelaConfiguracao()
+{
+    Gui, Show,, Configurações
+    return
+
 }
 
 retornaInfoTela()
@@ -1304,4 +1479,19 @@ retornaInfoTela()
     WinGet, ControlList, ControlList, A
     ToolTip, %ControlList%
     return    
+}
+
+criaTransparencia()
+{
+    CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
+    Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
+    Gui, Color, %CustomColor%
+    Gui, Font, s32  ; Set a large font size (32-point).
+    Gui, Add, Text, vMyText cLime, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ; XX & YY serve to auto-size the window.
+    ; Make all pixels of this color transparent and make the text itself translucent (150):
+    WinSet, TransColor, %CustomColor% 150
+    SetTimer, verificaDistancia, 200
+    Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
+
+    return
 }
