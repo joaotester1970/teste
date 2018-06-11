@@ -234,7 +234,7 @@ Hotkey, ^+r, recarregar
 Hotkey, ^+c, abreJanelaConfiguracao
 Hotkey, F12, posicao
 
-Hotkey, IfWinActive, Diablo III
+;Hotkey, IfWinActive, Diablo III
 Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
 Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
 Hotkey, F5, kadala
@@ -1012,16 +1012,16 @@ calculaDistancia(mouseX, mouseY)
     
     if (mouseY >= posicaoCentralY) ; Y inferior
     {
-        catetoYMetros := ((0.08807938*(0.99938944**(catetoYPixel-1)))*catetoYPixel) * screenYRazao
+        catetoYMetros := ((0.08807938*(0.99938944**(catetoYPixel-1)))*catetoYPixel) 
     }
     else ; Y superior
     {
-        catetoYMetros := ((0.080479528*(1.00086283**(catetoYPixel-1)))*catetoYPixel) * screenYRazao
+        catetoYMetros := ((0.080479528*(1.00086283**(catetoYPixel-1)))*catetoYPixel) 
     }
 
     catetoXMetros := (0.063533792*(0.999838803**(catetoXPixel-1)))*catetoXPixel ; Relação em metro de X na posição central
     
-    catetoXMetros := catetoXMetros * (1.362668238*(0.999388636**(mouseY-1))) * screenXRazao ; correção em função da posição Y
+    catetoXMetros := catetoXMetros * (1.362668238*(0.999388636**(mouseY-1))) 
 
     hipotenusaMetros := Round((Sqrt((catetoXMetros**2)+(catetoYMetros**2))),0)
 
