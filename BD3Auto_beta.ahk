@@ -7,8 +7,9 @@ SetWorkingDir %A_ScriptDir%
 
 Global telaAtiva, telaAtiva := 0 ; 0 nenhuma, 1 transparencia, 2 configuracao
 Global mostraTransparenciaSituacao, mostraTransparenciaSituacao := -1
-Global displayMetros ; 0 apenas metros; 1 mais informações
-Global configAvancadas ; 0 sem temporizador 1 com temporizador
+Global displayMetros ; 0 - apenas metros; 1 - mais informações
+Global configAvancadas ; 0 - sem temporizador; 1 - com temporizador
+Global testeForaDiablo ; 1 - para testar em ambiente fora do diablo
 
 global screenSizeX
 global screenSizeY
@@ -31,15 +32,15 @@ global vit2
 global speed2
 global resource2
 
-Global habilitadeAutomatica1Estado, habilitadeAutomatica1Estado := 1
-Global habilitadeAutomatica2Estado, habilitadeAutomatica2Estado := 1
-Global habilitadeAutomatica3Estado, habilitadeAutomatica3Estado := 1
-Global habilitadeAutomatica4Estado, habilitadeAutomatica4Estado := 1
+Global habilitadeAutomatica1Estado, habilitadeAutomatica1Estado := -1
+Global habilitadeAutomatica2Estado, habilitadeAutomatica2Estado := -1
+Global habilitadeAutomatica3Estado, habilitadeAutomatica3Estado := -1
+Global habilitadeAutomatica4Estado, habilitadeAutomatica4Estado := -1
 
 Global habilidadeAutomaticaTipo ; 0 = perfilAutomatico; 1 = sequenciadorAutomatico
 
 Global perfilAutomaticoEstado, perfilAutomaticoEstado := 0 ; 0 = está desligado; 1 = está ligado
-Global perfilAutomaticoCarregado, perfilAutomaticoCarregado := 1
+Global perfilAutomaticoCarregado
 
 Global nomePerfil1
 Global habilidade1TempoPerfil1
@@ -127,9 +128,9 @@ Global sequenciadorAutomatico4Tecla3Tempo
 Global sequenciadorAutomatico4Tecla4
 Global sequenciadorAutomatico4Tecla4Tempo
 
-Global forcarMovimentoEstado, forcarMovimentoEstado := 1
+Global forcarMovimentoEstado, forcarMovimentoEstado := -1
 
-Global trocaWheelUpDownNecroEstado, trocaWheelUpDownNecroEstado := 1
+Global trocaWheelUpDownNecroEstado, trocaWheelUpDownNecroEstado := -1
 
 global menuAtributoX
 global menuAtributoY
@@ -188,7 +189,7 @@ Global novaPosicaoX
 Global novaPosicaoY
 
 Global transformaRaroLendarioPosicao ; 0 = horizontal; 1 = vertical
-Global transformaRaroLendarioSituacao, transformaRaroLendarioSituacao := 1 ; 1 = liga, -1 = desliga
+Global transformaRaroLendarioSituacao, transformaRaroLendarioSituacao := -1 ; 1 = está ligado, -1 = está desligado
 
 CoordMode, Mouse, Window
 
@@ -222,8 +223,14 @@ SetDefaultMouseSpeed, 0 ; mouse moves faster
 Hotkey, ^+r, recarregar
 Hotkey, ^+c, abreJanelaConfiguracao
 Hotkey, F12, posicao
+;Hotkey, #F12, forcarMovimento
+;Hotkey, ^F12, validaCor
 
-Hotkey, IfWinActive, Diablo III
+if testeForaDiablo <> 1
+{
+    Hotkey, IfWinActive, Diablo III
+}
+
 Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
 Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
 Hotkey, F5, kadala
@@ -243,8 +250,6 @@ Hotkey, +^F1, perfilAutomatico5
 Hotkey, +^F2, perfilAutomatico6
 Hotkey, +^F3, perfilAutomatico7
 Hotkey, +^F4, perfilAutomatico8
-;Hotkey, #F12, forcarMovimento
-Hotkey, ^F12, validaCor
 Hotkey, +F12, trocaWheelUpDownNecro
 Hotkey, ^t, teleporte
 Hotkey, ^+d, verificaDistancia
@@ -550,7 +555,7 @@ reciclaLinha()
 habilidadeAutomatica1()
 {
 	
-    if habilitadeAutomatica1Estado = 1
+    if habilitadeAutomatica1Estado = -1
     {
     	SendInput, {1 Down}
     }
@@ -567,7 +572,7 @@ habilidadeAutomatica1()
 habilidadeAutomatica2()
 {
 	
-    if habilitadeAutomatica2Estado = 1
+    if habilitadeAutomatica2Estado = -1
     {
     	SendInput, {2 Down}
     }
@@ -583,7 +588,7 @@ habilidadeAutomatica2()
 habilidadeAutomatica3()
 {
 	
-    if habilitadeAutomatica3Estado = 1
+    if habilitadeAutomatica3Estado = -1
     {
     	SendInput, {3 Down}
     }
@@ -599,7 +604,7 @@ habilidadeAutomatica3()
 habilidadeAutomatica4()
 {
 	
-    if habilitadeAutomatica4Estado = 1
+    if habilitadeAutomatica4Estado = -1
     {
     	SendInput, {4 Down}
     }
@@ -615,7 +620,7 @@ habilidadeAutomatica4()
 forcarMovimento()
 {
 	
-    if forcarMovimentoEstado = 1
+    if forcarMovimentoEstado = -1
     {
 ;    	SetKeyDelay, 1
 		Send, {0 Down}
@@ -650,7 +655,7 @@ transformaRaroLendarioVertical()
 transformaRaroLendario()
 {
 
-    if transformaRaroLendarioSituacao = 1
+    if transformaRaroLendarioSituacao = -1
     {
         validaResolucao()
 
@@ -699,7 +704,7 @@ transformaRaroLendarioTimer()
     if (novaPosicaoX <= limiteBagMinX) or (novaPosicaoY <= limiteBagMinY)
     {
         SetTimer, transformaRaroLendarioTimer, Off
-        transformaRaroLendarioSituacao := 1
+        transformaRaroLendarioSituacao := -1
     }
     else
     {
@@ -1046,7 +1051,7 @@ trocaWheelUpDownNecro()
 
     MouseClickDrag, left, menuJogoBarraRolagemArrastoX1, menuJogoBarraRolagemArrastoY1, menuJogoBarraRolagemArrastoX2, menuJogoBarraRolagemArrastoY2
 
-    if trocaWheelUpDownNecroEstado = 1
+    if trocaWheelUpDownNecroEstado = -1
     {
         SetMouseDelay, 10
         MouseClick, Left, menuJogoHabilidade4Tecla1X, menuJogoHabilidade4Tecla1Y ; habilidade 3 - tecla 1
@@ -1272,7 +1277,14 @@ carregaConfiguracao()
         displayMetros = 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, DisplayMetros, %displayMetros%
     }
- 
+
+    RegRead, testeForaDiablo, HKEY_CURRENT_USER\Software\BD3Auto\Config, TesteForaDiablo
+    if testeForaDiablo is not integer
+    {
+        testeForaDiablo = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, TesteForaDiablo, %testeForaDiablo%
+    }
+
     RegRead, configAvancadas, HKEY_CURRENT_USER\Software\BD3Auto\Config, ConfigAvancadas
     if configAvancadas is not integer
     {
@@ -1321,6 +1333,32 @@ carregaConfiguracao()
         screenSizeRegY = 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY, %screenSizeRegY%
     }
+
+;----------------------------------
+;configurações avançadas - atalhos
+
+;Hotkey, F1, habilidadeAutomatica1
+;Hotkey, F2, habilidadeAutomatica2
+;Hotkey, F3, habilidadeAutomatica3
+;Hotkey, F4, habilidadeAutomatica4
+;Hotkey, ^F1, perfilAutomatico1
+;Hotkey, ^F2, perfilAutomatico2
+;Hotkey, ^F3, perfilAutomatico3
+;Hotkey, ^F4, perfilAutomatico4
+;Hotkey, +^F1, perfilAutomatico5
+;Hotkey, +^F2, perfilAutomatico6
+;Hotkey, +^F3, perfilAutomatico7
+;Hotkey, +^F4, perfilAutomatico8
+;Hotkey, +F12, trocaWheelUpDownNecro
+;Hotkey, ^t, teleporte
+;Hotkey, ^+d, verificaDistancia
+;Hotkey, ^+m, mostraTransparencia
+
+;Hotkey, ^F5, sequenciadorAutomatico1
+;Hotkey, ^F6, sequenciadorAutomatico2
+;Hotkey, ^F7, sequenciadorAutomatico3
+;Hotkey, ^F8, sequenciadorAutomatico4
+
 
 ;-----------------------------
     ;Parametros de Paragon Dano
@@ -1723,10 +1761,99 @@ migraConfigVelha()
 
 }
 
+criaJanelaConfiguracaoAvancada()
+{
+    Gui, ConfiguracoesAvancada: New,, Configurações Avançadas
+    Gui, ConfiguracoesAvancada: Default
+        
+    Gui Add, Tab3, x10 y10 w500 h280, Advertências||Teclas de Atalho|Atalho Auto Avançado|Configurações do desenvolvedor
+
+    Gui, Tab, 1
+    Gui, Font, s13
+    Gui, Add, Text, x30 y120, *** Mexa com cuidado nestas configurações ***
+    Gui, Font
+
+    Gui, Tab, 2
+    Gui, Add, Text, x60 y105, Latência Paragon:
+    Gui, Add, Text,, Latência:
+    Gui, Add, Text,, Atalho Paragon:
+    Gui, Add, Text,, Troca Kadala (Quantidade):
+    Gui, Add, Text,, ResoluçãoX:
+    Gui, Add, Text,, ResoluçãoY:
+    ;Gui, Add, Edit, x210 y105 w60 h21 vlatency1, %latency1%  ; The ym option starts a new column of controls.
+    ;Gui, Add, Edit, w60 h21 vlatency2, %latency2%
+    ;Gui, Add, Edit, w60 h21 vactivateKeyParagon, %activateKeyParagon% ; The ym option starts a new column of controls.
+    ;Gui, Add, Edit, w60 h21 vquantTrocaKadala, %quantTrocaKadala%
+    ;Gui, Add, Edit, w60 h21 vscreenSizeRegX, %screenSizeRegX% ; The ym option starts a new column of controls.
+    ;Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
+;    Gui, Add, Text, x245 y150, (*) para configurar:
+;    Gui, Add, Text, x245 y170, ^ = Control
+;    Gui, Add, Text, x245 y185, + = Shift
+;    Gui, Add, Text, x245 y200, ^+v = control+shift+v
+;    Gui, Add, Text, x245 y215, Necessário reload
+
+
+    Gui, Tab, 3
+    Gui, Add, Text, x20 y80, Atalho
+    Gui, Add, Text, x80 y80, Tecla1
+    Gui, Add, Text, x145 y80, Tecla2
+    Gui, Add, Text, x210 y80, Tecla3
+    Gui, Add, Text, x275 y80, Tecla4
+    linha := 100
+    
+    loop, 4
+    {
+        atalho := sequenciadorAutomatico%A_Index%Atalho
+        tecla1 := sequenciadorAutomatico%A_Index%Tecla1
+        tecla1Tempo := sequenciadorAutomatico%A_Index%Tecla1Tempo
+        tecla2 := sequenciadorAutomatico%A_Index%Tecla2
+        tecla2Tempo := sequenciadorAutomatico%A_Index%Tecla2Tempo
+        tecla3 := sequenciadorAutomatico%A_Index%Tecla3
+        tecla3Tempo := sequenciadorAutomatico%A_Index%Tecla3Tempo
+        tecla4 := sequenciadorAutomatico%A_Index%Tecla4
+        tecla4Tempo := sequenciadorAutomatico%A_Index%Tecla4Tempo
+        
+
+        Gui, Add, Edit, x20 y%linha% w50 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
+        Gui, Add, Edit, x80 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1, %tecla1%
+        Gui, Add, Edit, x145 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2, %tecla2%
+        Gui, Add, Edit, x210 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3, %tecla3%
+        Gui, Add, Edit, x275 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4, %tecla4%
+        
+        linha := linha + 21
+        Gui, Add, Edit, x80 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1Tempo, %tecla1Tempo%
+        Gui, Add, Edit, x145 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2Tempo, %tecla2Tempo%
+        Gui, Add, Edit, x210 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3Tempo, %tecla3Tempo%
+        Gui, Add, Edit, x275 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4Tempo, %tecla4Tempo%
+        linha := linha + 25
+
+    }
+    
+    Gui, Tab, 4
+    Gui, Add, Text, x40 y100, Atalho
+    Gui, Add, Text, x110 y100, Tecla1
+    Gui, Add, Text, x170 y100, Tecla2
+    Gui, Add, Text, x230 y100, Tecla3
+    Gui, Add, Text, x290 y100, Tecla4
+
+    Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
+
+    Gui, Add, Button, x317 y300 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    
+    return
+    
+}
+
+botaoSalvarConfigAvancada()
+{
+    Gui, Submit
+}
+
 criaJanelaConfiguracao()
 {
-
-    ;Gui, Configuracoes: New,, Configurações
+    Gui, Configuracoes: New,, Configurações
+    Gui, Configuracoes: Default
+        
     Gui Add, Tab3, x10 y10 w350 h280, Ajuda||Configurações|Paragon|Atalho Auto|Perfil Auto 1|Perfil Auto 2|Perfil Auto 3|Perfil Auto 4|Perfil Auto 5|Perfil Auto 6|Perfil Auto 7|Perfil Auto 8
 
     Gui, Tab, 1
@@ -1755,35 +1882,31 @@ criaJanelaConfiguracao()
     Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
 
     Gui, Tab, 3
-    Gui, Add, Text, x50 y100, Vida
-    Gui, Add, Text, x20 y130, Atalho(*):
+    Gui, Add, Text, x70 y100, Vida
+    Gui, Add, Text, x40 y130, Atalho:
     Gui, Add, Text,, Atributo:
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Edit, x80 y130 w40 h21 vatalhoParagonVida, %atalhoParagonVida%  ; The ym option starts a new column of controls.
+    Gui, Add, Text, x100 y130 w40 h21, %atalhoParagonVida%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vstat2, %stat2%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vvit2, %vit2%
     Gui, Add, Edit, w40 h21 vspeed2, %speed2% ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vresource2, %resource2%
-    Gui, Add, Text, x160 y100, Dano
-    Gui, Add, Text, x130 y130, Atalho(*):
+    Gui, Add, Text, x220 y100, Dano
+    Gui, Add, Text, x190 y130, Atalho:
     Gui, Add, Text,, Atributo:
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Edit, x190 y130 w40 h21 vatalhoParagonDano, %atalhoParagonDano%  ; The ym option starts a new column of controls.
+    Gui, Add, Text, x250 y130 w40 h21, %atalhoParagonDano%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vstat1, %stat1%  ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vvit1, %vit1%
     Gui, Add, Edit, w40 h21 vspeed1, %speed1% ; The ym option starts a new column of controls.
     Gui, Add, Edit, w40 h21 vresource1, %resource1%
-    Gui, Add, Text, x245 y150, (*) para configurar:
-    Gui, Add, Text, x245 y170, ^ = Control
-    Gui, Add, Text, x245 y185, + = Shift
-    Gui, Add, Text, x245 y200, ^+v = control+shift+v
-    Gui, Add, Text, x245 y215, Necessário reload
 
     Gui, Tab, 4
+    
     if (configAvancadas = 0)
     {
         Gui, Add, Text, x40 y100, Atalho
@@ -1792,32 +1915,15 @@ criaJanelaConfiguracao()
         Gui, Add, Text, x230 y100, Tecla3
         Gui, Add, Text, x290 y100, Tecla4
         linha := 130
-    }
-    else
-    {
-        Gui, Add, Text, x20 y80, Atalho
-        Gui, Add, Text, x80 y80, Tecla1
-        Gui, Add, Text, x145 y80, Tecla2
-        Gui, Add, Text, x210 y80, Tecla3
-        Gui, Add, Text, x275 y80, Tecla4
-        linha := 100
-    }
-    
-    loop, 4
-    {
-        atalho := sequenciadorAutomatico%A_Index%Atalho
-        tecla1 := sequenciadorAutomatico%A_Index%Tecla1
-        tecla1Tempo := sequenciadorAutomatico%A_Index%Tecla1Tempo
-        tecla2 := sequenciadorAutomatico%A_Index%Tecla2
-        tecla2Tempo := sequenciadorAutomatico%A_Index%Tecla2Tempo
-        tecla3 := sequenciadorAutomatico%A_Index%Tecla3
-        tecla3Tempo := sequenciadorAutomatico%A_Index%Tecla3Tempo
-        tecla4 := sequenciadorAutomatico%A_Index%Tecla4
-        tecla4Tempo := sequenciadorAutomatico%A_Index%Tecla4Tempo
-        
 
-        if (configAvancadas = 0)
+        loop, 4
         {
+            atalho := sequenciadorAutomatico%A_Index%Atalho
+            tecla1 := sequenciadorAutomatico%A_Index%Tecla1
+            tecla2 := sequenciadorAutomatico%A_Index%Tecla2
+            tecla3 := sequenciadorAutomatico%A_Index%Tecla3
+            tecla4 := sequenciadorAutomatico%A_Index%Tecla4
+            
             Gui, Add, Edit, x40 y%linha% w40 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
             Gui, Add, Edit, x110 y%linha% w40 h21 vsequenciadorAutomatico%A_Index%Tecla1, %tecla1%
             Gui, Add, Edit, x170 y%linha% w40 h21 vsequenciadorAutomatico%A_Index%Tecla2, %tecla2%
@@ -1825,22 +1931,12 @@ criaJanelaConfiguracao()
             Gui, Add, Edit, x290 y%linha% w40 h21 vsequenciadorAutomatico%A_Index%Tecla4, %tecla4%
             linha := linha + 30
         }
-        else
-        {
-            Gui, Add, Edit, x20 y%linha% w50 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
-            Gui, Add, Edit, x80 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1, %tecla1%
-            Gui, Add, Edit, x145 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2, %tecla2%
-            Gui, Add, Edit, x210 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3, %tecla3%
-            Gui, Add, Edit, x275 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4, %tecla4%
-            
-            linha := linha + 21
-            Gui, Add, Edit, x80 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1Tempo, %tecla1Tempo%
-            Gui, Add, Edit, x145 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2Tempo, %tecla2Tempo%
-            Gui, Add, Edit, x210 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3Tempo, %tecla3Tempo%
-            Gui, Add, Edit, x275 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4Tempo, %tecla4Tempo%
-            linha := linha + 25
-        }
-
+    }
+    else
+    {
+        Gui, Font, s13
+        Gui, Add, Text, x30 y100, *** Configure nas opções avançadas ***
+        Gui, Font
     }
     
     loop, 8
@@ -1867,43 +1963,51 @@ criaJanelaConfiguracao()
 
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
-    Gui, Add, Button, x315 y300 default, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Add, Button, x317 y300 default gbotaoSalvarConfig, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+
+    if (configAvancadas = 1)
+    {
+        Gui, Add, Button, x10 y300 gbotaoAbreConfigAvancada, ConfigAvancada ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    }
     
     return
+}
 
-    GuiClose:
-    GuiEscape:
-    ButtonSalvar:
+botaoSalvarConfig()
+{
+
+    if telaAtiva = 2
     {
-        if telaAtiva = 2
+
+        Gui, Configuracoes: Submit  ; Save each control's contents to its associated variable.
+        gravaConfiguracao()
+        
+        Gui, Destroy
+
+        if mostraTransparenciaSituacao = 1
         {
-
-            Gui, Submit  ; Save each control's contents to its associated variable.
-            gravaConfiguracao()
-            
-            Gui, Destroy
-
-            if mostraTransparenciaSituacao = 1
-            {
-                criaTransparencia()
-                SetTimer, verificaDistancia, 500
-                Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
-                telaAtiva := 1
-            }
-            else
-            {
-                telaAtiva := 0
-            }
-            
+            criaTransparencia()
+            SetTimer, verificaDistancia, 500
+            Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
+            telaAtiva := 1
         }
-        return
+        else
+        {
+            telaAtiva := 0
+        }
+        
     }
+    return
+}
 
+botaoAbreConfigAvancada()
+{
+    abreJanelaConfiguracaoAvancada()
+    return
 }
 
 abreJanelaConfiguracao()
 {
-
     
     if mostraTransparenciaSituacao = 1
     {
@@ -1927,6 +2031,45 @@ abreJanelaConfiguracao()
     
     return
     
+}
+
+abreJanelaConfiguracaoAvancada()
+{
+    criaJanelaConfiguracaoAvancada()
+    Gui, ConfiguracoesAvancada: Show
+}
+
+mostraTransparencia()
+{
+    Gui, Destroy
+
+    if mostraTransparenciaSituacao = -1
+    {
+        telaAtiva := 1
+        criaTransparencia()
+        SetTimer, verificaDistancia, 500
+        Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
+    }
+    else
+    {
+        telaAtiva := 0
+        SetTimer, verificaDistancia, off
+    }
+    mostraTransparenciaSituacao := mostraTransparenciaSituacao * -1
+}
+
+criaTransparencia()
+{
+    ;Gui, Transparencia: New
+    CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
+    Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
+    Gui, Color, %CustomColor%
+    Gui, Font, s32  ; Set a large font size (32-point).
+    Gui, Add, Text, vMyText cLime, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ; XX & YY serve to auto-size the window.
+    ; Make all pixels of this color transparent and make the text itself translucent (150):
+    WinSet, TransColor, %CustomColor% 150
+
+    return
 }
 
 retornaInfoTela()
@@ -1965,36 +2108,4 @@ retornaInfoTela()
     WinGet, ControlList, ControlList, A
     ToolTip, %ControlList%
     return    
-}
-
-mostraTransparencia()
-{
-    Gui, Destroy
-    if mostraTransparenciaSituacao = -1
-    {
-        telaAtiva := 1
-        criaTransparencia()
-        SetTimer, verificaDistancia, 500
-        Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
-    }
-    else
-    {
-        telaAtiva := 0
-        SetTimer, verificaDistancia, off
-    }
-    mostraTransparenciaSituacao := mostraTransparenciaSituacao * -1
-}
-
-criaTransparencia()
-{
-    ;Gui, Transparencia: New
-    CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
-    Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
-    Gui, Color, %CustomColor%
-    Gui, Font, s32  ; Set a large font size (32-point).
-    Gui, Add, Text, vMyText cLime, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ; XX & YY serve to auto-size the window.
-    ; Make all pixels of this color transparent and make the text itself translucent (150):
-    WinSet, TransColor, %CustomColor% 150
-
-    return
 }
