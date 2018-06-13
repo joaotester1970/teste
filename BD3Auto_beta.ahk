@@ -5,12 +5,10 @@
 #SingleInstance Force
 SetWorkingDir %A_ScriptDir%
 
-;************************ Configurar aqui *******************************************
-
-Global testeSituacao, testeSituacao := 2 ; 0 no diablo; 1 = windows; 2 com osd
-Global sequenciadorAutomaticoComTempo, sequenciadorAutomaticoComTempo := 1 ; 0 sem temporizador 1 com temporizador
-
-;*******************************************************************
+Global telaAtiva, telaAtiva := 0 ; 0 nenhuma, 1 transparencia, 2 configuracao
+Global mostraTransparenciaSituacao, mostraTransparenciaSituacao := -1
+Global displayMetros ; 0 apenas metros; 1 mais informações
+Global configAvancadas ; 0 sem temporizador 1 com temporizador
 
 global screenSizeX
 global screenSizeY
@@ -219,22 +217,13 @@ Para configurar pressione Control+Shift+C
 ;;;;;AutoCast para tecla de forçar movimento (0 no diablo) = Tecla Windows+F12 (em análise)
 }
 
-;if ((testeSituacao = 0) or (testeSituacao = 1))
-;{
-    criaJanelaConfiguracao()
-;}
-;else
-;{
-    criaTransparencia()
-;}
-
 SetDefaultMouseSpeed, 0 ; mouse moves faster
 
 Hotkey, ^+r, recarregar
 Hotkey, ^+c, abreJanelaConfiguracao
 Hotkey, F12, posicao
 
-;Hotkey, IfWinActive, Diablo III
+Hotkey, IfWinActive, Diablo III
 Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
 Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
 Hotkey, F5, kadala
@@ -259,6 +248,7 @@ Hotkey, ^F12, validaCor
 Hotkey, +F12, trocaWheelUpDownNecro
 Hotkey, ^t, teleporte
 Hotkey, ^+d, verificaDistancia
+Hotkey, ^+m, mostraTransparencia
 
 Hotkey, ^F5, sequenciadorAutomatico1
 Hotkey, ^F6, sequenciadorAutomatico2
@@ -941,21 +931,16 @@ teleporte()
 
 verificaDistancia()
 {
-    Gui, Transparencia:Default
 
     MouseGetPos, mouseX, mouseY
     ;texto := calculaDistanciaAnt(mouseX, mouseY)
     texto := calculaDistancia(mouseX, mouseY)
 
-    if testeSituacao = 0 
+    if mostraTransparenciaSituacao = -1 
     {
         SendInput, {Enter}
         SendInput, %texto%        
         SendInput, {Enter}
-    }
-    else if testeSituacao = 1
-    {
-        MsgBox, 0,,(%texto%)
     }
     else
     {
@@ -1032,7 +1017,7 @@ calculaDistancia(mouseX, mouseY)
     ;textoRetorno := Round(hipotenusaPixel,1) . "(h) " . Round(catetoYPixel,1) . "(y) " . Round(catetoXPixel,1) . "(x)" . "posicao:" . mouseX . "x" . mouseY . "(" . posicaoCentralX . "x" . posicaoCentralY . ")"
     ;textoRetorno := Round(catetoYMetros,1) . "(y) " . Round(catetoYPixel,1) . "(yP)" . " posicao:" . mouseX . "x" . mouseY
 
-    if testeSituacao = 0
+    if displayMetros = 0
     {
         textoRetorno := Round(hipotenusaMetros,0) . "m"
     }
@@ -1273,6 +1258,7 @@ carregaConfiguracao()
 {
     ;Parametros de configuração
 
+
     RegRead, latency1, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 01_LatenciaPainelParagon
     if latency1 is integer
     {
@@ -1280,13 +1266,27 @@ carregaConfiguracao()
     }
 
     ;Parametros de configuração
+    RegRead, displayMetros, HKEY_CURRENT_USER\Software\BD3Auto\Config, DisplayMetros
+    if displayMetros is not integer
+    {
+        displayMetros = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, DisplayMetros, %displayMetros%
+    }
+ 
+    RegRead, configAvancadas, HKEY_CURRENT_USER\Software\BD3Auto\Config, ConfigAvancadas
+    if configAvancadas is not integer
+    {
+        configAvancadas = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ConfigAvancadas, %configAvancadas%
+    }
+
     RegRead, latency1, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon
     if latency1 is not integer
     {
         latency1 = 100
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon, %latency1%
     }
-    
+
     RegRead, latency2, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick
     if latency2 is not integer
     {
@@ -1582,7 +1582,7 @@ gravaConfiguracao()
         chaveRegistry := "HKEY_CURRENT_USER\Software\BD3Auto\SequenciadorAutomatico\Perfil" . A_Index
 
 
-        if (sequenciadorAutomaticoComTempo = 0)
+        if (configAvancadas = 0)
         {
             sequenciadorAutomatico%A_Index%Atalho := SubStr(sequenciadorAutomatico%A_Index%Tecla1, 1, 1)
             sequenciadorAutomatico%A_Index%Tecla1 := SubStr(sequenciadorAutomatico%A_Index%Tecla1, 1, 1)
@@ -1726,7 +1726,7 @@ migraConfigVelha()
 criaJanelaConfiguracao()
 {
 
-    Gui, Configuracoes: New,, Configurações
+    ;Gui, Configuracoes: New,, Configurações
     Gui Add, Tab3, x10 y10 w350 h280, Ajuda||Configurações|Paragon|Atalho Auto|Perfil Auto 1|Perfil Auto 2|Perfil Auto 3|Perfil Auto 4|Perfil Auto 5|Perfil Auto 6|Perfil Auto 7|Perfil Auto 8
 
     Gui, Tab, 1
@@ -1784,7 +1784,7 @@ criaJanelaConfiguracao()
     Gui, Add, Text, x245 y215, Necessário reload
 
     Gui, Tab, 4
-    if (sequenciadorAutomaticoComTempo = 0)
+    if (configAvancadas = 0)
     {
         Gui, Add, Text, x40 y100, Atalho
         Gui, Add, Text, x110 y100, Tecla1
@@ -1816,7 +1816,7 @@ criaJanelaConfiguracao()
         tecla4Tempo := sequenciadorAutomatico%A_Index%Tecla4Tempo
         
 
-        if (sequenciadorAutomaticoComTempo = 0)
+        if (configAvancadas = 0)
         {
             Gui, Add, Edit, x40 y%linha% w40 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
             Gui, Add, Edit, x110 y%linha% w40 h21 vsequenciadorAutomatico%A_Index%Tecla1, %tecla1%
@@ -1868,33 +1868,65 @@ criaJanelaConfiguracao()
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
     Gui, Add, Button, x315 y300 default, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
-
+    
     return
 
     GuiClose:
     GuiEscape:
     ButtonSalvar:
     {
-        Gui, Configuracoes:Default
+        if telaAtiva = 2
+        {
 
-        Gui, Submit  ; Save each control's contents to its associated variable.
-        gravaConfiguracao()
+            Gui, Submit  ; Save each control's contents to its associated variable.
+            gravaConfiguracao()
+            
+            Gui, Destroy
+
+            if mostraTransparenciaSituacao = 1
+            {
+                criaTransparencia()
+                SetTimer, verificaDistancia, 500
+                Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
+                telaAtiva := 1
+            }
+            else
+            {
+                telaAtiva := 0
+            }
+            
+        }
         return
     }
-    
+
 }
 
 abreJanelaConfiguracao()
 {
+
+    
+    if mostraTransparenciaSituacao = 1
+    {
+        ;Gui, Transparencia:Default
+        SetTimer, verificaDistancia, off
+        Gui, Destroy ; NoActivate avoids deactivating the currently active window.
+    }
+
     sequenciadorAutomatico1AtalhoAntes := sequenciadorAutomatico1Atalho
     sequenciadorAutomatico2AtalhoAntes := sequenciadorAutomatico2Atalho
     sequenciadorAutomatico3AtalhoAntes := sequenciadorAutomatico3Atalho
     sequenciadorAutomatico4AtalhoAntes := sequenciadorAutomatico4Atalho
-    
-    Gui, Configuracoes:Default
+
+    criaJanelaConfiguracao()
+
+    telaAtiva := 2
+
+    ;Gui, Configuracoes:Default
     
     Gui, Show,, Configurações
+    
     return
+    
 }
 
 retornaInfoTela()
@@ -1935,9 +1967,27 @@ retornaInfoTela()
     return    
 }
 
+mostraTransparencia()
+{
+    Gui, Destroy
+    if mostraTransparenciaSituacao = -1
+    {
+        telaAtiva := 1
+        criaTransparencia()
+        SetTimer, verificaDistancia, 500
+        Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
+    }
+    else
+    {
+        telaAtiva := 0
+        SetTimer, verificaDistancia, off
+    }
+    mostraTransparenciaSituacao := mostraTransparenciaSituacao * -1
+}
+
 criaTransparencia()
 {
-    Gui, Transparencia: New
+    ;Gui, Transparencia: New
     CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
     Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
     Gui, Color, %CustomColor%
@@ -1945,8 +1995,6 @@ criaTransparencia()
     Gui, Add, Text, vMyText cLime, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ; XX & YY serve to auto-size the window.
     ; Make all pixels of this color transparent and make the text itself translucent (150):
     WinSet, TransColor, %CustomColor% 150
-    SetTimer, verificaDistancia, 200
-    Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
 
     return
 }
