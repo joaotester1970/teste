@@ -5,9 +5,9 @@
 #SingleInstance Force
 SetWorkingDir %A_ScriptDir%
 
-Global telaAtiva, telaAtiva := 0 ; 0 nenhuma, 1 transparencia, 2 configuracao
-Global mostraTransparenciaSituacao, mostraTransparenciaSituacao := -1
-Global displayMetros ; 0 - apenas metros; 1 - mais informações
+Global telaAtiva, telaAtiva := 0 ; 0 nenhuma, 1 InfoAvancadas, 2 configuracao
+Global InfoAvancadasAtivo, InfoAvancadasAtivo := -1
+Global InfoAvancadasMetros ; 0 - apenas metros; 1 - mais informações
 Global configAvancadas ; 0 - sem temporizador; 1 - com temporizador
 Global testeForaDiablo ; 1 - para testar em ambiente fora do diablo
 
@@ -252,8 +252,8 @@ Hotkey, +^F3, perfilAutomatico7
 Hotkey, +^F4, perfilAutomatico8
 Hotkey, +F12, trocaWheelUpDownNecro
 Hotkey, ^t, teleporte
-Hotkey, ^+d, verificaDistancia
-Hotkey, ^+m, mostraTransparencia
+Hotkey, ^+d, mostraDistanciaDiablo
+Hotkey, ^+m, mostraInfoAvancadas
 
 Hotkey, ^F5, sequenciadorAutomatico1
 Hotkey, ^F6, sequenciadorAutomatico2
@@ -809,6 +809,7 @@ tecla1Timer()
     tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla1
     Sendinput, %tecla%
     setTimer, tecla1Timer, off
+    return
 }
 
 tecla2Timer()
@@ -816,6 +817,7 @@ tecla2Timer()
     tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla2
     Sendinput, %tecla%
     setTimer, tecla2Timer, off
+    return
 }
 
 tecla3Timer()
@@ -823,6 +825,7 @@ tecla3Timer()
     tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla3
     Sendinput, %tecla%
     setTimer, tecla3Timer, off
+    return
 }
 
 tecla4Timer()
@@ -830,6 +833,8 @@ tecla4Timer()
     tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla4
     Sendinput, %tecla%
     setTimer, tecla4Timer, off
+    return
+
 }
 
 perfilAutomatico(perfilAcionado)
@@ -932,25 +937,34 @@ habilidade4()
 teleporte()
 {
     Send, t{Enter}
+    return
 }
 
-verificaDistancia()
+mostraDistanciaDiablo()
 {
 
     MouseGetPos, mouseX, mouseY
     ;texto := calculaDistanciaAnt(mouseX, mouseY)
     texto := calculaDistancia(mouseX, mouseY)
 
-    if mostraTransparenciaSituacao = -1 
-    {
-        SendInput, {Enter}
-        SendInput, %texto%        
-        SendInput, {Enter}
-    }
-    else
-    {
-        GuiControl,, MyText, %texto%
-    }
+    SendInput, {Enter}
+    SendInput, %texto%        
+    SendInput, {Enter}
+
+    return
+
+}
+
+atualizaInfoAvancadas()
+{
+
+    Gui, InfoAvancadas:Default
+
+    MouseGetPos, mouseX, mouseY
+    ;texto := calculaDistanciaAnt(mouseX, mouseY)
+    texto := calculaDistancia(mouseX, mouseY)
+
+    GuiControl,, MyText, %texto%
 
     return
 
@@ -1022,7 +1036,7 @@ calculaDistancia(mouseX, mouseY)
     ;textoRetorno := Round(hipotenusaPixel,1) . "(h) " . Round(catetoYPixel,1) . "(y) " . Round(catetoXPixel,1) . "(x)" . "posicao:" . mouseX . "x" . mouseY . "(" . posicaoCentralX . "x" . posicaoCentralY . ")"
     ;textoRetorno := Round(catetoYMetros,1) . "(y) " . Round(catetoYPixel,1) . "(yP)" . " posicao:" . mouseX . "x" . mouseY
 
-    if displayMetros = 0
+    if InfoAvancadasMetros = 0
     {
         textoRetorno := Round(hipotenusaMetros,0) . "m"
     }
@@ -1271,11 +1285,11 @@ carregaConfiguracao()
     }
 
     ;Parametros de configuração
-    RegRead, displayMetros, HKEY_CURRENT_USER\Software\BD3Auto\Config, DisplayMetros
-    if displayMetros is not integer
+    RegRead, InfoAvancadasMetros, HKEY_CURRENT_USER\Software\BD3Auto\Config, InfoAvancadasMetros
+    if InfoAvancadasMetros is not integer
     {
-        displayMetros = 0
-        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, DisplayMetros, %displayMetros%
+        InfoAvancadasMetros = 0
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, InfoAvancadasMetros, %InfoAvancadasMetros%
     }
 
     RegRead, testeForaDiablo, HKEY_CURRENT_USER\Software\BD3Auto\Config, TesteForaDiablo
@@ -1352,7 +1366,7 @@ carregaConfiguracao()
 ;Hotkey, +F12, trocaWheelUpDownNecro
 ;Hotkey, ^t, teleporte
 ;Hotkey, ^+d, verificaDistancia
-;Hotkey, ^+m, mostraTransparencia
+;Hotkey, ^+m, mostraInfoAvancadas
 
 ;Hotkey, ^F5, sequenciadorAutomatico1
 ;Hotkey, ^F6, sequenciadorAutomatico2
@@ -1847,6 +1861,7 @@ criaJanelaConfiguracaoAvancada()
 botaoSalvarConfigAvancada()
 {
     Gui, Submit
+    return
 }
 
 criaJanelaConfiguracao()
@@ -1984,10 +1999,10 @@ botaoSalvarConfig()
         
         Gui, Destroy
 
-        if mostraTransparenciaSituacao = 1
+        if InfoAvancadasAtivo = 1
         {
-            criaTransparencia()
-            SetTimer, verificaDistancia, 500
+            criaInfoAvancadas()
+            SetTimer, atualizaInfoAvancadas, 500
             Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
             telaAtiva := 1
         }
@@ -2009,10 +2024,10 @@ botaoAbreConfigAvancada()
 abreJanelaConfiguracao()
 {
     
-    if mostraTransparenciaSituacao = 1
+    if InfoAvancadasAtivo = 1
     {
-        ;Gui, Transparencia:Default
-        SetTimer, verificaDistancia, off
+        ;Gui, InfoAvancadas:Default
+        SetTimer, atualizaInfoAvancadas, off
         Gui, Destroy ; NoActivate avoids deactivating the currently active window.
     }
 
@@ -2025,8 +2040,6 @@ abreJanelaConfiguracao()
 
     telaAtiva := 2
 
-    ;Gui, Configuracoes:Default
-    
     Gui, Show,, Configurações
     
     return
@@ -2037,30 +2050,34 @@ abreJanelaConfiguracaoAvancada()
 {
     criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: Show
+    return
 }
 
-mostraTransparencia()
+mostraInfoAvancadas()
 {
-    Gui, Destroy
+    Gui, InfoAvancadas:Destroy
 
-    if mostraTransparenciaSituacao = -1
+    if InfoAvancadasAtivo = -1
     {
         telaAtiva := 1
-        criaTransparencia()
-        SetTimer, verificaDistancia, 500
+        criaInfoAvancadas()
+        SetTimer, atualizaInfoAvancadas, 500
         Gui, Show, x0 y50 NoActivate  ; NoActivate avoids deactivating the currently active window.
     }
     else
     {
         telaAtiva := 0
-        SetTimer, verificaDistancia, off
+        SetTimer, atualizaInfoAvancadas, off
     }
-    mostraTransparenciaSituacao := mostraTransparenciaSituacao * -1
+    InfoAvancadasAtivo := InfoAvancadasAtivo * -1
+    
+    return
+    
 }
 
-criaTransparencia()
+criaInfoAvancadas()
 {
-    ;Gui, Transparencia: New
+    Gui, InfoAvancadas: New
     CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
     Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
     Gui, Color, %CustomColor%
