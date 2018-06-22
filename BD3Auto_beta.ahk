@@ -11,14 +11,66 @@ Global InfoAvancadasMetros ; 0 - apenas metros; 1 - mais informações
 Global configAvancadas ; 0 - sem temporizador; 1 - com temporizador
 Global testeForaDiablo ; 1 - para testar em ambiente fora do diablo
 
+global atalhoParagonDano
+global atalhoParagonVida
+global atalhoTrocaKadala
+global atalhoReciclaUM
+global atalhoReciclaLinha
+global atalhoTransformaRaroLendarioHorizontal
+global atalhoTransformaRaroLendarioVertical
+global atalhoHabilidadeAutomatica1
+global atalhoHabilidadeAutomatica2
+global atalhoHabilidadeAutomatica3
+global atalhoHabilidadeAutomatica4
+global atalhoPerfilAutomatico1
+global atalhoPerfilAutomatico2
+global atalhoPerfilAutomatico3
+global atalhoPerfilAutomatico4
+global atalhoPerfilAutomatico5
+global atalhoPerfilAutomatico6
+global atalhoPerfilAutomatico7
+global atalhoPerfilAutomatico8
+global atalhoTeleporte
+global atalhoMostraDistanciaDiablo
+global atalhoMostraInfoAvancadas
+global atalhoSequenciadorAutomatico1
+global atalhoSequenciadorAutomatico2
+global atalhoSequenciadorAutomatico3
+global atalhoSequenciadorAutomatico4
+
+global atalhoParagonDanoPadrao, atalhoParagonDanoPadrao := "F8"
+global atalhoParagonVidaPadrao, atalhoParagonVidaPadrao := "F7"
+global atalhoTrocaKadalaPadrao, atalhoTrocaKadalaPadrao := "F5"
+global atalhoReciclaUMPadrao, atalhoReciclaUMPadrao := "F6"
+global atalhoReciclaLinhaPadrao, atalhoReciclaLinhaPadrao := "^+F6"
+global atalhoTransformaRaroLendarioHorizontalPadrao, atalhoTransformaRaroLendarioHorizontalPadrao := "F11"
+global atalhoTransformaRaroLendarioVerticalPadrao, atalhoTransformaRaroLendarioVerticalPadrao := "^F11"
+global atalhoHabilidadeAutomatica1Padrao, atalhoHabilidadeAutomatica1Padrao := "F1"
+global atalhoHabilidadeAutomatica2Padrao, atalhoHabilidadeAutomatica2Padrao := "F2"
+global atalhoHabilidadeAutomatica3Padrao, atalhoHabilidadeAutomatica3Padrao := "F3"
+global atalhoHabilidadeAutomatica4Padrao, atalhoHabilidadeAutomatica4Padrao := "F4"
+global atalhoPerfilAutomatico1Padrao, atalhoPerfilAutomatico1Padrao := "^F1"
+global atalhoPerfilAutomatico2Padrao, atalhoPerfilAutomatico2Padrao := "^F2"
+global atalhoPerfilAutomatico3Padrao, atalhoPerfilAutomatico3Padrao := "^F3"
+global atalhoPerfilAutomatico4Padrao, atalhoPerfilAutomatico4Padrao := "^F4"
+global atalhoPerfilAutomatico5Padrao, atalhoPerfilAutomatico5Padrao := "^+F1"
+global atalhoPerfilAutomatico6Padrao, atalhoPerfilAutomatico6Padrao := "^+F2"
+global atalhoPerfilAutomatico7Padrao, atalhoPerfilAutomatico7Padrao := "^+F3"
+global atalhoPerfilAutomatico8Padrao, atalhoPerfilAutomatico8Padrao := "^+F4"
+global atalhoTeleportePadrao, atalhoTeleportePadrao := "^t"
+global atalhoMostraDistanciaDiabloPadrao, atalhoMostraDistanciaDiabloPadrao := "^+d"
+global atalhoMostraInfoAvancadasPadrao, atalhoMostraInfoAvancadasPadrao := "^+m"
+global atalhoSequenciadorAutomatico1Padrao, atalhoSequenciadorAutomatico1Padrao := "^F5"
+global atalhoSequenciadorAutomatico2Padrao, atalhoSequenciadorAutomatico2Padrao := "^F6"
+global atalhoSequenciadorAutomatico3Padrao, atalhoSequenciadorAutomatico3Padrao := "^F7"
+global atalhoSequenciadorAutomatico4Padrao, atalhoSequenciadorAutomatico4Padrao := "^F8"
+
 global screenSizeX
 global screenSizeY
 
-global atalhoParagonDano
-global atalhoParagonVida
 global latency1
 global latency2
-global activateKeyParagon
+global atalhoDiabloParagon
 global quantTrocaKadala
 global screenSizeRegX
 global screenSizeRegY
@@ -233,7 +285,7 @@ if testeForaDiablo <> 1
 
 Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
 Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
-Hotkey, F5, kadala
+Hotkey, F5, trocaKadala
 Hotkey, F6, reciclaUM
 Hotkey, +^F6, reciclaLinha
 Hotkey, F11, transformaRaroLendarioHorizontal
@@ -392,7 +444,7 @@ trocaParagonDano() ; script to change paragon for dealing damage
     
     MouseGetPos, mouseX, mouseY
 
-    SendInput %activateKeyParagon%
+    SendInput %atalhoDiabloParagon%
 
     SetMouseDelay, %latency1%
     MouseClick, Left, menuAtributoX, menuAtributoY
@@ -445,7 +497,7 @@ trocaParagonVida() ; script to change paragon for staying alive
     
     MouseGetPos, mouseX, mouseY
 
-    SendInput %activateKeyParagon%
+    SendInput %atalhoDiabloParagon%
 
     SetMouseDelay, %latency1%
     MouseClick, Left, menuAtributoX, menuAtributoY
@@ -489,7 +541,7 @@ trocaParagonVida() ; script to change paragon for staying alive
     return
 }
 
-kadala()  
+trocaKadala()  
 {
     Critical
 
@@ -717,7 +769,7 @@ transformaRaroLendarioTimer()
 posicao()  
 {
 
-    arquivoSaida = pontos.txt
+    arquivoSaida := pontos.txt
 
     MouseGetPos, mouseX, mouseY
     
@@ -1109,7 +1161,7 @@ trocaWheelUpDownNecro()
 
 validaCor()  
 {
-    arquivoSaida = pontos.txt
+    arquivoSaida := pontos.txt
 
     MouseGetPos, mouseX, mouseY
 
@@ -1288,165 +1340,238 @@ carregaConfiguracao()
     RegRead, InfoAvancadasMetros, HKEY_CURRENT_USER\Software\BD3Auto\Config, InfoAvancadasMetros
     if InfoAvancadasMetros is not integer
     {
-        InfoAvancadasMetros = 0
+        InfoAvancadasMetros := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, InfoAvancadasMetros, %InfoAvancadasMetros%
     }
 
     RegRead, testeForaDiablo, HKEY_CURRENT_USER\Software\BD3Auto\Config, TesteForaDiablo
     if testeForaDiablo is not integer
     {
-        testeForaDiablo = 0
+        testeForaDiablo := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, TesteForaDiablo, %testeForaDiablo%
     }
 
     RegRead, configAvancadas, HKEY_CURRENT_USER\Software\BD3Auto\Config, ConfigAvancadas
     if configAvancadas is not integer
     {
-        configAvancadas = 0
+        configAvancadas := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ConfigAvancadas, %configAvancadas%
     }
 
     RegRead, latency1, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon
     if latency1 is not integer
     {
-        latency1 = 100
+        latency1 := 100
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon, %latency1%
     }
 
     RegRead, latency2, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick
     if latency2 is not integer
     {
-        latency2 = 1
+        latency2 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick, %latency2%
     }
     
-    RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon
-    if activateKeyParagon is space
+    RegRead, atalhoDiabloParagon, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon
+    if atalhoDiabloParagon is space
     {
-        activateKeyParagon := "p"
-        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %activateKeyParagon%
+        atalhoDiabloParagon := "p"
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %atalhoDiabloParagon%
     }
 
     RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala
     if quantTrocaKadala is not integer
     {
-        quantTrocaKadala = 30
+        quantTrocaKadala := 30
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala, %quantTrocaKadala%
     }
 
     RegRead, screenSizeRegX, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoX
     if screenSizeRegX is not integer
     {
-        screenSizeRegX = 0
+        screenSizeRegX := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoX, %screenSizeRegX%
     }
 
     RegRead, screenSizeRegY, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY
         if screenSizeRegY is not integer
     {
-        screenSizeRegY = 0
+        screenSizeRegY := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY, %screenSizeRegY%
     }
 
 ;----------------------------------
 ;configurações avançadas - atalhos
 
-;Hotkey, F1, habilidadeAutomatica1
-;Hotkey, F2, habilidadeAutomatica2
-;Hotkey, F3, habilidadeAutomatica3
-;Hotkey, F4, habilidadeAutomatica4
-;Hotkey, ^F1, perfilAutomatico1
-;Hotkey, ^F2, perfilAutomatico2
-;Hotkey, ^F3, perfilAutomatico3
-;Hotkey, ^F4, perfilAutomatico4
-;Hotkey, +^F1, perfilAutomatico5
-;Hotkey, +^F2, perfilAutomatico6
-;Hotkey, +^F3, perfilAutomatico7
-;Hotkey, +^F4, perfilAutomatico8
-;Hotkey, +F12, trocaWheelUpDownNecro
-;Hotkey, ^t, teleporte
-;Hotkey, ^+d, verificaDistancia
-;Hotkey, ^+m, mostraInfoAvancadas
+    RegRead, atalhoParagonDano, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano
+    if atalhoParagonDano is space
+    {
+        atalhoParagonDano := atalhoParagonDanoPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
+    }
 
-;Hotkey, ^F5, sequenciadorAutomatico1
-;Hotkey, ^F6, sequenciadorAutomatico2
-;Hotkey, ^F7, sequenciadorAutomatico3
-;Hotkey, ^F8, sequenciadorAutomatico4
+    RegRead, atalhoParagonVida, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida
+    if atalhoParagonVida is space
+    {
+        atalhoParagonVida := atalhoParagonVidaPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
+    }
 
+    RegRead, atalhoTrocaKadala, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTrocaKadala
+    if atalhoTrocaKadala is space
+    {
+        atalhoTrocaKadala := atalhoTrocaKadalaPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTrocaKadala, %atalhoTrocaKadala%
+    }
+
+    RegRead, atalhoReciclaUM, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoReciclaUM
+    if atalhoReciclaUM is space
+    {
+        atalhoReciclaUM := atalhoReciclaUMPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoReciclaUM, %atalhoReciclaUM%
+    }
+
+    RegRead, atalhoReciclaLinha, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoReciclaLinha
+    if atalhoReciclaLinha is space
+    {
+        atalhoReciclaLinha := atalhoReciclaLinhaPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoReciclaLinha, %atalhoReciclaLinha%
+    }
+
+    RegRead, atalhoTransformaRaroLendarioHorizontal, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTransformaRaroLendarioHorizontal
+    if atalhoTransformaRaroLendarioHorizontal is space
+    {
+        atalhoTransformaRaroLendarioHorizontal := atalhoTransformaRaroLendarioHorizontalPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTransformaRaroLendarioHorizontal, %atalhoTransformaRaroLendarioHorizontal%
+    }
+
+    RegRead, atalhoTransformaRaroLendarioVertical, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTransformaRaroLendarioVertical
+    if atalhoTransformaRaroLendarioVertical is space
+    {
+        atalhoTransformaRaroLendarioVertical := atalhoTransformaRaroLendarioVerticalPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTransformaRaroLendarioVertical, %atalhoTransformaRaroLendarioVertical%
+    }
+
+    RegRead, atalhoHabilidadeAutomatica1, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoHabilidadeAutomatica1
+    if atalhoHabilidadeAutomatica1 is space
+    {
+        atalhoHabilidadeAutomatica1 := atalhoHabilidadeAutomatica1Padrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoHabilidadeAutomatica1, %atalhoHabilidadeAutomatica1%
+    }
+
+    RegRead, atalhoTeleporte, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTeleporte
+    if atalhoTeleporte is space
+    {
+        atalhoTeleporte := atalhoTeleportePadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTeleporte, %atalhoTeleporte%
+    }
+
+    RegRead, atalhoMostraDistanciaDiablo, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoMostraDistanciaDiablo
+    if atalhoMostraDistanciaDiablo is space
+    {
+        atalhoMostraDistanciaDiablo := atalhoMostraDistanciaDiabloPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoMostraDistanciaDiablo, %atalhoMostraDistanciaDiablo%
+    }
+
+    RegRead, atalhoMostraInfoAvancadas, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoMostraInfoAvancadas
+    if atalhoMostraInfoAvancadas is space
+    {
+        atalhoMostraInfoAvancadas := atalhoMostraInfoAvancadasPadrao
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoMostraInfoAvancadas, %atalhoMostraInfoAvancadas%
+    }
+
+    loop, 4
+    {
+        RegRead, atalhoHabilidadeAutomatica%A_Index%, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoHabilidadeAutomatica%A_Index%
+        if atalhoHabilidadeAutomatica%A_Index% is space
+        {
+            atalhoHabilidadeAutomatica%A_Index% := atalhoHabilidadeAutomatica%A_Index%Padrao
+            valor := atalhoHabilidadeAutomatica%A_Index%
+            RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoHabilidadeAutomatica%A_Index%, %valor%
+        }
+    }
+
+    loop, 8
+    {
+        RegRead, atalhoPerfilAutomatico%A_Index%, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoPerfilAutomatico%A_Index%
+        if atalhoPerfilAutomatico%A_Index% is space
+        {
+            atalhoPerfilAutomatico%A_Index% := atalhoPerfilAutomatico%A_Index%Padrao
+            valor := atalhoPerfilAutomatico%A_Index%
+            RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoPerfilAutomatico%A_Index%, %valor%
+        }
+    }
+
+    loop, 4
+    {
+        RegRead, atalhoSequenciadorAutomatico%A_Index%, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoSequenciadorAutomatico%A_Index%
+        if atalhoSequenciadorAutomatico%A_Index% is space
+        {
+            atalhoSequenciadorAutomatico%A_Index% := atalhoSequenciadorAutomatico%A_Index%Padrao
+            valor := atalhoSequenciadorAutomatico%A_Index%
+            RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoSequenciadorAutomatico%A_Index%, %valor%
+        }
+    }
 
 ;-----------------------------
     ;Parametros de Paragon Dano
 
-    RegRead, atalhoParagonDano, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano
-    if atalhoParagonDano is space
-    {
-        atalhoParagonDano = F8
-        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
-    }
-
     RegRead, stat1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo
     if stat1 is not integer
     {
-        stat1 = 1
+        stat1 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo, %stat1%
     }
     
     RegRead, vit1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade
     if vit1 is not integer
     {
-        vit1 = 0
+        vit1 := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade, %vit1%
     }
     
     RegRead, speed1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade
     if speed1 is not integer
     {
-        speed1 = 1
+        speed1 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade, %speed1%
     }
     
     RegRead, resource1, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoRecurso
     if resource1 is not integer
     {
-        resource1 = 1
+        resource1 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoRecurso, %resource1%
     }
 
 ;-----------------------------
     ;Parametros de Paragon Vida
-    
-    RegRead, atalhoParagonVida, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida
-    if atalhoParagonVida is space
-    {
-        atalhoParagonVida = F7
-        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
-    }
 
     RegRead, stat2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo
     if stat2 is not integer
     {
-        stat2 = 0
+        stat2 := 0
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo, %stat2%
     }
     
     RegRead, vit2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade
     if vit2 is not integer
     {
-        vit2 = 1
+        vit2 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade, %vit2%
     }
     
     RegRead, speed2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade
     if speed2 is not integer
     {
-        speed2 = 1
+        speed2 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade, %speed2%
     }
     
     RegRead, resource2, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaRecurso
     if resource2 is not integer
     {
-        resource2 = 1
+        resource2 := 1
         RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaRecurso, %resource2%
     }
 
@@ -1588,14 +1713,46 @@ gravaConfiguracao()
 
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaPainelParagon, %latency1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick, %latency2%
-    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %activateKeyParagon%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %atalhoDiabloParagon%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala, %quantTrocaKadala%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoX, %screenSizeRegX%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, ResolucaoY, %screenSizeRegY%
 
+;----------------------------------
+;configurações avançadas - atalhos
+
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTrocaKadala, %atalhoTrocaKadala%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoReciclaUM, %atalhoReciclaUM%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoReciclaLinha, %atalhoReciclaLinha%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTransformaRaroLendarioHorizontal, %atalhoTransformaRaroLendarioHorizontal%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTransformaRaroLendarioVertical, %atalhoTransformaRaroLendarioVertical%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoHabilidadeAutomatica1, %atalhoHabilidadeAutomatica1%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoTeleporte, %atalhoTeleporte%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoMostraDistanciaDiablo, %atalhoMostraDistanciaDiablo%
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoMostraInfoAvancadas, %atalhoMostraInfoAvancadas%
+    
+    loop, 4
+    {
+        valor := atalhoHabilidadeAutomatica%A_Index%
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoHabilidadeAutomatica%A_Index%, %valor%
+    }
+
+    loop, 8
+    {
+        valor := atalhoPerfilAutomatico%A_Index%
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoPerfilAutomatico%A_Index%, %valor%
+    }
+
+    loop, 4
+    {
+        valor := atalhoSequenciadorAutomatico%A_Index%
+        RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Atalhos, AtalhoSequenciadorAutomatico%A_Index%, %valor%
+    }
+
 ;-----------------------------
     ;Parametros de Paragon Dano
-    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, atalhoParagonDano, %atalhoParagonDano%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoAtributo, %stat1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVitalidade, %vit1%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonDano, ParagonDanoVelocidade, %speed1%
@@ -1604,7 +1761,6 @@ gravaConfiguracao()
 ;-----------------------------
     ;Parametros de Paragon Vida
 
-    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, AtalhoParagonVida, %AtalhoParagonVida%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaAtributo, %stat2%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVitalidade, %vit2%
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\ParagonVida, ParagonVidaVelocidade, %speed2%
@@ -1705,8 +1861,8 @@ migraConfigVelha()
     RegRead, latency2, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 02_LatenciaClick
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, LatenciaClick, %latency2%
 
-    RegRead, activateKeyParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
-    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %activateKeyParagon%
+    RegRead, atalhoDiabloParagon, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 03_AtalhoDiabloParagon
+    RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, AtalhoDiabloParagon, %atalhoDiabloParagon%
 
     RegRead, quantTrocaKadala, HKEY_CURRENT_USER\Software\DiabloAuto\02_Config, 04_QuantTrocaKadala
     RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\BD3Auto\Config, QuantTrocaKadala, %quantTrocaKadala%
@@ -1780,23 +1936,52 @@ criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: New,, Configurações Avançadas
     Gui, ConfiguracoesAvancada: Default
         
-    Gui Add, Tab3, x10 y10 w500 h280, Advertências||Teclas de Atalho|Atalho Auto Avançado|Configurações do desenvolvedor
+    ;Gui Add, Tab3, x10 y10 w500 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Configurações do desenvolvedor
+    Gui Add, Tab3, x10 y10 w500 h350, Advertências|Teclas de Atalho||Atalho Auto Avançado|Configurações do desenvolvedor
 
     Gui, Tab, 1
     Gui, Font, s13
     Gui, Add, Text, x30 y120, *** Mexa com cuidado nestas configurações ***
+    Gui, Add, Text, x30 y180, *** Após alterações de atalho, recarregue o script ***
     Gui, Font
 
+    linha := 50
+    coluna := 30
+    incrementoLinha := 21
+
     Gui, Tab, 2
-    Gui, Add, Text, x60 y105, Latência Paragon:
-    Gui, Add, Text,, Latência:
-    Gui, Add, Text,, Atalho Paragon:
-    Gui, Add, Text,, Troca Kadala (Quantidade):
-    Gui, Add, Text,, ResoluçãoX:
-    Gui, Add, Text,, ResoluçãoY:
+    Gui, Add, Text, x%coluna% y%linha%, Paragon Vida:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Paragon Dano:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Troca Kadala:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Recicla Um:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Recicla Linha:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Teleporte:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Mostra Distancia:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Inf. Avancadas:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Transf. Lendario (H):
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Transf. Lendario (V):
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Auto Cast 1:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Auto Cast 2:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Auto Cast 3:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Auto Cast 4:
+    linha := linha + incrementoLinha
+
     ;Gui, Add, Edit, x210 y105 w60 h21 vlatency1, %latency1%  ; The ym option starts a new column of controls.
     ;Gui, Add, Edit, w60 h21 vlatency2, %latency2%
-    ;Gui, Add, Edit, w60 h21 vactivateKeyParagon, %activateKeyParagon% ; The ym option starts a new column of controls.
+    ;Gui, Add, Edit, w60 h21 vatalhoDiabloParagon, %atalhoDiabloParagon% ; The ym option starts a new column of controls.
     ;Gui, Add, Edit, w60 h21 vquantTrocaKadala, %quantTrocaKadala%
     ;Gui, Add, Edit, w60 h21 vscreenSizeRegX, %screenSizeRegX% ; The ym option starts a new column of controls.
     ;Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
@@ -1805,6 +1990,19 @@ criaJanelaConfiguracaoAvancada()
 ;    Gui, Add, Text, x245 y185, + = Shift
 ;    Gui, Add, Text, x245 y200, ^+v = control+shift+v
 ;    Gui, Add, Text, x245 y215, Necessário reload
+
+;global atalhoPerfilAutomatico1
+;global atalhoPerfilAutomatico2
+;global atalhoPerfilAutomatico3
+;global atalhoPerfilAutomatico4
+;global atalhoPerfilAutomatico5
+;global atalhoPerfilAutomatico6
+;global atalhoPerfilAutomatico7
+;global atalhoPerfilAutomatico8
+;global atalhoSequenciadorAutomatico1
+;global atalhoSequenciadorAutomatico2
+;global atalhoSequenciadorAutomatico3
+;global atalhoSequenciadorAutomatico4
 
 
     Gui, Tab, 3
@@ -1852,7 +2050,7 @@ criaJanelaConfiguracaoAvancada()
 
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
-    Gui, Add, Button, x317 y300 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Add, Button, x467 y370 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
     
     return
     
@@ -1889,11 +2087,11 @@ criaJanelaConfiguracao()
     Gui, Add, Text,, Troca Kadala (Quantidade):
     Gui, Add, Text,, ResoluçãoX:
     Gui, Add, Text,, ResoluçãoY:
-    Gui, Add, Edit, x210 y105 w60 h21 vlatency1, %latency1%  ; The ym option starts a new column of controls.
+    Gui, Add, Edit, x210 y105 w60 h21 vlatency1, %latency1%  
     Gui, Add, Edit, w60 h21 vlatency2, %latency2%
-    Gui, Add, Edit, w60 h21 vactivateKeyParagon, %activateKeyParagon% ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w60 h21 vatalhoDiabloParagon, %atalhoDiabloParagon% 
     Gui, Add, Edit, w60 h21 vquantTrocaKadala, %quantTrocaKadala%
-    Gui, Add, Edit, w60 h21 vscreenSizeRegX, %screenSizeRegX% ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w60 h21 vscreenSizeRegX, %screenSizeRegX% 
     Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
 
     Gui, Tab, 3
@@ -1903,10 +2101,10 @@ criaJanelaConfiguracao()
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Text, x100 y130 w40 h21, %atalhoParagonVida%  ; The ym option starts a new column of controls.
-    Gui, Add, Edit, w40 h21 vstat2, %stat2%  ; The ym option starts a new column of controls.
+    Gui, Add, Text, x100 y130 w40 h21, %atalhoParagonVida%  
+    Gui, Add, Edit, w40 h21 vstat2, %stat2%  
     Gui, Add, Edit, w40 h21 vvit2, %vit2%
-    Gui, Add, Edit, w40 h21 vspeed2, %speed2% ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w40 h21 vspeed2, %speed2% 
     Gui, Add, Edit, w40 h21 vresource2, %resource2%
     Gui, Add, Text, x220 y100, Dano
     Gui, Add, Text, x190 y130, Atalho:
@@ -1914,10 +2112,10 @@ criaJanelaConfiguracao()
     Gui, Add, Text,, Vitalidade:
     Gui, Add, Text,, Velocidade:
     Gui, Add, Text,, Recurso:
-    Gui, Add, Text, x250 y130 w40 h21, %atalhoParagonDano%  ; The ym option starts a new column of controls.
-    Gui, Add, Edit, w40 h21 vstat1, %stat1%  ; The ym option starts a new column of controls.
+    Gui, Add, Text, x250 y130 w40 h21, %atalhoParagonDano%  
+    Gui, Add, Edit, w40 h21 vstat1, %stat1%  
     Gui, Add, Edit, w40 h21 vvit1, %vit1%
-    Gui, Add, Edit, w40 h21 vspeed1, %speed1% ; The ym option starts a new column of controls.
+    Gui, Add, Edit, w40 h21 vspeed1, %speed1%
     Gui, Add, Edit, w40 h21 vresource1, %resource1%
 
     Gui, Tab, 4
@@ -1997,8 +2195,9 @@ botaoSalvarConfig()
         Gui, Configuracoes: Submit  ; Save each control's contents to its associated variable.
         gravaConfiguracao()
         
-        Gui, Destroy
-
+        Gui, ConfiguracoesAvancada:Destroy
+        Gui, Configuracoes:Destroy
+        
         if InfoAvancadasAtivo = 1
         {
             criaInfoAvancadas()
@@ -2028,7 +2227,7 @@ abreJanelaConfiguracao()
     {
         ;Gui, InfoAvancadas:Default
         SetTimer, atualizaInfoAvancadas, off
-        Gui, Destroy ; NoActivate avoids deactivating the currently active window.
+        Gui, InfoAvancadas:Destroy
     }
 
     sequenciadorAutomatico1AtalhoAntes := sequenciadorAutomatico1Atalho
@@ -2078,7 +2277,7 @@ mostraInfoAvancadas()
 criaInfoAvancadas()
 {
     Gui, InfoAvancadas: New
-    CustomColor = EEAA99  ; Can be any RGB color (it will be made transparent below).
+    CustomColor := EEAA99  ; Can be any RGB color (it will be made transparent below).
     Gui +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
     Gui, Color, %CustomColor%
     Gui, Font, s32  ; Set a large font size (32-point).
