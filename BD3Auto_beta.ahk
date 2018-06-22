@@ -18,6 +18,9 @@ global atalhoReciclaUM
 global atalhoReciclaLinha
 global atalhoTransformaRaroLendarioHorizontal
 global atalhoTransformaRaroLendarioVertical
+global atalhoTeleporte
+global atalhoMostraDistanciaDiablo
+global atalhoMostraInfoAvancadas
 global atalhoHabilidadeAutomatica1
 global atalhoHabilidadeAutomatica2
 global atalhoHabilidadeAutomatica3
@@ -30,9 +33,6 @@ global atalhoPerfilAutomatico5
 global atalhoPerfilAutomatico6
 global atalhoPerfilAutomatico7
 global atalhoPerfilAutomatico8
-global atalhoTeleporte
-global atalhoMostraDistanciaDiablo
-global atalhoMostraInfoAvancadas
 global atalhoSequenciadorAutomatico1
 global atalhoSequenciadorAutomatico2
 global atalhoSequenciadorAutomatico3
@@ -1937,7 +1937,7 @@ criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: Default
         
     ;Gui Add, Tab3, x10 y10 w500 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Configurações do desenvolvedor
-    Gui Add, Tab3, x10 y10 w500 h350, Advertências|Teclas de Atalho||Atalho Auto Avançado|Configurações do desenvolvedor
+    Gui Add, Tab3, x10 y10 w500 h380, Advertências|Teclas de Atalho||Atalho Auto Avançado|Configurações do desenvolvedor
 
     Gui, Tab, 1
     Gui, Font, s13
@@ -1945,11 +1945,13 @@ criaJanelaConfiguracaoAvancada()
     Gui, Add, Text, x30 y180, *** Após alterações de atalho, recarregue o script ***
     Gui, Font
 
-    linha := 50
-    coluna := 30
-    incrementoLinha := 21
 
     Gui, Tab, 2
+
+    linha := 60
+    coluna := 30
+    incrementoLinha := 23
+    
     Gui, Add, Text, x%coluna% y%linha%, Paragon Vida:
     linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Paragon Dano:
@@ -1960,15 +1962,15 @@ criaJanelaConfiguracaoAvancada()
     linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Recicla Linha:
     linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Transf. Lendario (H):
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Transf. Lendario (V):
+    linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Teleporte:
     linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Mostra Distancia:
     linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Inf. Avancadas:
-    linha := linha + incrementoLinha
-    Gui, Add, Text, x%coluna% y%linha%, Transf. Lendario (H):
-    linha := linha + incrementoLinha
-    Gui, Add, Text, x%coluna% y%linha%, Transf. Lendario (V):
     linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Auto Cast 1:
     linha := linha + incrementoLinha
@@ -1979,17 +1981,38 @@ criaJanelaConfiguracaoAvancada()
     Gui, Add, Text, x%coluna% y%linha%, Auto Cast 4:
     linha := linha + incrementoLinha
 
-    ;Gui, Add, Edit, x210 y105 w60 h21 vlatency1, %latency1%  ; The ym option starts a new column of controls.
-    ;Gui, Add, Edit, w60 h21 vlatency2, %latency2%
-    ;Gui, Add, Edit, w60 h21 vatalhoDiabloParagon, %atalhoDiabloParagon% ; The ym option starts a new column of controls.
-    ;Gui, Add, Edit, w60 h21 vquantTrocaKadala, %quantTrocaKadala%
-    ;Gui, Add, Edit, w60 h21 vscreenSizeRegX, %screenSizeRegX% ; The ym option starts a new column of controls.
-    ;Gui, Add, Edit, w60 h21 vscreenSizeRegY, %screenSizeRegY%
-;    Gui, Add, Text, x245 y150, (*) para configurar:
-;    Gui, Add, Text, x245 y170, ^ = Control
-;    Gui, Add, Text, x245 y185, + = Shift
-;    Gui, Add, Text, x245 y200, ^+v = control+shift+v
-;    Gui, Add, Text, x245 y215, Necessário reload
+    linha := 60
+    coluna := 140
+
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoParagonDano, %atalhoParagonDano% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoParagonVida, %atalhoParagonVida% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoTrocaKadala, %atalhoTrocaKadala% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoReciclaUM, %atalhoReciclaUM% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoReciclaLinha, %atalhoReciclaLinha% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoTransformaRaroLendarioHorizontal, %atalhoTransformaRaroLendarioHorizontal% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoTransformaRaroLendarioVertical, %atalhoTransformaRaroLendarioVertical% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoTeleporte, %atalhoTeleporte% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoMostraDistanciaDiablo, %atalhoMostraDistanciaDiablo% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoMostraInfoAvancadas, %atalhoMostraInfoAvancadas% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoHabilidadeAutomatica1, %atalhoHabilidadeAutomatica1% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoHabilidadeAutomatica2, %atalhoHabilidadeAutomatica2% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoHabilidadeAutomatica3, %atalhoHabilidadeAutomatica3% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoHabilidadeAutomatica4, %atalhoHabilidadeAutomatica4% 
+    linha := linha + incrementoLinha
+
 
 ;global atalhoPerfilAutomatico1
 ;global atalhoPerfilAutomatico2
@@ -2050,7 +2073,7 @@ criaJanelaConfiguracaoAvancada()
 
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
-    Gui, Add, Button, x467 y370 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Add, Button, x467 y400 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
     
     return
     
