@@ -1937,12 +1937,11 @@ criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: Default
         
     ;Gui Add, Tab3, x10 y10 w500 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Configurações do desenvolvedor
-    Gui Add, Tab3, x10 y10 w500 h380, Advertências|Teclas de Atalho||Atalho Auto Avançado|Configurações do desenvolvedor
+    Gui Add, Tab3, x10 y10 w550 h380, Advertências|Teclas de Atalho|Atalho Auto Avançado||Configurações do desenvolvedor
 
     Gui, Tab, 1
     Gui, Font, s13
     Gui, Add, Text, x30 y120, *** Mexa com cuidado nestas configurações ***
-    Gui, Add, Text, x30 y180, *** Após alterações de atalho, recarregue o script ***
     Gui, Font
 
 
@@ -1979,7 +1978,6 @@ criaJanelaConfiguracaoAvancada()
     Gui, Add, Text, x%coluna% y%linha%, Auto Cast 3:
     linha := linha + incrementoLinha
     Gui, Add, Text, x%coluna% y%linha%, Auto Cast 4:
-    linha := linha + incrementoLinha
 
     linha := 60
     coluna := 140
@@ -2011,31 +2009,71 @@ criaJanelaConfiguracaoAvancada()
     Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoHabilidadeAutomatica3, %atalhoHabilidadeAutomatica3% 
     linha := linha + incrementoLinha
     Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoHabilidadeAutomatica4, %atalhoHabilidadeAutomatica4% 
+
+    linha := 60
+    coluna := 230
+    incrementoLinha := 23
+    
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto1:
     linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto2:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto3:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto4:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto5:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto6:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto7:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Perfil Auto8:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Sequenciador Auto1:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Sequenciador Auto2:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Sequenciador Auto3:
+    linha := linha + incrementoLinha
+    Gui, Add, Text, x%coluna% y%linha%, Sequenciador Auto4:
 
+    linha := 60
+    coluna := 340
 
-;global atalhoPerfilAutomatico1
-;global atalhoPerfilAutomatico2
-;global atalhoPerfilAutomatico3
-;global atalhoPerfilAutomatico4
-;global atalhoPerfilAutomatico5
-;global atalhoPerfilAutomatico6
-;global atalhoPerfilAutomatico7
-;global atalhoPerfilAutomatico8
-;global atalhoSequenciadorAutomatico1
-;global atalhoSequenciadorAutomatico2
-;global atalhoSequenciadorAutomatico3
-;global atalhoSequenciadorAutomatico4
-
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico1, %atalhoPerfilAutomatico1% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico2, %atalhoPerfilAutomatico2% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico3, %atalhoPerfilAutomatico3% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico4, %atalhoPerfilAutomatico4% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico5, %atalhoPerfilAutomatico5% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico6, %atalhoPerfilAutomatico6% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico7, %atalhoPerfilAutomatico7% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoPerfilAutomatico8, %atalhoPerfilAutomatico8% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoSequenciadorAutomatico1, %atalhoSequenciadorAutomatico1% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoSequenciadorAutomatico2, %atalhoSequenciadorAutomatico2% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoSequenciadorAutomatico3, %atalhoSequenciadorAutomatico3% 
+    linha := linha + incrementoLinha
+    Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoSequenciadorAutomatico4, %atalhoSequenciadorAutomatico4% 
 
     Gui, Tab, 3
-    Gui, Add, Text, x20 y80, Atalho
-    Gui, Add, Text, x80 y80, Tecla1
-    Gui, Add, Text, x145 y80, Tecla2
-    Gui, Add, Text, x210 y80, Tecla3
-    Gui, Add, Text, x275 y80, Tecla4
+    Gui, Add, Text, x60 y80, Atalho
+    Gui, Add, Text, x180 y80, Tecla1
+    Gui, Add, Text, x290 y80, Tecla2
+    Gui, Add, Text, x400 y80, Tecla3
+    Gui, Add, Text, x510 y80, Tecla4
+
     linha := 100
-    
+
     loop, 4
     {
         atalho := sequenciadorAutomatico%A_Index%Atalho
@@ -2049,18 +2087,18 @@ criaJanelaConfiguracaoAvancada()
         tecla4Tempo := sequenciadorAutomatico%A_Index%Tecla4Tempo
         
 
-        Gui, Add, Edit, x20 y%linha% w50 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
-        Gui, Add, Edit, x80 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1, %tecla1%
-        Gui, Add, Edit, x145 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2, %tecla2%
-        Gui, Add, Edit, x210 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3, %tecla3%
-        Gui, Add, Edit, x275 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4, %tecla4%
+        Gui, Add, Edit, x20 y%linha% w80 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
+        Gui, Add, Edit, x115 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla1, %tecla1%
+        Gui, Add, Edit, x225 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla2, %tecla2%
+        Gui, Add, Edit, x335 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla3, %tecla3%
+        Gui, Add, Edit, x445 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla4, %tecla4%
         
-        linha := linha + 21
-        Gui, Add, Edit, x80 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1Tempo, %tecla1Tempo%
-        Gui, Add, Edit, x145 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2Tempo, %tecla2Tempo%
-        Gui, Add, Edit, x210 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3Tempo, %tecla3Tempo%
-        Gui, Add, Edit, x275 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4Tempo, %tecla4Tempo%
-        linha := linha + 25
+        linha := linha + 23
+        Gui, Add, Edit, x155 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1Tempo, %tecla1Tempo%
+        Gui, Add, Edit, x265 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2Tempo, %tecla2Tempo%
+        Gui, Add, Edit, x375 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3Tempo, %tecla3Tempo%
+        Gui, Add, Edit, x485 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4Tempo, %tecla4Tempo%
+        linha := linha + 40
 
     }
     
@@ -2073,7 +2111,11 @@ criaJanelaConfiguracaoAvancada()
 
     Gui, Tab  ; i.e. subsequently-added controls will not belong to the tab control.
 
-    Gui, Add, Button, x467 y400 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Font, s10 bold
+    Gui, Add, Text, x10 y390, *** Após alterações de atalho, salve e recarregue (Control+Shift+R)***
+    Gui, Font
+
+    Gui, Add, Button, x517 y400 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
     
     return
     
