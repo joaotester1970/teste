@@ -138,6 +138,7 @@ Global habilidade4TempoPerfil8
 Global sequenciadorAutomaticoEstado, sequenciadorAutomaticoEstado := 0
 Global sequenciadorAutomaticoCarregado, sequenciadorAutomaticoCarregado := 1
 Global sequenciadorAutomaticoTeclaAcionada
+
 Global sequenciadorAutomatico1AtalhoAntes
 Global sequenciadorAutomatico2AtalhoAntes
 Global sequenciadorAutomatico3AtalhoAntes
@@ -179,6 +180,19 @@ Global sequenciadorAutomatico4Tecla3
 Global sequenciadorAutomatico4Tecla3Tempo
 Global sequenciadorAutomatico4Tecla4
 Global sequenciadorAutomatico4Tecla4Tempo
+
+Global frases1Atalho
+Global frases1Texto
+Global frases2Atalho
+Global frases2Texto
+Global frases3Atalho
+Global frases3Texto
+Global frases4Atalho
+Global frases4Texto
+Global frases1AtalhoAntes
+Global frases2AtalhoAntes
+Global frases3AtalhoAntes
+Global frases4AtalhoAntes
 
 Global forcarMovimentoEstado, forcarMovimentoEstado := -1
 
@@ -329,6 +343,24 @@ if sequenciadorAutomatico4Atalho <> ""
     Hotkey, $%sequenciadorAutomatico4Atalho%, sequenciadorAutomaticoTeclaPressionada4
 }
 
+if frases1Atalho <> ""
+{
+    Hotkey, $%frases1Atalho%, frasesPressionada1
+}
+if frases2Atalho <> ""
+{
+    Hotkey, $%frases2Atalho%, frasesPressionada2
+}
+if frases3Atalho <> ""
+{
+    Hotkey, $%frases3Atalho%, frasesPressionada3
+}
+if frases4Atalho <> ""
+{
+    Hotkey, $%frases4Atalho%, frasesPressionada4
+}
+
+
 return
 
 recarregar()
@@ -435,6 +467,31 @@ sequenciadorAutomaticoTeclaPressionada4()
     sequenciadorAutomaticoTeclaPressionada()
     Return
 }
+
+frasesPressionada1()
+{
+    frasesPressionada(1)
+    Return
+}
+
+frasesPressionada2()
+{
+    frasesPressionada(2)
+    Return
+}
+
+frasesPressionada3()
+{
+    frasesPressionada(3)
+    Return
+}
+
+frasesPressionada4()
+{
+    frasesPressionada(4)
+    Return
+}
+
 
 trocaParagonDano() ; script to change paragon for dealing damage
 {
@@ -989,6 +1046,17 @@ habilidade4()
 teleporte()
 {
     Send, t{Enter}
+    return
+}
+
+frasesPressionada(fraseAcionada)
+{
+    texto := frases%fraseAcionada%Texto
+    
+    SendInput, {Enter}
+    SendInput, %texto%        
+    SendInput, {Enter}
+
     return
 }
 
@@ -1704,6 +1772,27 @@ carregaConfiguracao()
         sequenciadorAutomatico%A_Index%Tecla4Tempo := tecla4Tempo
     }
 
+    loop, 4
+    {
+        chaveRegistry := "HKEY_CURRENT_USER\Software\BD3Auto\Frases\Frase" . A_Index
+        RegRead, atalho, %chaveRegistry%, Atalho
+        if atalho is space
+        {
+            atalho := ""
+            RegWrite, REG_SZ, %chaveRegistry%, Atalho, %atalho%
+        }
+
+        RegRead, texto, %chaveRegistry%, Texto
+        if texto is space
+        {
+            texto := ""
+            RegWrite, REG_SZ, %chaveRegistry%, Texto, %texto%
+        }
+
+        frases%A_Index%Atalho := atalho
+        frases%A_Index%Texto := texto
+    }
+
     return
 
 }
@@ -1844,7 +1933,20 @@ gravaConfiguracao()
         RegWrite, REG_SZ, %chaveRegistry%, Tecla4Tempo, %tecla4Tempo%
     }
 
-    if (sequenciadorAutomatico1AtalhoAntes <> sequenciadorAutomatico1Atalho or sequenciadorAutomatico2AtalhoAntes <> sequenciadorAutomatico2Atalho or sequenciadorAutomatico3AtalhoAntes <> sequenciadorAutomatico3Atalho or sequenciadorAutomatico4AtalhoAntes <> sequenciadorAutomatico4Atalho)
+    loop, 4
+    {
+        chaveRegistry := "HKEY_CURRENT_USER\Software\BD3Auto\Frases\Frase" . A_Index
+
+        atalho := frases%A_Index%Atalho
+        texto := frases%A_Index%Texto 
+
+        RegWrite, REG_SZ, %chaveRegistry%, Atalho, %atalho%
+        RegWrite, REG_SZ, %chaveRegistry%, Texto, %texto%
+
+    }
+
+
+    if (sequenciadorAutomatico1AtalhoAntes <> sequenciadorAutomatico1Atalho or sequenciadorAutomatico2AtalhoAntes <> sequenciadorAutomatico2Atalho or sequenciadorAutomatico3AtalhoAntes <> sequenciadorAutomatico3Atalho or sequenciadorAutomatico4AtalhoAntes <> sequenciadorAutomatico4Atalho or frases1Atalho <> frases1AtalhoAntes or frases2Atalho <> frases2AtalhoAntes or frases3Atalho <> frases3AtalhoAntes or frases4Atalho <> frases4AtalhoAntes)
     {
         recarregar()
     }
@@ -1936,8 +2038,7 @@ criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: New,, Configurações Avançadas
     Gui, ConfiguracoesAvancada: Default
         
-    ;Gui Add, Tab3, x10 y10 w500 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Configurações do desenvolvedor
-    Gui Add, Tab3, x10 y10 w550 h380, Advertências|Teclas de Atalho|Atalho Auto Avançado||Configurações do desenvolvedor
+    Gui Add, Tab3, x10 y10 w550 h380, Advertências|Teclas de Atalho|Atalho Auto Avançado|Frases||Configurações do desenvolvedor
 
     Gui, Tab, 1
     Gui, Font, s13
@@ -2101,8 +2202,26 @@ criaJanelaConfiguracaoAvancada()
         linha := linha + 40
 
     }
-    
+
     Gui, Tab, 4
+    Gui, Add, Text, x120 y100, Atalho
+    Gui, Add, Text, x300 y100, Texto
+
+    linha := 130
+
+    loop, 4
+    {
+        atalho := frases%A_Index%Atalho
+        texto := frases%A_Index%Texto
+        
+        Gui, Add, Edit, x100 y%linha% w80 h21 vfrases%A_Index%Atalho, %atalho%
+        Gui, Add, Edit, x195 y%linha% w240 h21 vfrases%A_Index%Texto, %texto%
+        
+        linha := linha + 40
+
+    }
+
+    Gui, Tab, 5
     Gui, Add, Text, x40 y100, Atalho
     Gui, Add, Text, x110 y100, Tecla1
     Gui, Add, Text, x170 y100, Tecla2
@@ -2135,15 +2254,25 @@ criaJanelaConfiguracao()
     Gui Add, Tab3, x10 y10 w350 h280, Ajuda||Configurações|Paragon|Atalho Auto|Perfil Auto 1|Perfil Auto 2|Perfil Auto 3|Perfil Auto 4|Perfil Auto 5|Perfil Auto 6|Perfil Auto 7|Perfil Auto 8
 
     Gui, Tab, 1
-    Gui, Add, Text, x30 y90, Control+Shift+C (Configuração)  /  Control+Shift+R (Reload)
-    Gui, Add, Text, x30 y110, F5 (Troca Itens Kadala)  /  F6 (Recicla Item)
-    Gui, Add, Text, x30 y130, F11 (Transforma Raro Lendário (direta para esquerda)) 
-    Gui, Add, Text, x30 y150, Control+F11 (Transforma Raro Lendário (baixo para cima))
-    Gui, Add, Text, x30 y170, F1, F2, F3, F4 (Auto cast habilidades)
-    Gui, Add, Text, x30 y190, Control+F1 a Control+F4 (Perfil Auto 1 a 4) 
-    Gui, Add, Text, x30 y210, Control+Shift+F1 a Control+Shift+F4 (Perfil Auto 5 a 8) 
-    Gui, Add, Text, x30 y230, Control+F5 a Control+F8 (Atalho Automatizado 1 a 4) 
-    Gui, Add, Text, x30 y250, Control+Shift+D - Distância em Metros
+
+    if (configAvancadas = 0)
+    {
+        Gui, Add, Text, x30 y90, Control+Shift+C (Configuração)  /  Control+Shift+R (Reload)
+        Gui, Add, Text, x30 y110, F5 (Troca Itens Kadala)  /  F6 (Recicla Item)
+        Gui, Add, Text, x30 y130, F11 (Transforma Raro Lendário (direta para esquerda)) 
+        Gui, Add, Text, x30 y150, Control+F11 (Transforma Raro Lendário (baixo para cima))
+        Gui, Add, Text, x30 y170, F1, F2, F3, F4 (Auto cast habilidades)
+        Gui, Add, Text, x30 y190, Control+F1 a Control+F4 (Perfil Auto 1 a 4) 
+        Gui, Add, Text, x30 y210, Control+Shift+F1 a Control+Shift+F4 (Perfil Auto 5 a 8) 
+        Gui, Add, Text, x30 y230, Control+F5 a Control+F8 (Atalho Automatizado 1 a 4) 
+        Gui, Add, Text, x30 y250, Control+Shift+D - Distância em Metros
+    }     
+    else
+    {
+        Gui, Font, s13
+        Gui, Add, Text, x30 y100, *** verifique configurações avançadas ***
+        Gui, Font
+    }
 
     Gui, Tab, 2
     Gui, Add, Text, x60 y105, Latência Paragon:
@@ -2213,7 +2342,7 @@ criaJanelaConfiguracao()
     else
     {
         Gui, Font, s13
-        Gui, Add, Text, x30 y100, *** Configure nas opções avançadas ***
+        Gui, Add, Text, x30 y100, *** verifique configurações avançadas ***
         Gui, Font
     }
     
@@ -2299,6 +2428,11 @@ abreJanelaConfiguracao()
     sequenciadorAutomatico2AtalhoAntes := sequenciadorAutomatico2Atalho
     sequenciadorAutomatico3AtalhoAntes := sequenciadorAutomatico3Atalho
     sequenciadorAutomatico4AtalhoAntes := sequenciadorAutomatico4Atalho
+
+    frases1AtalhoAntes := frases1Atalho
+    frases2AtalhoAntes := frases2Atalho
+    frases3AtalhoAntes := frases3Atalho
+    frases4AtalhoAntes := frases4Atalho
 
     criaJanelaConfiguracao()
 
