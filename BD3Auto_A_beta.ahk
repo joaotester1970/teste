@@ -11,6 +11,8 @@ Global InfoAvancadasMetros ; 0 - apenas metros; 1 - mais informações
 Global configAvancadas ; 0 - sem temporizador; 1 - com temporizador
 Global testeForaDiablo ; 1 - para testar em ambiente fora do diablo
 
+Global protecaoContraRepeticaoAtalho
+
 global atalhoParagonDano
 global atalhoParagonVida
 global atalhoTrocaKadala
@@ -299,67 +301,75 @@ if testeForaDiablo <> 1
 
 Hotkey, %atalhoParagonDano%, trocaParagonDano ; starts damage script
 Hotkey, %atalhoParagonVida%, trocaParagonVida ; starts health script1
-Hotkey, F5, trocaKadala
-Hotkey, F6, reciclaUM
-Hotkey, +^F6, reciclaLinha
-Hotkey, F11, transformaRaroLendarioHorizontal
-Hotkey, ^F11, transformaRaroLendarioVertical
-Hotkey, F1, habilidadeAutomatica1
-Hotkey, F2, habilidadeAutomatica2
-Hotkey, F3, habilidadeAutomatica3
-Hotkey, F4, habilidadeAutomatica4
-Hotkey, ^F1, perfilAutomatico1
-Hotkey, ^F2, perfilAutomatico2
-Hotkey, ^F3, perfilAutomatico3
-Hotkey, ^F4, perfilAutomatico4
-Hotkey, +^F1, perfilAutomatico5
-Hotkey, +^F2, perfilAutomatico6
-Hotkey, +^F3, perfilAutomatico7
-Hotkey, +^F4, perfilAutomatico8
+Hotkey, %atalhoTrocaKadala%, trocaKadala
+Hotkey, %atalhoReciclaUM%, reciclaUM
+Hotkey, %atalhoReciclaLinha%, reciclaLinha
+Hotkey, %atalhoTransformaRaroLendarioHorizontal%, transformaRaroLendarioHorizontal
+Hotkey, %atalhoTransformaRaroLendarioVertical%, transformaRaroLendarioVertical
+Hotkey, %atalhoHabilidadeAutomatica1%, habilidadeAutomatica1
+Hotkey, %atalhoHabilidadeAutomatica2%, habilidadeAutomatica2
+Hotkey, %atalhoHabilidadeAutomatica3%, habilidadeAutomatica3
+Hotkey, %atalhoHabilidadeAutomatica4%, habilidadeAutomatica4
+Hotkey, %atalhoPerfilAutomatico1%, perfilAutomatico1
+Hotkey, %atalhoPerfilAutomatico2%, perfilAutomatico2
+Hotkey, %atalhoPerfilAutomatico3%, perfilAutomatico3
+Hotkey, %atalhoPerfilAutomatico4%, perfilAutomatico4
+Hotkey, %atalhoPerfilAutomatico5%, perfilAutomatico5
+Hotkey, %atalhoPerfilAutomatico6%, perfilAutomatico6
+Hotkey, %atalhoPerfilAutomatico7%, perfilAutomatico7
+Hotkey, %atalhoPerfilAutomatico8%, perfilAutomatico8
 Hotkey, +F12, trocaWheelUpDownNecro
-Hotkey, ^t, teleporte
-Hotkey, ^+d, mostraDistanciaDiablo
-Hotkey, ^+m, mostraInfoAvancadas
+Hotkey, %atalhoTeleporte%, teleporte
+Hotkey, %atalhoMostraDistanciaDiablo%, mostraDistanciaDiablo
+Hotkey, %atalhoMostraInfoAvancadas%, mostraInfoAvancadas
 
-Hotkey, ^F5, sequenciadorAutomatico1
-Hotkey, ^F6, sequenciadorAutomatico2
-Hotkey, ^F7, sequenciadorAutomatico3
-Hotkey, ^F8, sequenciadorAutomatico4
+Hotkey, %atalhoSequenciadorAutomatico1%, sequenciadorAutomatico1
+Hotkey, %atalhoSequenciadorAutomatico2%, sequenciadorAutomatico2
+Hotkey, %atalhoSequenciadorAutomatico3%, sequenciadorAutomatico3
+Hotkey, %atalhoSequenciadorAutomatico4%, sequenciadorAutomatico4
 
-if sequenciadorAutomatico1Atalho <> ""
+;if (configAvancadas = 1) ; para usuário do sequenciador avançado é possível ter função chamando função (sem $ na frente dos atalhos)
+;{
+;    protecaoContraRepeticaoAtalho := ""
+;}
+;else
+;{
+    protecaoContraRepeticaoAtalho := "$"
+;}
+
+if sequenciadorAutomatico1Atalho is not space
 {
-    Hotkey, $%sequenciadorAutomatico1Atalho%, sequenciadorAutomaticoTeclaPressionada1
+    Hotkey, %protecaoContraRepeticaoAtalho%%sequenciadorAutomatico1Atalho%, sequenciadorAutomaticoTeclaPressionada1
 }
-if sequenciadorAutomatico2Atalho <> ""
+if sequenciadorAutomatico2Atalho is not space
 {
-    Hotkey, $%sequenciadorAutomatico2Atalho%, sequenciadorAutomaticoTeclaPressionada2
+    Hotkey, %protecaoContraRepeticaoAtalho%%sequenciadorAutomatico2Atalho%, sequenciadorAutomaticoTeclaPressionada2
 }
-if sequenciadorAutomatico3Atalho <> ""
+if sequenciadorAutomatico3Atalho is not space
 {
-    Hotkey, $%sequenciadorAutomatico3Atalho%, sequenciadorAutomaticoTeclaPressionada3
+    Hotkey, %protecaoContraRepeticaoAtalho%%sequenciadorAutomatico3Atalho%, sequenciadorAutomaticoTeclaPressionada3
 }
-if sequenciadorAutomatico4Atalho <> ""
+if sequenciadorAutomatico4Atalho is not space
 {
-    Hotkey, $%sequenciadorAutomatico4Atalho%, sequenciadorAutomaticoTeclaPressionada4
+    Hotkey, %protecaoContraRepeticaoAtalho%%sequenciadorAutomatico4Atalho%, sequenciadorAutomaticoTeclaPressionada4
 }
 
-if frases1Atalho <> ""
+if frases1Atalho is not space
 {
     Hotkey, $%frases1Atalho%, frasesPressionada1
 }
-if frases2Atalho <> ""
+if frases2Atalho is not space
 {
     Hotkey, $%frases2Atalho%, frasesPressionada2
 }
-if frases3Atalho <> ""
+if frases3Atalho is not space
 {
     Hotkey, $%frases3Atalho%, frasesPressionada3
 }
-if frases4Atalho <> ""
+if frases4Atalho is not space
 {
     Hotkey, $%frases4Atalho%, frasesPressionada4
 }
-
 
 return
 
@@ -886,21 +896,21 @@ sequenciadorAutomaticoTeclaPressionada()
         sequenciadorAutomaticoEstado := 0
     }
     
-    if (sequenciadorAutomaticoEstado = 1) and (sequenciadorAutomaticoTeclaAcionada = sequenciadorAutomaticoCarregado)
+    if (sequenciadorAutomaticoEstado = 1) ; and (sequenciadorAutomaticoTeclaAcionada = sequenciadorAutomaticoCarregado)
     {
-        if tecla1 <> "" 
+        if tecla1 is not space 
         {
             setTimer, tecla1Timer, %tecla1Tempo%
         }    
-        if tecla2 <> ""
+        if tecla2 is not space
         {
             setTimer, tecla2Timer, %tecla2Tempo%
         }
-        if tecla3 <> ""
+        if tecla3 is not space
         {
             setTimer, tecla3Timer, %tecla3Tempo%
         }
-        if tecla4 <> ""
+        if tecla4 is not space
         {
             setTimer, tecla4Timer, %tecla4Tempo%
         }
@@ -2038,7 +2048,7 @@ criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: New,, Configurações Avançadas
     Gui, ConfiguracoesAvancada: Default
         
-    Gui Add, Tab3, x10 y10 w550 h380, Advertências|Teclas de Atalho|Atalho Auto Avançado|Frases||Configurações do desenvolvedor
+    Gui Add, Tab3, x10 y10 w550 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Frases|Configurações do desenvolvedor
 
     Gui, Tab, 1
     Gui, Font, s13
@@ -2166,8 +2176,10 @@ criaJanelaConfiguracaoAvancada()
     linha := linha + incrementoLinha
     Gui, Add, Edit, x%coluna% y%linha% w40 h21 vatalhoSequenciadorAutomatico4, %atalhoSequenciadorAutomatico4% 
 
+    Gui, Add, Button, x230 y350 default gbotaoReconfiguraPadraoAtalhos, Restaura Padrão Atalhos
+
     Gui, Tab, 3
-    Gui, Add, Text, x60 y80, Atalho
+    Gui, Add, Text, x20 y80, Atalho
     Gui, Add, Text, x180 y80, Tecla1
     Gui, Add, Text, x290 y80, Tecla2
     Gui, Add, Text, x400 y80, Tecla3
@@ -2244,6 +2256,53 @@ botaoSalvarConfigAvancada()
 {
     Gui, Submit
     return
+}
+
+botaoReconfiguraPadraoAtalhos()
+{
+
+    MsgBox, 4,, Todas as configurações de atalho serão restauradas para o padrão e ocorrerá reload do script. Tem certeza?
+    IfMsgBox Yes
+    {
+        Gui, Submit
+        Gui, Configuracoes: Submit
+        
+        atalhoParagonDano := atalhoParagonDanoPadrao 
+        atalhoParagonVida := atalhoParagonVidaPadrao
+        atalhoTrocaKadala := atalhoTrocaKadalaPadrao
+        atalhoReciclaUM := atalhoReciclaUMPadrao
+        atalhoReciclaLinha := atalhoReciclaLinhaPadrao
+        atalhoTransformaRaroLendarioHorizontal := atalhoTransformaRaroLendarioHorizontalPadrao
+        atalhoTransformaRaroLendarioVertical := atalhoTransformaRaroLendarioVerticalPadrao
+        atalhoHabilidadeAutomatica1 := atalhoHabilidadeAutomatica1Padrao
+        atalhoHabilidadeAutomatica2 := atalhoHabilidadeAutomatica2Padrao
+        atalhoHabilidadeAutomatica3 := atalhoHabilidadeAutomatica3Padrao
+        atalhoHabilidadeAutomatica4 := atalhoHabilidadeAutomatica4Padrao
+        atalhoPerfilAutomatico1 := atalhoPerfilAutomatico1Padrao
+        atalhoPerfilAutomatico2 := atalhoPerfilAutomatico2Padrao
+        atalhoPerfilAutomatico3 := atalhoPerfilAutomatico3Padrao
+        atalhoPerfilAutomatico4 := atalhoPerfilAutomatico4Padrao
+        atalhoPerfilAutomatico5 := atalhoPerfilAutomatico5Padrao
+        atalhoPerfilAutomatico6 := atalhoPerfilAutomatico6Padrao
+        atalhoPerfilAutomatico7 := atalhoPerfilAutomatico7Padrao
+        atalhoPerfilAutomatico8 := atalhoPerfilAutomatico8Padrao
+        atalhoTeleporte := atalhoTeleportePadrao
+        atalhoMostraDistanciaDiablo := atalhoMostraDistanciaDiabloPadrao
+        atalhoMostraInfoAvancadas := atalhoMostraInfoAvancadasPadrao
+        atalhoSequenciadorAutomatico1 := atalhoSequenciadorAutomatico1Padrao
+        atalhoSequenciadorAutomatico2 := atalhoSequenciadorAutomatico2Padrao
+        atalhoSequenciadorAutomatico3 := atalhoSequenciadorAutomatico3Padrao
+        atalhoSequenciadorAutomatico4 := atalhoSequenciadorAutomatico4Padrao
+        
+        gravaConfiguracao()
+        
+        recarregar()
+
+    }
+
+
+    return
+
 }
 
 criaJanelaConfiguracao()
