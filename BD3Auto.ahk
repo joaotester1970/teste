@@ -209,7 +209,7 @@ posicao()
 perfilAutomatico(perfilAcionado)
 {
     
-    if ((perfilAutomaticoEstado = 0) and (habilidadeAutomaticaTipo = 0))
+    if perfilAutomaticoEstado = 0 
     {
         perfilAutomaticoEstado := 1
     }
