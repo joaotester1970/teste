@@ -155,6 +155,14 @@ Global sequenciadorAutomatico1Tecla3
 Global sequenciadorAutomatico1Tecla3Tempo
 Global sequenciadorAutomatico1Tecla4
 Global sequenciadorAutomatico1Tecla4Tempo
+Global sequenciadorAutomatico1Tecla5
+Global sequenciadorAutomatico1Tecla5Tempo
+Global sequenciadorAutomatico1Tecla6
+Global sequenciadorAutomatico1Tecla6Tempo
+Global sequenciadorAutomatico1Tecla7
+Global sequenciadorAutomatico1Tecla7Tempo
+Global sequenciadorAutomatico1Tecla8
+Global sequenciadorAutomatico1Tecla8Tempo
 Global sequenciadorAutomatico2Atalho
 Global sequenciadorAutomatico2Tecla1
 Global sequenciadorAutomatico2Tecla1Tempo
@@ -164,6 +172,14 @@ Global sequenciadorAutomatico2Tecla3
 Global sequenciadorAutomatico2Tecla3Tempo
 Global sequenciadorAutomatico2Tecla4
 Global sequenciadorAutomatico2Tecla4Tempo
+Global sequenciadorAutomatico2Tecla5
+Global sequenciadorAutomatico2Tecla5Tempo
+Global sequenciadorAutomatico2Tecla6
+Global sequenciadorAutomatico2Tecla6Tempo
+Global sequenciadorAutomatico2Tecla7
+Global sequenciadorAutomatico2Tecla7Tempo
+Global sequenciadorAutomatico2Tecla8
+Global sequenciadorAutomatico2Tecla8Tempo
 Global sequenciadorAutomatico3Atalho
 Global sequenciadorAutomatico3Tecla1
 Global sequenciadorAutomatico3Tecla1Tempo
@@ -173,6 +189,14 @@ Global sequenciadorAutomatico3Tecla3
 Global sequenciadorAutomatico3Tecla3Tempo
 Global sequenciadorAutomatico3Tecla4
 Global sequenciadorAutomatico3Tecla4Tempo
+Global sequenciadorAutomatico3Tecla5
+Global sequenciadorAutomatico3Tecla5Tempo
+Global sequenciadorAutomatico3Tecla6
+Global sequenciadorAutomatico3Tecla6Tempo
+Global sequenciadorAutomatico3Tecla7
+Global sequenciadorAutomatico3Tecla7Tempo
+Global sequenciadorAutomatico3Tecla8
+Global sequenciadorAutomatico3Tecla8Tempo
 Global sequenciadorAutomatico4Atalho
 Global sequenciadorAutomatico4Tecla1
 Global sequenciadorAutomatico4Tecla1Tempo
@@ -182,6 +206,14 @@ Global sequenciadorAutomatico4Tecla3
 Global sequenciadorAutomatico4Tecla3Tempo
 Global sequenciadorAutomatico4Tecla4
 Global sequenciadorAutomatico4Tecla4Tempo
+Global sequenciadorAutomatico4Tecla5
+Global sequenciadorAutomatico4Tecla5Tempo
+Global sequenciadorAutomatico4Tecla6
+Global sequenciadorAutomatico4Tecla6Tempo
+Global sequenciadorAutomatico4Tecla7
+Global sequenciadorAutomatico4Tecla7Tempo
+Global sequenciadorAutomatico4Tecla8
+Global sequenciadorAutomatico4Tecla8Tempo
 
 Global frases1Atalho
 Global frases1Texto
@@ -890,8 +922,16 @@ sequenciadorAutomaticoTeclaPressionada()
     tecla3Tempo := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla3Tempo
     tecla4 := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla4
     tecla4Tempo := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla4Tempo
+    tecla5 := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla5
+    tecla5Tempo := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla5Tempo
+    tecla6 := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla6
+    tecla6Tempo := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla6Tempo
+    tecla7 := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla7
+    tecla7Tempo := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla7Tempo
+    tecla8 := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla8
+    tecla8Tempo := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla8Tempo
     
-    if (tecla1 = "" and tecla2 = "" and tecla3 = "" and tecla4 = "")
+    if (tecla1 = "" and tecla2 = "" and tecla3 = "" and tecla4 = "" and tecla5 = "" and tecla6 = "" and tecla7 = "" and tecla8 = "")
     {
         sequenciadorAutomaticoEstado := 0
     }
@@ -914,6 +954,23 @@ sequenciadorAutomaticoTeclaPressionada()
         {
             setTimer, tecla4Timer, %tecla4Tempo%
         }
+        if tecla5 is not space
+        {
+            setTimer, tecla5Timer, %tecla5Tempo%
+        }
+        if tecla6 is not space
+        {
+            setTimer, tecla6Timer, %tecla6Tempo%
+        }
+        if tecla7 is not space
+        {
+            setTimer, tecla7Timer, %tecla7Tempo%
+        }
+        if tecla8 is not space
+        {
+            setTimer, tecla8Timer, %tecla8Tempo%
+        }
+        
     }
     else
     {
@@ -952,6 +1009,42 @@ tecla4Timer()
     tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla4
     Sendinput, %tecla%
     setTimer, tecla4Timer, off
+    return
+
+}
+
+tecla5Timer()
+{
+    tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla5
+    Sendinput, %tecla%
+    setTimer, tecla5Timer, off
+    return
+
+}
+
+tecla6Timer()
+{
+    tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla6
+    Sendinput, %tecla%
+    setTimer, tecla6Timer, off
+    return
+
+}
+
+tecla7Timer()
+{
+    tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla7
+    Sendinput, %tecla%
+    setTimer, tecla7Timer, off
+    return
+
+}
+
+tecla8Timer()
+{
+    tecla := sequenciadorAutomatico%sequenciadorAutomaticoTeclaAcionada%Tecla8
+    Sendinput, %tecla%
+    setTimer, tecla8Timer, off
     return
 
 }
@@ -1703,7 +1796,7 @@ carregaConfiguracao()
     }
 
 ;-----------------
-    ;Perfil temporizado
+    ;sequenciador temporizado
 
     loop, 4
     {
@@ -1771,6 +1864,62 @@ carregaConfiguracao()
             RegWrite, REG_SZ, %chaveRegistry%, Tecla4Tempo, %tecla4Tempo%
         }
 
+        RegRead, tecla5, %chaveRegistry%, Tecla5
+        if tecla5 is space
+        {
+            tecla5 := ""
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla5, %tecla5%
+        }
+
+        RegRead, tecla5Tempo, %chaveRegistry%, Tecla5Tempo
+        if tecla5Tempo is not integer
+        {
+            tecla5Tempo := 0
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla5Tempo, %tecla5Tempo%
+        }
+
+        RegRead, tecla6, %chaveRegistry%, Tecla6
+        if tecla6 is space
+        {
+            tecla6 := ""
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla6, %tecla6%
+        }
+
+        RegRead, tecla6Tempo, %chaveRegistry%, Tecla6Tempo
+        if tecla6Tempo is not integer
+        {
+            tecla6Tempo := 0
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla6Tempo, %tecla6Tempo%
+        }
+
+        RegRead, tecla7, %chaveRegistry%, Tecla7
+        if tecla7 is space
+        {
+            tecla7 := ""
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla7, %tecla7%
+        }
+
+        RegRead, tecla7Tempo, %chaveRegistry%, Tecla7Tempo
+        if tecla7Tempo is not integer
+        {
+            tecla7Tempo := 0
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla7Tempo, %tecla7Tempo%
+        }
+
+        RegRead, tecla8, %chaveRegistry%, Tecla8
+        if tecla8 is space
+        {
+            tecla8 := ""
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla8, %tecla8%
+        }
+
+        RegRead, tecla8Tempo, %chaveRegistry%, Tecla8Tempo
+        if tecla8Tempo is not integer
+        {
+            tecla8Tempo := 0
+            RegWrite, REG_SZ, %chaveRegistry%, Tecla8Tempo, %tecla8Tempo%
+        }
+
         sequenciadorAutomatico%A_Index%Atalho := atalho
         sequenciadorAutomatico%A_Index%Tecla1 := tecla1
         sequenciadorAutomatico%A_Index%Tecla1Tempo := tecla1Tempo
@@ -1780,6 +1929,14 @@ carregaConfiguracao()
         sequenciadorAutomatico%A_Index%Tecla3Tempo := tecla3Tempo
         sequenciadorAutomatico%A_Index%Tecla4 := tecla4
         sequenciadorAutomatico%A_Index%Tecla4Tempo := tecla4Tempo
+        sequenciadorAutomatico%A_Index%Tecla5 := tecla5
+        sequenciadorAutomatico%A_Index%Tecla5Tempo := tecla5Tempo
+        sequenciadorAutomatico%A_Index%Tecla6 := tecla6
+        sequenciadorAutomatico%A_Index%Tecla6Tempo := tecla6Tempo
+        sequenciadorAutomatico%A_Index%Tecla7 := tecla7
+        sequenciadorAutomatico%A_Index%Tecla7Tempo := tecla7Tempo
+        sequenciadorAutomatico%A_Index%Tecla8 := tecla8
+        sequenciadorAutomatico%A_Index%Tecla8Tempo := tecla8Tempo
     }
 
     loop, 4
@@ -1884,6 +2041,9 @@ gravaConfiguracao()
         RegWrite, REG_SZ, %chaveRegistry2%, habilidade4Tempo, %tempo4%
     }
 
+;-----------------
+    ;sequenciador temporizado
+    
     loop, 4
     {
         chaveRegistry := "HKEY_CURRENT_USER\Software\BD3Auto\SequenciadorAutomatico\Perfil" . A_Index
@@ -1896,6 +2056,10 @@ gravaConfiguracao()
             sequenciadorAutomatico%A_Index%Tecla2 := SubStr(sequenciadorAutomatico%A_Index%Tecla2, 1, 1)
             sequenciadorAutomatico%A_Index%Tecla3 := SubStr(sequenciadorAutomatico%A_Index%Tecla3, 1, 1)
             sequenciadorAutomatico%A_Index%Tecla4 := SubStr(sequenciadorAutomatico%A_Index%Tecla4, 1, 1)
+            sequenciadorAutomatico%A_Index%Tecla5 := SubStr(sequenciadorAutomatico%A_Index%Tecla5, 1, 1)
+            sequenciadorAutomatico%A_Index%Tecla6 := SubStr(sequenciadorAutomatico%A_Index%Tecla6, 1, 1)
+            sequenciadorAutomatico%A_Index%Tecla7 := SubStr(sequenciadorAutomatico%A_Index%Tecla7, 1, 1)
+            sequenciadorAutomatico%A_Index%Tecla8 := SubStr(sequenciadorAutomatico%A_Index%Tecla8, 1, 1)
         }
 
         atalho := sequenciadorAutomatico%A_Index%Atalho
@@ -1904,6 +2068,10 @@ gravaConfiguracao()
         tecla2 := sequenciadorAutomatico%A_Index%Tecla2
         tecla3 := sequenciadorAutomatico%A_Index%Tecla3
         tecla4 := sequenciadorAutomatico%A_Index%Tecla4
+        tecla5 := sequenciadorAutomatico%A_Index%Tecla5
+        tecla6 := sequenciadorAutomatico%A_Index%Tecla6
+        tecla7 := sequenciadorAutomatico%A_Index%Tecla7
+        tecla8 := sequenciadorAutomatico%A_Index%Tecla8
 
         if sequenciadorAutomatico%A_Index%Tecla1Tempo is not integer
         {
@@ -1932,6 +2100,30 @@ gravaConfiguracao()
         }
         tecla4Tempo := sequenciadorAutomatico%A_Index%Tecla4Tempo
 
+        if sequenciadorAutomatico%A_Index%Tecla5Tempo is not integer
+        {
+            sequenciadorAutomatico%A_Index%Tecla5Tempo := 0
+        }
+        tecla5Tempo := sequenciadorAutomatico%A_Index%Tecla5Tempo
+
+        if sequenciadorAutomatico%A_Index%Tecla6Tempo is not integer
+        {
+            sequenciadorAutomatico%A_Index%Tecla6Tempo := 0
+        }
+        tecla6Tempo := sequenciadorAutomatico%A_Index%Tecla6Tempo
+
+        if sequenciadorAutomatico%A_Index%Tecla7Tempo is not integer
+        {
+            sequenciadorAutomatico%A_Index%Tecla7Tempo := 0
+        }
+        tecla7Tempo := sequenciadorAutomatico%A_Index%Tecla7Tempo
+
+        if sequenciadorAutomatico%A_Index%Tecla8Tempo is not integer
+        {
+            sequenciadorAutomatico%A_Index%Tecla8Tempo := 0
+        }
+        tecla8Tempo := sequenciadorAutomatico%A_Index%Tecla8Tempo
+
         RegWrite, REG_SZ, %chaveRegistry%, Atalho, %atalho%
         RegWrite, REG_SZ, %chaveRegistry%, Tecla1, %tecla1%
         RegWrite, REG_SZ, %chaveRegistry%, Tecla1Tempo, %tecla1Tempo%
@@ -1941,6 +2133,14 @@ gravaConfiguracao()
         RegWrite, REG_SZ, %chaveRegistry%, Tecla3Tempo, %tecla3Tempo%
         RegWrite, REG_SZ, %chaveRegistry%, Tecla4, %tecla4%
         RegWrite, REG_SZ, %chaveRegistry%, Tecla4Tempo, %tecla4Tempo%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla5, %tecla5%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla5Tempo, %tecla5Tempo%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla6, %tecla6%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla6Tempo, %tecla6Tempo%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla7, %tecla7%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla7Tempo, %tecla7Tempo%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla8, %tecla8%
+        RegWrite, REG_SZ, %chaveRegistry%, Tecla8Tempo, %tecla8Tempo%
     }
 
     loop, 4
@@ -2048,7 +2248,7 @@ criaJanelaConfiguracaoAvancada()
     Gui, ConfiguracoesAvancada: New,, Configurações Avançadas
     Gui, ConfiguracoesAvancada: Default
         
-    Gui Add, Tab3, x10 y10 w550 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Frases|Configurações do desenvolvedor
+    Gui Add, Tab3, x10 y10 w990 h380, Advertências||Teclas de Atalho|Atalho Auto Avançado|Frases|Configurações do desenvolvedor
 
     Gui, Tab, 1
     Gui, Font, s13
@@ -2184,6 +2384,10 @@ criaJanelaConfiguracaoAvancada()
     Gui, Add, Text, x290 y80, Tecla2
     Gui, Add, Text, x400 y80, Tecla3
     Gui, Add, Text, x510 y80, Tecla4
+    Gui, Add, Text, x620 y80, Tecla5
+    Gui, Add, Text, x730 y80, Tecla6
+    Gui, Add, Text, x840 y80, Tecla7
+    Gui, Add, Text, x950 y80, Tecla8
 
     linha := 100
 
@@ -2198,6 +2402,14 @@ criaJanelaConfiguracaoAvancada()
         tecla3Tempo := sequenciadorAutomatico%A_Index%Tecla3Tempo
         tecla4 := sequenciadorAutomatico%A_Index%Tecla4
         tecla4Tempo := sequenciadorAutomatico%A_Index%Tecla4Tempo
+        tecla5 := sequenciadorAutomatico%A_Index%Tecla5
+        tecla5Tempo := sequenciadorAutomatico%A_Index%Tecla5Tempo
+        tecla6 := sequenciadorAutomatico%A_Index%Tecla6
+        tecla6Tempo := sequenciadorAutomatico%A_Index%Tecla6Tempo
+        tecla7 := sequenciadorAutomatico%A_Index%Tecla7
+        tecla7Tempo := sequenciadorAutomatico%A_Index%Tecla7Tempo
+        tecla8 := sequenciadorAutomatico%A_Index%Tecla8
+        tecla8Tempo := sequenciadorAutomatico%A_Index%Tecla8Tempo
         
 
         Gui, Add, Edit, x20 y%linha% w80 h21 vsequenciadorAutomatico%A_Index%Atalho, %atalho%
@@ -2205,12 +2417,20 @@ criaJanelaConfiguracaoAvancada()
         Gui, Add, Edit, x225 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla2, %tecla2%
         Gui, Add, Edit, x335 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla3, %tecla3%
         Gui, Add, Edit, x445 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla4, %tecla4%
-        
+        Gui, Add, Edit, x555 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla5, %tecla5%
+        Gui, Add, Edit, x665 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla6, %tecla6%
+        Gui, Add, Edit, x775 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla7, %tecla7%
+        Gui, Add, Edit, x885 y%linha% w100 h21 vsequenciadorAutomatico%A_Index%Tecla8, %tecla8%
         linha := linha + 23
+
         Gui, Add, Edit, x155 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla1Tempo, %tecla1Tempo%
         Gui, Add, Edit, x265 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla2Tempo, %tecla2Tempo%
         Gui, Add, Edit, x375 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla3Tempo, %tecla3Tempo%
         Gui, Add, Edit, x485 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla4Tempo, %tecla4Tempo%
+        Gui, Add, Edit, x595 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla5Tempo, %tecla5Tempo%
+        Gui, Add, Edit, x705 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla6Tempo, %tecla6Tempo%
+        Gui, Add, Edit, x815 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla7Tempo, %tecla7Tempo%
+        Gui, Add, Edit, x925 y%linha% w60 h21 vsequenciadorAutomatico%A_Index%Tecla8Tempo, %tecla8Tempo%
         linha := linha + 40
 
     }
@@ -2246,7 +2466,7 @@ criaJanelaConfiguracaoAvancada()
     Gui, Add, Text, x10 y390, *** Após alterações de atalho, salve e recarregue (Control+Shift+R)***
     Gui, Font
 
-    Gui, Add, Button, x517 y400 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
+    Gui, Add, Button, x957 y400 default gbotaoSalvarConfigAvancada, Salvar ; The label ButtonOK (if it exists) will be run when the button is pressed.
     
     return
     
