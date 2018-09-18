@@ -422,7 +422,7 @@ habilidadeAutomatica4()
 posicao()  
 {
 
-    arquivoSaida = pontos.txt
+    arquivoSaida = "pontos.txt"
 
     MouseGetPos, mouseX, mouseY
     

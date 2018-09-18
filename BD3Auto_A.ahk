@@ -254,6 +254,10 @@ Global preencherBotaoX
 Global preencherBotaoY 
 Global transmutarBotaoX
 Global transmutarBotaoY
+Global receitaFrenteBotaoX
+Global receitaFrenteBotaoY
+Global receitaVoltaBotaoX
+Global receitaVoltaBotaoY 
 Global limiteDiferencaX
 Global limiteDiferencaY
 Global menuJogoOpcoesX
@@ -815,7 +819,7 @@ transformaRaroLendario()
         novaPosicaoX := mouseX
         novaPosicaoY := mouseY
 
-        SetTimer, transformaRaroLendarioTimer, 1000
+        SetTimer, transformaRaroLendarioTimer, %latency1%
     }
     else
     {
@@ -835,14 +839,19 @@ transformaRaroLendarioTimer()
     
     SetMouseDelay, 10
     MouseClick, Right, novaPosicaoX, novaPosicaoY
-    SetMouseDelay, 10
     MouseClick, Left, preencherBotaoX, preencherBotaoY
-    SetMouseDelay, 10
     MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
-    Sleep, 3000
-    SetMouseDelay, 10
-    MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
-    
+    ;Sleep, 3000
+    ;SetMouseDelay, 10
+    ;MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
+
+    MouseClick, Left, receitaFrenteBotaoX, receitaFrenteBotaoY ; transmutar
+
+    Sleep, %latency1%
+
+    MouseClick, Left, receitaVoltaBotaoX, receitaVoltaBotaoY ; transmutar
+
+
     if transformaRaroLendarioPosicao = 0 ; 0 = horizontal , 1 = vertical
     {
         novaPosicaoX := NovaPosicaoX - limiteDiferencaX
@@ -868,7 +877,7 @@ transformaRaroLendarioTimer()
 posicao()  
 {
 
-    arquivoSaida := pontos.txt
+    arquivoSaida := "pontos.txt"
 
     MouseGetPos, mouseX, mouseY
     
@@ -1411,6 +1420,11 @@ ajustaResolucao()
         preencherBotaoY := format("{:u}", (838 * screenYRazao))
         transmutarBotaoX := format("{:u}", (235 * screenXRazao))
         transmutarBotaoY := format("{:u}", (828 * screenYRazao))
+        receitaFrenteBotaoX := format("{:u}", (849 * screenXRazao))
+        receitaFrenteBotaoY := format("{:u}", (838 * screenYRazao))
+        receitaVoltaBotaoX := format("{:u}", (582 * screenXRazao))
+        receitaVoltaBotaoY := format("{:u}", (838 * screenYRazao))
+
         limiteDiferencaX := format("{:u}", (51 * screenXRazao))
         limiteDiferencaY := format("{:u}", (48 * screenYRazao))
         
@@ -1472,6 +1486,11 @@ ajustaResolucao()
         transmutarBotaoY := format("{:u}", (828 * screenYRazao))
         limiteDiferencaX := 51
         limiteDiferencaY := format("{:u}", (48 * screenYRazao))
+        
+        receitaFrenteBotaoX := 849
+        receitaFrenteBotaoY := format("{:u}", (838 * screenYRazao))
+        receitaVoltaBotaoX := 582
+        receitaVoltaBotaoY := format("{:u}", (838 * screenYRazao))
         
         menuJogoOpcoesX := posicaoCentralX - (posicaoCentralXReferencia - 228)
         menuJogoOpcoesY := format("{:u}", (317 * screenYRazao))

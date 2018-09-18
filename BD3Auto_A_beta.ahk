@@ -278,6 +278,10 @@ Global menuJogoForcarMovimentoTecla2X
 Global menuJogoForcarMovimentoTecla2Y
 Global menuJogoAceitarX
 Global menuJogoAceitarY
+Global MiriamBotaoX
+Global MiriamBotaoY
+Global MiriamItem1X
+Global MiriamItem1Y
 
 Global posicaoCentralX
 Global posicaoCentralY
@@ -294,6 +298,8 @@ Global novaPosicaoY
 
 Global transformaRaroLendarioPosicao ; 0 = horizontal; 1 = vertical
 Global transformaRaroLendarioSituacao, transformaRaroLendarioSituacao := -1 ; 1 = está ligado, -1 = está desligado
+
+Global habilitaTrocaMiriamEstado, habilitaTrocaMiriamEstado := -1 ; 1 = está ligado, -1 = está desligado
 
 CoordMode, Mouse, Window
 
@@ -363,6 +369,10 @@ Hotkey, %atalhoSequenciadorAutomatico1%, sequenciadorAutomatico1
 Hotkey, %atalhoSequenciadorAutomatico2%, sequenciadorAutomatico2
 Hotkey, %atalhoSequenciadorAutomatico3%, sequenciadorAutomatico3
 Hotkey, %atalhoSequenciadorAutomatico4%, sequenciadorAutomatico4
+
+Hotkey, ^z, habilitaTrocaMiriam
+Hotkey, z, trocaMiriam
+Hotkey, z, Off
 
 ;if (configAvancadas = 1) ; para usuário do sequenciador avançado é possível ter função chamando função (sem $ na frente dos atalhos)
 ;{
@@ -661,6 +671,38 @@ trocaKadala()
     return
 }
 
+habilitaTrocaMiriam()
+{
+
+    if habilitaTrocaMiriamEstado = -1
+    {
+        Hotkey, z, On
+    }
+    else
+    {
+        Hotkey, z, Off
+    }
+    habilitaTrocaMiriamEstado := habilitaTrocaMiriamEstado * -1
+
+    return
+}
+
+trocaMiriam()
+{
+
+    Critical
+
+    validaResolucao()
+
+    SetMouseDelay, %latency1%
+    MouseClick, Left, MiriamItem1X, MiriamItem1Y
+
+    MouseClick, Left, MiriamBotaoX, MiriamBotaoY
+
+    return
+
+}
+
 reciclaUM()
 {
     Critical
@@ -819,7 +861,7 @@ transformaRaroLendario()
         novaPosicaoX := mouseX
         novaPosicaoY := mouseY
 
-        SetTimer, transformaRaroLendarioTimer, 1000
+        SetTimer, transformaRaroLendarioTimer, %latency1%
     }
     else
     {
@@ -839,20 +881,17 @@ transformaRaroLendarioTimer()
     
     SetMouseDelay, 10
     MouseClick, Right, novaPosicaoX, novaPosicaoY
-    SetMouseDelay, 10
     MouseClick, Left, preencherBotaoX, preencherBotaoY
-    SetMouseDelay, 10
     MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; transmutar
-    Sleep, 3000
-    SetMouseDelay, 10
-    MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
+    ;Sleep, 3000
+    ;SetMouseDelay, 10
+    ;MouseClick, Left, transmutarBotaoX, transmutarBotaoY ; aceitar
 
-;    SetMouseDelay, 10
-;    MouseClick, Left, receitaFrenteBotaoX, receitaFrenteBotaoY ; transmutar
-;    Sleep, 3000
+    MouseClick, Left, receitaFrenteBotaoX, receitaFrenteBotaoY ; transmutar
 
-;    SetMouseDelay, 10
-;    MouseClick, Left, receitaVoltaBotaoX, receitaVoltaBotaoY ; transmutar
+    Sleep, %latency1%
+
+    MouseClick, Left, receitaVoltaBotaoX, receitaVoltaBotaoY ; transmutar
 
 
     if transformaRaroLendarioPosicao = 0 ; 0 = horizontal , 1 = vertical
@@ -880,7 +919,7 @@ transformaRaroLendarioTimer()
 posicao()  
 {
 
-    arquivoSaida := pontos.txt
+    arquivoSaida := "pontos.txt"
 
     MouseGetPos, mouseX, mouseY
     
@@ -1423,12 +1462,11 @@ ajustaResolucao()
         preencherBotaoY := format("{:u}", (838 * screenYRazao))
         transmutarBotaoX := format("{:u}", (235 * screenXRazao))
         transmutarBotaoY := format("{:u}", (828 * screenYRazao))
-        receitaFrenteBotaoX := format("{:u}", (370 * screenXRazao))
-        receitaFrenteBotaoY := format("{:u}", (846 * screenYRazao))
-        receitaVoltaBotaoX := format("{:u}", (370 * screenXRazao))
-        receitaVoltaBotaoY := format("{:u}", (726 * screenYRazao))
+        receitaFrenteBotaoX := format("{:u}", (849 * screenXRazao))
+        receitaFrenteBotaoY := format("{:u}", (838 * screenYRazao))
+        receitaVoltaBotaoX := format("{:u}", (582 * screenXRazao))
+        receitaVoltaBotaoY := format("{:u}", (838 * screenYRazao))
 
-        
         limiteDiferencaX := format("{:u}", (51 * screenXRazao))
         limiteDiferencaY := format("{:u}", (48 * screenYRazao))
         
@@ -1450,6 +1488,12 @@ ajustaResolucao()
         menuJogoForcarMovimentoTecla2Y := format("{:u}", (673 * screenYRazao))
         menuJogoAceitarX := format("{:u}", (1239 * screenXRazao))
         menuJogoAceitarY := format("{:u}", (867 * screenYRazao))
+        
+        MiriamBotaoX := format("{:u}", (246 * screenXRazao))
+        MiriamBotaoY := format("{:u}", (781 * screenYRazao))	
+
+        MiriamItem1X := format("{:u}", (254 * screenXRazao))
+        MiriamItem1Y := format("{:u}", (400 * screenYRazao))
 
         posicaoCentralX := format("{:u}", (960 * screenXRazao))
         posicaoCentralY := format("{:u}", (507 * screenYRazao))
@@ -1490,6 +1534,17 @@ ajustaResolucao()
         transmutarBotaoY := format("{:u}", (828 * screenYRazao))
         limiteDiferencaX := 51
         limiteDiferencaY := format("{:u}", (48 * screenYRazao))
+
+        MiriamBotaoX := 246
+        MiriamBotaoY := format("{:u}", (781 * screenYRazao))	
+        MiriamItem1X := 254
+        MiriamItem1Y := format("{:u}", (400 * screenYRazao))
+
+
+        receitaFrenteBotaoX := 849
+        receitaFrenteBotaoY := format("{:u}", (838 * screenYRazao))
+        receitaVoltaBotaoX := 582
+        receitaVoltaBotaoY := format("{:u}", (838 * screenYRazao))
         
         menuJogoOpcoesX := posicaoCentralX - (posicaoCentralXReferencia - 228)
         menuJogoOpcoesY := format("{:u}", (317 * screenYRazao))
